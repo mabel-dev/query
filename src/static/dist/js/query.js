@@ -125,11 +125,15 @@ function set_records_per_page() {
 }
 
 function page_forward() {
+    document.getElementById('page-back').disabled = true
+    document.getElementById('page-forward').disabled = true
     _page_number++;
     execute();
 }
 
 function page_back() {
+    document.getElementById('page-back').disabled = true
+    document.getElementById('page-forward').disabled = true
     _page_number--;
     execute();
 }
