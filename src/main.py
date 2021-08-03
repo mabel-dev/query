@@ -37,22 +37,13 @@ def do_search(search: SearchModel):
     search.page_size = min(1000, search.page_size)
     search.page_size = max(1, search.page_size)
 
-    filters = []
-    for filter in search.filters:
-        filters.append((filter.field, filter.operator, filter.value, ))
-
     sql_reader = SqlReader(
-        #dataset = search.dataset,
         start_date = search.start_date,
         end_date = search.end_date,
-        #filters = filters,
         cursor = search.cursor,
 
         sql_statement=search.query,
-        project = os.environ("PROJECT_NAME"),
-
-        #inner_reader=DiskReader,
-        raw_path=True
+        project = os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader
 
