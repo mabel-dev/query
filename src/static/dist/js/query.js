@@ -4,6 +4,7 @@ var _records = "Many"
 var _cursors = []
 var _history = []
 var _page_number = 0
+var _interval_obj = null
 
 function get_columns(data) {
     if (data.columns === undefined) {
@@ -55,7 +56,10 @@ function execute() {
     function do_ticker() {
         document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
     }
-    interval_obj = setInterval(function() { do_ticker() }, 250);
+    if (_interval_obj) {
+        clearInterval(_interval_obj)
+    }
+    _interval_obj = setInterval(function() { do_ticker() }, 250);
 
     var url = '/v1/search'
     data = {}
@@ -71,7 +75,7 @@ function execute() {
     fetch(url, { method: "POST", body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
         .then((res) => res.json())
         .then(output => {
-            clearInterval(interval_obj);
+            clearInterval(_interval_obj);
             var response = output;
             console.log(response)
             response.columns = get_columns(response.results[0]);
@@ -98,7 +102,10 @@ function execute() {
             document.getElementById('record_counter').innerText =
                 (_page_number - 1) * _records_per_page + " - " + max_record + " of " + _records
 
-        });
+        }).catch(function() {
+            clearInterval(_interval_obj);
+            document.getElementById("data-table-wrapper").innerHTML = "<p>ERROR</p>"
+        })
 }
 
 function run_query() {
