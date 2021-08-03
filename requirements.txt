@@ -1,7 +1,7 @@
 uvicorn
 fastapi
 pydantic
-mabel
+mabelbeta 
 orjson
 requests
 google-cloud-storage
