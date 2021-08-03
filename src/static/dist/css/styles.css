@@ -32,9 +32,13 @@
 }
 
 .btn-fixed-width {
-    width: 128px !important;
-    text-align: left;
+    width: 132px !important;
     margin-left: 5px;
+}
+
+.btn-fixed-width>i::after {
+    content: "";
+    padding-left: 0.4em;
 }
 
 .nav-header {
@@ -89,8 +93,6 @@
     font-weight: 300;
     display: block;
 }
-
-.data-table-wrapper {}
 
 html,
 body {
@@ -148,4 +150,31 @@ body {
     padding-left: 10px;
     padding-right: 10px;
     color: #60B1A7;
+}
+
+.datepicker {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.table-sm>:not(caption)>*>* {
+    padding: .2rem .2rem;
+}
+
+td,
+tr {
+    border-color: inherit;
+    border-style: none;
+    border-width: 0;
+}
+
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-accent-bg: transparent;
+    --bs-table-striped-color: #212529;
+    --bs-table-striped-bg: rgba(96, 177, 167, 0.1);
+    --bs-table-active-color: #212529;
+    --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+    --bs-table-hover-color: #212529;
+    --bs-table-hover-bg: rgba(96, 177, 167, 0.25);
 }

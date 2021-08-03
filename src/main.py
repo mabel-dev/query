@@ -23,7 +23,6 @@ class FilterModel(BaseModel):
 class SearchModel(BaseModel):
     start_date: Optional[Union[datetime.datetime,datetime.date]] = datetime.date.today()
     end_date: Optional[Union[datetime.datetime,datetime.date]] = datetime.date.today()
-    #dataset: str
     filters: Optional[List[FilterModel]] = []
     query: Optional[str] = ''
     cursor: Optional[str] = None
@@ -50,9 +49,9 @@ def do_search(search: SearchModel):
         cursor = search.cursor,
 
         sql_statement=search.query,
-        #project = config.project_name,
+        project = os.environ("PROJECT_NAME"),
 
-        inner_reader=DiskReader,
+        #inner_reader=DiskReader,
         raw_path=True
     )
     return sql_reader.reader
