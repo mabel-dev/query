@@ -12,8 +12,9 @@
     <link href="dist/fonts/JetBrains Mono/font.css" rel="stylesheet" />
     <link href="dist/fonts/Pacifico/font.css" rel="stylesheet" />
     <link href="dist/fonts/Roboto Condensed/font.css" rel="stylesheet" />
-
     <link href="dist/css/styles.css" rel="stylesheet" />
+
+    <link rel="icon" type="image/png" href="dist/img/q-logo.png">
 
 </head>
 
@@ -132,27 +133,31 @@
     <footer class="footer">
         <div class="container">
 
+            <div class="d-flex flex-row justify-content-end">
+                <div>
 
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item disabled">
-                        <a class="page-link button-query-white" href="#" tabindex="-1" aria-disabled="true">
-                            <i class="fas fa-chevron-left"></i>
-                        </a>
-                    </li>
-                    <li class="page-item disabled no-border"><span class="page-link">100 to 200 of Many</span></li>
-                    <li class="page-item">
-                        <a class="page-link button-query-white" href="#">
-                            <i class="fas fa-chevron-right"></i>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+                    Records per page
+                    <select id="records_per_page">
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="100">100</option>
+                    </select>
+
+                    <span class="vertical-separator">|</span>
+
+                    <span id="record_counter"></span>
+
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button id="page-back" type="button" class="btn button-query-white" disabled><i class="fas fa-chevron-left"></i></button>
+                        <button id="page-forward" type="button" class="btn button-query-white" disabled><i class="fas fa-chevron-right"></i></button>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="plugins/jquery/jquery.min.js"></script>
-    <script src="plugins/popper/js/popper.min.js"></script>
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="plugins/moment/js/moment.js"></script>
     <script src="dist/js/code-editor.js"></script>

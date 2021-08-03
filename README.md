@@ -9,8 +9,12 @@ _SQL IDE for mabel datasets_
 
 **Query** is a SQL IDE for [mabel](https://github.com/mabel-dev/mabel) datasets.
 
+NOTE: Query requires mabel v0.5 or later, which is available using:
+
+~~~
+pip install mabelbeta
+~~~
+
 <img src="assets/screen-shot.png" height="128px">
 
 This project is _alpha_, some functionality only works under the right conditions.
-
-## NOTE: Query requires mabel v0.5 or later, which is being developed in parallel

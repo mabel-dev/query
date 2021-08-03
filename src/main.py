@@ -32,7 +32,6 @@ class SearchModel(BaseModel):
 
 from mabel.data.readers.internals.alpha_sql_reader import SqlReader
 from mabel.adapters.disk import DiskReader
-from mabel.data.formats.dictset import limit
 
 def do_search(search: SearchModel):
 
@@ -43,7 +42,7 @@ def do_search(search: SearchModel):
     for filter in search.filters:
         filters.append((filter.field, filter.operator, filter.value, ))
 
-    reader = SqlReader(
+    sql_reader = SqlReader(
         #dataset = search.dataset,
         start_date = search.start_date,
         end_date = search.end_date,
@@ -56,7 +55,7 @@ def do_search(search: SearchModel):
         inner_reader=DiskReader,
         raw_path=True
     )
-    return reader
+    return sql_reader.reader
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -71,7 +70,11 @@ application.mount("/plugins", StaticFiles(directory="src/static/plugins"), name=
 def handle_start_request(request: SearchModel):
     try:
         results = do_search(request)
-        response = {"results": list(limit(results, request.page_size)), "cursor": {"results.cursor":"NOT IMPLEMENTED"}}
+        response = {
+            "results": results.take(request.page_size).collect(),
+            "cursor": results.cursor(),
+            "record_count": results.count()
+            }
         return response
     except SystemExit as err:
         logger.alert(err)

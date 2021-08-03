@@ -1,0 +1,151 @@
+.editor {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-size: 16px;
+    overflow-y: auto;
+    padding: 5px;
+    padding-left: 48px;
+    counter-reset: line;
+    width: 100%;
+    line-height: 18px;
+    min-height: 108px;
+    max-height: 108px;
+    border: 2px solid #60B1A7;
+    border-radius: 5px;
+}
+
+.editor div {
+    display: block;
+    position: relative;
+    white-space: pre-wrap;
+}
+
+.editor div::before {
+    content: counter(line, decimal-leading-zero);
+    counter-increment: line;
+    position: absolute;
+    right: calc(100% + 16px);
+    opacity: 0.5;
+}
+
+.editor:focus-within {
+    border: 2px solid black;
+}
+
+.btn-fixed-width {
+    width: 128px !important;
+    text-align: left;
+    margin-left: 5px;
+}
+
+.nav-header {
+    font-size: 20px !important;
+}
+
+.btn-action {
+    background-color: #60B1A7;
+    color: white
+}
+
+.button-query-white {
+    background-color: white;
+    color: #60B1A7;
+    border-color: transparent;
+}
+
+.button-query-white:hover {
+    color: white;
+    background-color: #60B1A7;
+}
+
+.no-border {
+    border-color: transparent !important;
+}
+
+.code-keyword {
+    color: blue;
+}
+
+.code-numbers {
+    color: purple;
+}
+
+.code-logical {
+    color: red;
+}
+
+.code-literal {
+    color: gray;
+}
+
+.brand-text {
+    font-family: Pacifico, Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.1em;
+    color: #60B1A7;
+}
+
+.data-table {
+    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+    font-weight: 300;
+    display: block;
+}
+
+.data-table-wrapper {}
+
+html,
+body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+}
+
+#main {
+    overflow: auto;
+    padding-bottom: 70px;
+    /* this needs to be bigger than footer height*/
+}
+
+.footer {
+    position: relative;
+    margin-top: -70px;
+    /* negative value of footer height */
+    height: 70px;
+    clear: both;
+    padding-top: 20px;
+}
+
+#results {
+    width: 100%;
+    border: thin solid black;
+    margin-top: 5px;
+}
+
+#search-form {
+    margin: 10px;
+}
+
+#button-row {
+    margin: 10px;
+}
+
+.navbar {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#records_per_page {
+    border: 2px solid transparent;
+    border-radius: 2px;
+}
+
+#records_per_page:hover {
+    border: 2px solid #60B1A7;
+}
+
+.vertical-separator {
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #60B1A7;
+}
