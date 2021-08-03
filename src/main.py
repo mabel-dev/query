@@ -59,11 +59,21 @@ def do_search(search: SearchModel):
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+def find_path(path):
+    import glob
+    paths = glob.iglob(f"/**/{path}")
+    for i in paths:
+        if i.endswith(path):
+            return i
+
+base_path = find_path('src/')
+print(base_path)
+
 # set up API interface
 application = FastAPI()
-templates = Jinja2Templates(directory="src/templates")
-application.mount("/dist", StaticFiles(directory="src/static/dist"), name="static/dist")
-application.mount("/plugins", StaticFiles(directory="src/static/plugins"), name="static/plugins")
+templates = Jinja2Templates(directory=f"{base_path}templates")
+application.mount("/dist", StaticFiles(directory=f"{base_path}static/dist"), name="static/dist")
+application.mount("/plugins", StaticFiles(directory=f"{base_path}static/plugins"), name="static/plugins")
 
 @application.post("/v1/search", response_class=UJSONResponse)
 def handle_start_request(request: SearchModel):
