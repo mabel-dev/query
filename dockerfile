@@ -3,6 +3,9 @@ FROM python:3.7
 RUN mkdir /app
 WORKDIR /app
 ADD . /app/
+
+ADD src /src
+
 RUN pip install -r requirements.txt
 
 RUN useradd --create-home chucknorris
