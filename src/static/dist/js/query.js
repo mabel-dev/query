@@ -1,7 +1,9 @@
-_records_per_page = 10
-_page_number = 1
-_query = ""
-
+var _records_per_page = document.getElementById("records_per_page").value;
+var _query = ""
+var _records = "Many"
+var _cursors = []
+var _history = []
+var _page_number = 0
 
 function get_columns(data) {
     if (data.columns === undefined) {
@@ -13,38 +15,6 @@ function get_columns(data) {
     }
     return data.columns
 }
-
-function fetch_data() {
-
-    ticker_start = Date.now()
-
-    function do_ticker() {
-        document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
-    }
-    interval_obj = setInterval(function() { do_ticker() }, 50);
-
-    var url = '/v1/search'
-    data = {}
-    data.query = document.getElementById('query').innerText
-    data.start_date = document.getElementById('start_date').value
-    data.end_date = document.getElementById('end_date').value
-    data.page_size = document.getElementById('records_per_page').value
-
-    console.log(JSON.stringify(data))
-
-    var timer = performance.now();
-    fetch(url, { method: "POST", body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
-        .then((res) => res.json())
-        .then(output => {
-            clearInterval(interval_obj);
-            var response = output;
-            console.log(response)
-            response.columns = get_columns(response.results[0]);
-            //  document.getElementById('clock').innerText = parseInt(performance.now() - timer) / 1000;
-            document.getElementById('data-table-wrapper').innerHTML = renderTable(response, 0)
-        });
-}
-
 
 function update_period() {
     var selected_value = document.getElementById('period').value;
@@ -85,7 +55,7 @@ function execute() {
     function do_ticker() {
         document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
     }
-    interval_obj = setInterval(function() { do_ticker() }, 50);
+    interval_obj = setInterval(function() { do_ticker() }, 250);
 
     var url = '/v1/search'
     data = {}
@@ -107,6 +77,8 @@ function execute() {
             response.columns = get_columns(response.results[0]);
             document.getElementById('data-table-wrapper').innerHTML = renderTable(response, 0)
 
+            document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(2)
+
             // if there is a cursor - set the attribute on the cursor
             document.getElementById('page-back').disabled = (_page_number == 1)
             document.getElementById('page-forward').disabled = isEmptyObject(response.cursor)
@@ -124,13 +96,14 @@ function execute() {
                 max_record = _records
             }
             document.getElementById('record_counter').innerText =
-                (_page_number - 1) * _records_per_page + " to " + max_record + " of " + _records
+                (_page_number - 1) * _records_per_page + " - " + max_record + " of " + _records
 
         });
 }
 
 function run_query() {
     _query = document.getElementById("query").innerText;
+    _history.push(_query)
     _records = "Many"
     _cursors = []
     _cursors[0] = ""
