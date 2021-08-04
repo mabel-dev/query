@@ -79,7 +79,7 @@ function execute() {
             var response = output;
             console.log(response)
             response.columns = get_columns(response.results[0]);
-            document.getElementById('data-table-wrapper').innerHTML = renderTable(response, 0)
+            document.getElementById('data-table-wrapper').innerHTML = renderTable(response, (_page_number - 1) * _records_per_page + 1)
 
             document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(2)
 
@@ -102,9 +102,6 @@ function execute() {
             document.getElementById('record_counter').innerText =
                 (_page_number - 1) * _records_per_page + " - " + max_record + " of " + _records
 
-        }).catch(function() {
-            clearInterval(_interval_obj);
-            document.getElementById("data-table-wrapper").innerHTML = "<p>ERROR</p>"
         })
 }
 

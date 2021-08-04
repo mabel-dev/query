@@ -1,4 +1,4 @@
-const timestampFormat = "DD MMM YYYY HH:mm"
+const timestampFormat = "YYYY-MM-DD HH:mm"
 
 document.getElementById('start_date').valueAsDate = new Date();
 document.getElementById('end_date').valueAsDate = new Date();
@@ -18,27 +18,28 @@ function is_date(sDate) {
     return (tryDate && tryDate.toString() != "NaN" && tryDate != "Invalid Date" && m.isValid());
 }
 
-function renderTable(data, page) {
-    var page_size = 100
+function zeroPad(num, places) {
+    var zero = places - num.toString().length + 1;
+    return Array(+(zero > 0 && zero)).join("0") + num;
+}
+
+function renderTable(data, start_index) {
     var row_data = ''
     row_data += "<thead><tr>";
-    row_data += "<th scope='col'></th>";
+    row_data += "<th scope='col'>#</th>";
     for (var h = 0; h < data.columns.length; h++) {
         row_data += "<th>" + htmlEncode(data.columns[h]) + "<th>"
     }
     row_data += "</tr></thead><tbody>";
-    var max_rows = page_size;
-    if (data.results.length < max_rows) { max_rows = data.results.length; }
-    for (var i = 0; i < max_rows; i++) {
+    for (var i = 0; i < data.results.length; i++) {
         row_data += "<tr>";
-        row_data += "<th scope='row'>1</th>";
-        let index = i + (page * page_size);
+        row_data += "<th scope='row'>" + zeroPad(start_index + i, 2) + "</th>";
         for (var h = 0; h < data.columns.length; h++) {
-            var cell_value = data.results[index][data.columns[h]];
+            var cell_value = data.results[i][data.columns[h]];
             if (is_date(cell_value)) {
-                row_data += "<td>" + moment(data.results[index][data.columns[h]]).format(timestampFormat) + "<td>"
+                row_data += "<td>" + moment(data.results[i][data.columns[h]]).format(timestampFormat) + "<td>"
             } else {
-                row_data += "<td>" + htmlEncode(data.results[index][data.columns[h]]) + "<td>"
+                row_data += "<td>" + htmlEncode(data.results[i][data.columns[h]]) + "<td>"
             }
         }
         row_data += "</tr>";

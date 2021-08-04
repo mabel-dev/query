@@ -88,8 +88,8 @@
 }
 
 .data-table {
-    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
-    font-size: 0.9em;
+    font-family: 'Open Sans Condensed', 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-size: 1em;
     font-weight: 300;
     display: block;
 }
@@ -161,14 +161,21 @@ body {
     padding: .2rem .2rem;
 }
 
-td,
 tr {
     border-color: inherit;
     border-style: none;
     border-width: 0;
 }
 
+td {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .table {
+    width: 100%;
     --bs-table-bg: transparent;
     --bs-table-accent-bg: transparent;
     --bs-table-striped-color: #212529;

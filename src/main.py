@@ -41,8 +41,11 @@ def do_search(search: SearchModel):
         start_date = search.start_date,
         end_date = search.end_date,
         cursor = search.cursor,
-
         sql_statement=search.query,
+
+        #inner_reader = DiskReader,
+        #raw_path = True,
+
         project = os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader
@@ -73,6 +76,10 @@ def handle_start_request(request: SearchModel):
             "record_count": results.count()
             }
         return response
+    except Exception as err:
+        error_message = { "error": type(err).__name__, "detail": str(err) }
+        logger.error(error_message)
+        raise HTTPException(status_code=418, detail=error_message)
     except SystemExit as err:
         logger.alert(err)
         raise HTTPException(status_code=500, detail=err)
