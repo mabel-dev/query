@@ -29,7 +29,7 @@ class SearchModel(BaseModel):
     page_size: Optional[int] = 100
 
 
-from mabel.data.readers.internals.alpha_sql_reader import SqlReader
+from mabel.data.readers.internals.sql_reader import SqlReader
 from mabel.adapters.disk import DiskReader
 
 def do_search(search: SearchModel):
