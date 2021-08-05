@@ -72,11 +72,19 @@ function execute() {
     console.log(JSON.stringify(data))
 
     var timer = performance.now();
-    fetch(url, { method: "POST", body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
-        .then((res) => res.json())
-        .then(output => {
+
+
+    fetch(url, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => {
             clearInterval(_interval_obj);
-            var response = output;
+            if (response.ok) return response.json();
+            return response.text().then(response => { throw new Error(response) })
+        })
+        .then(response => {
             console.log(response)
             response.columns = get_columns(response.results[0]);
             document.getElementById('data-table-wrapper').innerHTML = renderTable(response, (_page_number - 1) * _records_per_page + 1)
@@ -101,8 +109,14 @@ function execute() {
             }
             document.getElementById('record_counter').innerText =
                 (_page_number - 1) * _records_per_page + " - " + max_record + " of " + _records
-
         })
+        .catch(error => {
+            console.log(error.message)
+            errorObject = JSON.parse(error.message).detail
+            document.getElementById("data-table-wrapper").innerHTML =
+                "<h1>" + errorObject.error + "</h1>" + errorObject.detail;
+        })
+
 }
 
 function run_query() {

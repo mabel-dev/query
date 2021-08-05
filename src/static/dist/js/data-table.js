@@ -35,11 +35,13 @@ function renderTable(data, start_index) {
         row_data += "<tr>";
         row_data += "<th scope='row'>" + zeroPad(start_index + i, 2) + "</th>";
         for (var h = 0; h < data.columns.length; h++) {
-            var cell_value = data.results[i][data.columns[h]];
-            if (is_date(cell_value)) {
-                row_data += "<td>" + moment(data.results[i][data.columns[h]]).format(timestampFormat) + "<td>"
+            var cellValue = htmlEncode(data.results[i][data.columns[h]])
+            if (is_date(cellValue)) {
+                row_data += "<td>" + moment(cellValue).format(timestampFormat) + "<td>"
+            } else if (cellValue.length > 16) {
+                row_data += "<td title='" + cellValue + "'>" + cellValue + "<td>"
             } else {
-                row_data += "<td>" + htmlEncode(data.results[i][data.columns[h]]) + "<td>"
+                row_data += "<td>" + cellValue + "<td>"
             }
         }
         row_data += "</tr>";
