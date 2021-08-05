@@ -43,8 +43,8 @@ def do_search(search: SearchModel):
         cursor = search.cursor,
         sql_statement=search.query,
 
-        inner_reader = DiskReader,
-        raw_path = True,
+        #inner_reader = DiskReader,
+        #raw_path = True,
 
         project = os.environ.get("PROJECT_NAME"),
     )
