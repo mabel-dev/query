@@ -1,7 +1,7 @@
       // Syntax highlight for JS
 
-      var keyword_reg = /\b(SELECT|FROM|WHERE)\b/gi;
-      var logical_reg = /\b(AND|OR|NOT|IN)\b/gi;
+      var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY)\b/gi;
+      var logical_reg = /\b(AND|OR|NOT|IN|LIKE|IS)\b/gi;
       var numbers_reg = /\b(\d+)\b/g;
       var literal_reg = /"([^\"]*)"/g
 
@@ -70,6 +70,7 @@
                   setCaret(pos);
               }
           });
+
       };
 
       // Turn div into an editor

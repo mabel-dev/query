@@ -6,6 +6,10 @@ var _history = []
 var _page_number = 0
 var _interval_obj = null
 
+var outcome
+
+const history_timestampFormat = "YYYY-MM-DD HH:mm:ss"
+
 function get_columns(data) {
     if (data.columns === undefined) {
         var columns = [];
@@ -71,9 +75,6 @@ function execute() {
 
     console.log(JSON.stringify(data))
 
-    var timer = performance.now();
-
-
     fetch(url, {
             method: "POST",
             body: JSON.stringify(data),
@@ -86,12 +87,19 @@ function execute() {
         })
         .then(response => {
             console.log(response)
+
+            if (response.results.length == 0) {
+                e = {}
+                e.error = "No Records Found"
+                e.detail = "The query appears to be valid, but it matched no records"
+                wrapper = {}
+                wrapper.detail = e
+                throw new Error(JSON.stringify(wrapper))
+            }
             response.columns = get_columns(response.results[0]);
             document.getElementById('data-table-wrapper').innerHTML = renderTable(response, (_page_number - 1) * _records_per_page + 1)
 
             document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(2)
-
-            // if there is a cursor - set the attribute on the cursor
             document.getElementById('page-back').disabled = (_page_number == 1)
             document.getElementById('page-forward').disabled = isEmptyObject(response.cursor)
 
@@ -109,23 +117,72 @@ function execute() {
             }
             document.getElementById('record_counter').innerText =
                 (_page_number - 1) * _records_per_page + " - " + max_record + " of " + _records
+
+            update_history(_query, true);
         })
         .catch(error => {
             console.log(error.message)
             errorObject = JSON.parse(error.message).detail
             document.getElementById("data-table-wrapper").innerHTML =
-                "<h1>" + errorObject.error + "</h1>" + errorObject.detail;
+                "<p><strong>" + errorObject.error + "</strong></p>" + errorObject.detail;
+
+            update_history(_query, false);
         })
 
 }
 
+function update_history(query, query_outcome) {
+
+    if (query) {
+        index = -1
+        for (var i = 0; i < _history.length; i++) {
+            if (_history[i].query == query) {
+                index = i
+            }
+        }
+        if (index > -1) {
+            _history.splice(index, 1);
+        }
+
+        history_object = {};
+        history_object.query = query;
+        history_object.last_run = Date.now();
+        history_object.outcome = query_outcome;
+
+        _history.push(history_object);
+    }
+
+
+    history_table = "<thead><tr><th></th><th>Query</th><th>Last Run</th><th></th></tr></thead>"
+    history_table += "<tbody>"
+    for (var i = 0; i < _history.length; i++) {
+        entry = "<tr>"
+        if (_history[i].outcome) {
+            entry += "<td><span class='badge success mono-font'>okay</span></td>"
+        } else {
+            entry += "<td><span class='badge fail mono-font'>fail</span></td>"
+        }
+        entry += "<td class='align-middle trim'>" + _history[i].query + "</td>"
+        entry += "<td class='align-middle'>" + moment(_history[i].last_run).format(history_timestampFormat) + "</td>"
+        entry += "<td>"
+        entry += '<button type="button" id="redo-' + i + '" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>'
+        entry += '<button type="button" id="del-' + i + '" class="btn btn-sm button-query-white" title="Remove Query from History"><i class="fas fa-trash-alt"></i></button>'
+        entry += "</td>"
+        entry += "</tr>"
+        history_table = entry + history_table
+    }
+    history_table += "</tbody>"
+    document.getElementById("history").innerHTML = "<table class='table table-sm history-table table-responsive'>" + history_table + "</table>"
+}
+
+
 function run_query() {
     _query = document.getElementById("query").innerText;
-    _history.push(_query)
     _records = "Many"
     _cursors = []
     _cursors[0] = ""
     _page_number = 1
+
     execute();
 }
 
@@ -149,8 +206,28 @@ function page_back() {
     execute();
 }
 
+function history_button_click(e) {
+    if (e.id.startsWith('redo-')) {
+        index = e.id.replace(/^redo-/, "");
+        document.getElementById("query").innerHTML = _history[index].query;
+        document.getElementById("query").dispatchEvent(new Event('change'));
+
+    } else if (e.id.startsWith('del-')) {
+        index = e.id.replace(/^del-/, "");
+        _history.splice(index, 1);
+        update_history();
+
+    } else {
+        if (e.parentElement) {
+            history_button_click(e.parentElement)
+        }
+    }
+}
 
 document.getElementById('run').addEventListener('click', run_query, false);
 document.getElementById('records_per_page').addEventListener('change', set_records_per_page, false);
 document.getElementById('page-forward').addEventListener('click', page_forward, false);
 document.getElementById('page-back').addEventListener('click', page_back, false)
+document.getElementById("history").addEventListener('click', function(e) {
+    history_button_click(e.target)
+});

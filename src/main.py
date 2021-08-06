@@ -43,8 +43,8 @@ def do_search(search: SearchModel):
         cursor = search.cursor,
         sql_statement=search.query,
 
-        #inner_reader = DiskReader,
-        #raw_path = True,
+        inner_reader = DiskReader,
+        raw_path = True,
 
         project = os.environ.get("PROJECT_NAME"),
     )
@@ -88,6 +88,10 @@ def handle_start_request(request: SearchModel):
 @application.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@application.get("/help.html", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse("help.html", {"request": request})
 
 # tell the server to start
 if __name__ == "__main__":

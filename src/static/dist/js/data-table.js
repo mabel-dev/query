@@ -26,14 +26,14 @@ function zeroPad(num, places) {
 function renderTable(data, start_index) {
     var row_data = ''
     row_data += "<thead><tr>";
-    row_data += "<th scope='col'>#</th>";
+    row_data += "<th scope='col' class='mono-font'>#</th>";
     for (var h = 0; h < data.columns.length; h++) {
         row_data += "<th>" + htmlEncode(data.columns[h]) + "<th>"
     }
     row_data += "</tr></thead><tbody>";
     for (var i = 0; i < data.results.length; i++) {
         row_data += "<tr>";
-        row_data += "<th scope='row'>" + zeroPad(start_index + i, 2) + "</th>";
+        row_data += "<th scope='row' class='mono-font'>" + zeroPad(start_index + i, 2) + "</th>";
         for (var h = 0; h < data.columns.length; h++) {
             var cellValue = htmlEncode(data.results[i][data.columns[h]])
             if (is_date(cellValue)) {
@@ -48,5 +48,5 @@ function renderTable(data, start_index) {
     }
     row_data += "</tbody>"
 
-    return "<table class='table table-striped table-sm data-table table-responsive'>" + row_data + "</table>";
+    return "<table class='table table-striped table-sm results-table table-responsive'>" + row_data + "</table>";
 }

@@ -1,3 +1,11 @@
+/* 
+    base_green: 60B1A7
+
+    red: FF3F3E
+    green: 179439
+    blue: 0079D6
+*/
+
 .editor {
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
     font-size: 16px;
@@ -87,7 +95,7 @@
     color: #60B1A7;
 }
 
-.data-table {
+.results-table {
     font-family: 'Open Sans Condensed', 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-size: 1em;
     font-weight: 300;
@@ -120,8 +128,7 @@ body {
 
 #results {
     width: 100%;
-    border: thin solid black;
-    margin-top: 5px;
+    border: 0px;
 }
 
 #search-form {
@@ -146,6 +153,15 @@ body {
     border: 2px solid #60B1A7;
 }
 
+.nav-link {
+    color: #60B1A7;
+}
+
+.nav-link:hover {
+    color: white;
+    background-color: #60B1A7;
+}
+
 .vertical-separator {
     padding-left: 10px;
     padding-right: 10px;
@@ -167,7 +183,7 @@ tr {
     border-width: 0;
 }
 
-td {
+.results-table>*>*>td {
     max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -184,4 +200,25 @@ td {
     --bs-table-active-bg: rgba(0, 0, 0, 0.1);
     --bs-table-hover-color: #212529;
     --bs-table-hover-bg: rgba(96, 177, 167, 0.25);
+}
+
+.mono-font {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+}
+
+.fail {
+    background-color: #FF3F3E;
+    color: white;
+}
+
+.success {
+    background-color: #179439;
+    color: white;
+}
+
+.trim {
+    max-width: 700px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

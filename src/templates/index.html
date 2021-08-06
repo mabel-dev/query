@@ -38,7 +38,7 @@
                     <div class="collapse navbar-collapse" id="navbarText">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="fas fa-question"></i> Help</a>
+                                <a class="nav-link" href="help.html"><i class="fas fa-question"></i> Help</a>
                             </li>
                         </ul>
                     </div>
@@ -90,28 +90,31 @@
 
             <div class="container">
                 <div class="row" id="button-row">
-                    <div class="col-sm-4">
-                        <span id="clock">-</span>
+                    <div class="col-sm-6">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false"><i class="fas fa-th-list"></i> Results</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false"><i class="fas fa-history"></i> History</button>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         <div class="d-flex justify-content-end">
-                            <div class="btn-group" role="group">
-                                <button id="history" type="button" class="btn btn-fixed-width btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-history"></i> History
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="history">
-                                    <a class="dropdown-item" href="#">Dropdown link</a>
-                                </div>
-                            </div>
                             <button type="button" class="btn-fixed-width btn btn-action" id="run">
                                 <i class="fas fa-sync-alt"></i> Run
                             </button>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
+                        <span id="clock" class="btn">-</span>
+                    </div>
+                    <div class="col-sm-2">
                         <div class="d-flex justify-content-end">
-                            <button type="button" class="btn-fixed-width btn btn-outline-secondary"><i
+                            <!-- <button type="button" class="btn-fixed-width btn btn-outline-secondary"><i
                                     class="fas fa-cloud-download-alt"></i> Download</button>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -119,14 +122,21 @@
 
             <div class="container">
                 <div class="row">
-                    <div id="data-table-wrapper"></div>
+
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="results" role="tabpanel" aria-labelledby="results-tab">
+                            <div id="data-table-wrapper"></div>
+                        </div>
+                        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                            No Queries Have been Run
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            </section>
-
         </div>
-    </div>
+
     </div>
 
     <footer class="footer">
@@ -157,7 +167,7 @@
     </footer>
 
     <script src="plugins/jquery/jquery.min.js"></script>
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="plugins/moment/js/moment.js"></script>
     <script src="dist/js/code-editor.js"></script>
     <script src="dist/js/query.js"></script>
