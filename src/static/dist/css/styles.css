@@ -204,6 +204,7 @@ tr {
 
 .mono-font {
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-size: 0.9em;
 }
 
 .fail {

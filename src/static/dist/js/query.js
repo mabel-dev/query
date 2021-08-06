@@ -227,7 +227,8 @@ function history_button_click(e) {
 document.getElementById('run').addEventListener('click', run_query, false);
 document.getElementById('records_per_page').addEventListener('change', set_records_per_page, false);
 document.getElementById('page-forward').addEventListener('click', page_forward, false);
-document.getElementById('page-back').addEventListener('click', page_back, false)
+document.getElementById('page-back').addEventListener('click', page_back, false);
 document.getElementById("history").addEventListener('click', function(e) {
     history_button_click(e.target)
 });
+document.getElementById("period").addEventListener('change', update_period, false);
