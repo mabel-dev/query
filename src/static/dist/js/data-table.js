@@ -26,22 +26,21 @@ function zeroPad(num, places) {
 function renderTable(data, start_index) {
     var row_data = ''
     row_data += "<thead><tr>";
-    row_data += "<th scope='col' class='mono-font'>#</th>";
+    row_data += '<th scope="col" class="mono-font">#</th>';
     for (var h = 0; h < data.columns.length; h++) {
-        row_data += "<th>" + htmlEncode(data.columns[h]) + "<th>"
+        row_data += `<th>${htmlEncode(data.columns[h])}<th>`
     }
     row_data += "</tr></thead><tbody>";
     for (var i = 0; i < data.results.length; i++) {
-        row_data += "<tr>";
-        row_data += "<th scope='row' class='mono-font align-middle'>" + zeroPad(start_index + i, 2) + "</th>";
+        row_data += `<tr><th scope="row" class="mono-font align-middle">${zeroPad(start_index + i, 2)}</th>`;
         for (var h = 0; h < data.columns.length; h++) {
             var cellValue = htmlEncode(data.results[i][data.columns[h]])
             if (is_date(cellValue)) {
-                row_data += "<td>" + moment(cellValue).format(timestampFormat) + "<td>"
+                row_data += `<td>${moment(cellValue).format(timestampFormat)}<td>`
             } else if (cellValue.length > 16) {
-                row_data += "<td title='" + cellValue + "'>" + cellValue + "<td>"
+                row_data += `<td title="${cellValue}">${cellValue}<td>`
             } else {
-                row_data += "<td>" + cellValue + "<td>"
+                row_data += `<td>${cellValue}<td>`
             }
         }
         row_data += "</tr>";

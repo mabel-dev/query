@@ -116,7 +116,7 @@ function execute() {
                 max_record = _records
             }
             document.getElementById('record_counter').innerText =
-                (_page_number - 1) * _records_per_page + " - " + max_record + " of " + _records
+                ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
             update_history(_query, true);
         })
@@ -156,19 +156,23 @@ function update_history(query, query_outcome) {
     history_table = "<thead><tr><th></th><th>Query</th><th>Last Run</th><th></th></tr></thead>"
     history_table += "<tbody>"
     for (var i = 0; i < _history.length; i++) {
-        entry = "<tr>"
+
+        let status = '<span class="badge fail mono-font">fail</span>'
         if (_history[i].outcome) {
-            entry += "<td><span class='badge success mono-font'>okay</span></td>"
-        } else {
-            entry += "<td><span class='badge fail mono-font'>fail</span></td>"
+            status = '<span class="badge success mono-font">okay</span>'
         }
-        entry += "<td class='align-middle trim'>" + _history[i].query + "</td>"
-        entry += "<td class='align-middle'>" + moment(_history[i].last_run).format(history_timestampFormat) + "</td>"
-        entry += "<td>"
-        entry += '<button type="button" id="redo-' + i + '" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>'
-        entry += '<button type="button" id="del-' + i + '" class="btn btn-sm button-query-white" title="Remove Query from History"><i class="fas fa-trash-alt"></i></button>'
-        entry += "</td>"
-        entry += "</tr>"
+
+        entry = `
+        <tr>
+            <td>${status}</td>
+            <td class="align-middle trim">${_history[i].query}</td>
+            <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
+            <td>
+                <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
+                <button type="button" id="del-${i}" class="btn btn-sm button-query-white" title="Remove Query from History"><i class="fas fa-trash-alt"></i></button>
+            </td>
+        </tr>
+        `
         history_table = entry + history_table
     }
     history_table += "</tbody>"

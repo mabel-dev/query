@@ -6,7 +6,6 @@ from typing import Optional, Union, List, Any
 from fastapi.responses import UJSONResponse, HTMLResponse
 from fastapi import FastAPI, HTTPException, Request
 import os
-from mabel.data.readers import STORAGE_CLASS
 import uvicorn
 from mabel.logging import get_logger, set_log_name
 
@@ -16,11 +15,6 @@ logger = get_logger()
 import datetime
 from pydantic import BaseModel
 
-
-class FilterModel(BaseModel):
-    field: str
-    operator: str
-    value: Any
 
 
 class SearchModel(BaseModel):
@@ -39,7 +33,7 @@ from mabel.adapters.disk import DiskReader
 
 def do_search(search: SearchModel):
 
-    search.page_size = min(1000, search.page_size)
+    search.page_size = min(100000, search.page_size)
     search.page_size = max(1, search.page_size)
 
     sql_reader = SqlReader(
@@ -96,8 +90,6 @@ def handle_start_request(request: SearchModel):
 
 
 from fastapi.responses import StreamingResponse
-import io
-import orjson
 from mabel import DictSet
 
 def join_lists(list_a, list_b):
