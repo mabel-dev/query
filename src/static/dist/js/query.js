@@ -186,6 +186,30 @@ function run_query() {
     execute();
 }
 
+function download_query() {
+    query = document.getElementById('query').innerText
+    start_date = document.getElementById('start_date').value
+    end_date = document.getElementById('end_date').value
+
+    var url = '/download/' + start_date + '/' + end_date + '/' + query
+
+    console.log(url)
+
+    const authHeader = "Bearer 6Q************"
+
+    const options = {
+        headers: {
+            //  Authorization: authHeader
+        }
+    };
+    fetch(url, options)
+        .then(res => res.blob())
+        .then(blob => {
+            var file = window.URL.createObjectURL(blob);
+            window.location.assign(file);
+        });
+}
+
 function set_records_per_page() {
     _records_per_page = document.getElementById("records_per_page").value;
     _page_number = 1;
@@ -225,6 +249,7 @@ function history_button_click(e) {
 }
 
 document.getElementById('run').addEventListener('click', run_query, false);
+document.getElementById('download').addEventListener('click', download_query, false);
 document.getElementById('records_per_page').addEventListener('change', set_records_per_page, false);
 document.getElementById('page-forward').addEventListener('click', page_forward, false);
 document.getElementById('page-back').addEventListener('click', page_back, false);
