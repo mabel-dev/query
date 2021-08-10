@@ -12,9 +12,11 @@
     <link href="dist/fonts/JetBrains Mono/font.css" rel="stylesheet" />
     <link href="dist/fonts/Pacifico/font.css" rel="stylesheet" />
     <link href="dist/fonts/Roboto Condensed/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Roboto/font.css" rel="stylesheet" />
     <link href="dist/fonts/Open Sans Condensed/font.css" rel="stylesheet" />
 
     <link href="dist/css/styles.css" rel="stylesheet" />
+    <link href="dist/css/nav.css" rel="stylesheet" />
 
     <link rel="icon" type="image/png" href="dist/img/q-logo.png">
 
@@ -25,21 +27,59 @@
     <div id="wrap">
         <div id="main">
 
-            <div class="container">
-                <nav class="navbar navbar-light bg-light">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="/">
-                            <div class="brand-text">Query</div>
+            <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                    <span class="fs-4">Sidebar</span>
+                </a>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" aria-current="page">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg> Home
                         </a>
-                        <div class="d-flex">
-                            <a class="nav-link" href="help.html"><i class="fas fa-question"></i> Help</a>
-                        </div>
-                    </div>
-                </nav>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-dark">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-dark">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg> Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-dark">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg> Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link link-dark">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg> Customers
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong>mdo</strong>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
             </div>
 
-            <div class="container">
 
+            <div>
                 <form onsubmit="return false" id="search-form">
                     <div class="form-group row">
                         <div class="col-sm-8">
@@ -53,10 +93,10 @@
 
                             <div class="input-group">
                                 <select class="form-select col-2" id="period" size="1">
-                                    <option value='today' selected>Today</option>
-                                    <option value='yesterday' select>Yesterday</option>
-                                    <option value="t-30">Last 30 days</option>
-                                </select>
+                                        <option value='today' selected>Today</option>
+                                        <option value='yesterday' select>Yesterday</option>
+                                        <option value="t-30">Last 30 days</option>
+                                    </select>
                             </div>
                             <div><br /></div>
                             <div class="row" id="custom-date-range">
@@ -79,55 +119,50 @@
                 </form>
             </div>
 
-            <div class="container">
-                <div class="row" id="button-row">
-                    <div class="col-sm-6">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false"><i class="fas fa-th-list"></i> Results</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false"><i class="fas fa-history"></i> History</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn-fixed-width btn btn-action" id="run">
-                                <i class="fas fa-sync-alt"></i> Run
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-sm-1">
-                        <span id="clock" class="btn">-</span>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn-fixed-width btn btn-outline-secondary" id="download">
-                                <i class="fas fa-cloud-download-alt"></i> Download
-                            </button>
-                        </div>
+            <div class="row" id="button-row">
+                <div class="col-sm-6">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false"><i class="fas fa-th-list"></i> Results</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false"><i class="fas fa-history"></i> History</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-2">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn-fixed-width btn btn-action" id="run">
+                                    <i class="fas fa-sync-alt"></i> Run
+                                </button>
                     </div>
                 </div>
-            </div>
-
-            <div class="container">
-                <div class="row">
-
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="results" role="tabpanel" aria-labelledby="results-tab">
-                            <div id="data-table-wrapper"></div>
-                        </div>
-                        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-                            No Queries Have been Run
-                        </div>
-                    </div>
-
+                <div class="col-sm-1">
+                    <span id="clock" class="btn">-</span>
                 </div>
+                <div class="col-sm-3">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn-fixed-width btn btn-outline-secondary" id="download">
+                                    <i class="fas fa-cloud-download-alt"></i> Download
+                                </button>
+                    </div>
+                </div>
+
             </div>
 
+            <div class="row">
+
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="results" role="tabpanel" aria-labelledby="results-tab">
+                        <div id="data-table-wrapper"></div>
+                    </div>
+                    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+                        No Queries Have been Run
+                    </div>
+                </div>
+
+            </div>
         </div>
-
     </div>
 
     <footer class="footer">

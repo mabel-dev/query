@@ -1,9 +1,10 @@
       // Syntax highlight for JS
 
-      var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY)\b/gi;
+      var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY|HAVING|LIMIT|ORDER BY)\b/gi;
       var logical_reg = /\b(AND|OR|NOT|IN|LIKE|IS)\b/gi;
       var numbers_reg = /\b(\d+)\b/g;
-      var literal_reg = /"([^\"]*)"/g
+      var literal_reg = /"([^\"]*)"/g;
+      var function_reg = /\b(COUNT|SUM|MAX|MIN|AVG)\b/gi;
 
       const js = el => {
           for (const node of el.children) {
@@ -12,6 +13,7 @@
               s = s.replace(logical_reg, "<span class='code-logical'>$1</span>");
               s = s.replace(literal_reg, "\"<span class='code-literal'>$1</span>\"");
               s = s.replace(numbers_reg, "<span class='code-numbers'>$1</span>");
+              s = s.replace(function_reg, "<span class='code-function'>$1</span>");
               node.innerHTML = s.split('\n').join('<br/>');
           }
       };
@@ -74,6 +76,6 @@
       };
 
       // Turn div into an editor
-      const el = document.querySelector('.editor');
+      const el = document.querySelector('#sql-editor');
       el.focus();
       editor(el);

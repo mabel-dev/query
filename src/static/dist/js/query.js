@@ -181,7 +181,7 @@ function update_history(query, query_outcome) {
 
 
 function run_query() {
-    _query = document.getElementById("query").innerText;
+    _query = document.getElementById("sql-editor").innerText;
     _records = "Many"
     _cursors = []
     _cursors[0] = ""
