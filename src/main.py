@@ -2,6 +2,12 @@
 Search Backend
 
 """
+import os
+import sys
+
+sys.path.insert(0, os.path.join(sys.path[0], "../../mabel/"))
+
+
 from typing import Optional, Union, List, Any
 from fastapi.responses import UJSONResponse, HTMLResponse
 from fastapi import FastAPI, HTTPException, Request
@@ -41,8 +47,8 @@ def do_search(search: SearchModel):
         end_date=search.end_date,
         cursor=search.cursor,
         sql_statement=search.query,
-        #inner_reader=DiskReader,
-        #raw_path=True,
+        inner_reader=DiskReader,
+        raw_path=True,
         project=os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader

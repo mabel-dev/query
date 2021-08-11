@@ -119,6 +119,7 @@ function execute() {
                 ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
             update_history(_query, true);
+            update_visualization(_query, response)
         })
         .catch(error => {
             console.log(error.message)
@@ -181,7 +182,7 @@ function update_history(query, query_outcome) {
 
 
 function run_query() {
-    _query = document.getElementById("query").innerText;
+    _query = document.getElementById("sql-editor").innerText;
     _records = "Many"
     _cursors = []
     _cursors[0] = ""

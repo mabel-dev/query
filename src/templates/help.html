@@ -1,62 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Query</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+    <title>Query</title>
+    <link rel="icon" type="image/png" href="dist/img/q-logo.png">
 
     <link href="dist/fonts/JetBrains Mono/font.css" rel="stylesheet" />
     <link href="dist/fonts/Pacifico/font.css" rel="stylesheet" />
     <link href="dist/fonts/Roboto Condensed/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Roboto/font.css" rel="stylesheet" />
     <link href="dist/fonts/Open Sans Condensed/font.css" rel="stylesheet" />
 
-    <link href="dist/css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
 
-    <link rel="icon" type="image/png" href="dist/img/q-logo.png">
-
+    <link rel="stylesheet" href="dist/css/styles.css">
+    <link rel="stylesheet" href="dist/css/nav.css">
 </head>
 
 <body>
 
-    <div id="wrap">
-        <div id="main">
+    <div class="wrapper">
 
-            <div class="container">
-                <nav class="navbar navbar-light bg-light">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="/">
-                            <div class="brand-text">Query</div>
-                        </a>
-                        <div class="d-flex">
-                            <a class="nav-link" href="help.html"><i class="fas fa-question"></i> Help</a>
-                        </div>
-                    </div>
-                </nav>
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <span class="brand-text">Query</span>
             </div>
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="/">SQL Lab</a>
+                </li>
+                <li class="active">
+                    <a href="/help.html">Help</a>
+                </li>
+            </ul>
 
+        </nav>
 
-            <div class="container">
-                <h3>Query</h3>
+        <div id="content">
 
+            <nav id="top-navbar" class="navbar navbar-expand-lg">
+                <button type="button" id="sidebarCollapse" class="btn button-query-white">
+                        <i class="fas fa-bars"></i>
+                </button>
+            </nav>
 
+            <section id="main">
+                <h1>Help</h1>
+                <h2>SQL Lab</h2>
+                <h3>Query Editor</h3>
+                <p></p>
+                <h3>Download</h3>
+                <p></p>
+                <h3>Results</h3>
+                <p></p>
+                <h3>History</h3>
+                <p></p>
+                <h3>Visualize</h3>
+                <p></p>
+            </section>
 
-            </div>
+            <footer id="footer">
+                <div class="d-flex justify-content-end">
+
+                </div>
+            </footer>
+
         </div>
     </div>
 
-
-
     <script src="plugins/jquery/jquery.min.js"></script>
-    <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="plugins/popper/js/popper.min.js"></script>
+    <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="plugins/moment/js/moment.js"></script>
+    <script src="plugins/chart.js/js/chart.min.js"></script>
+    <script src="plugins/custom-scrollbar/js/custom-scrollbar.js"></script>
+
     <script src="dist/js/code-editor.js"></script>
     <script src="dist/js/query.js"></script>
     <script src="dist/js/data-table.js"></script>
+    <script src="dist/js/visualize.js"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar, #content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
 </body>
 
 </html>
