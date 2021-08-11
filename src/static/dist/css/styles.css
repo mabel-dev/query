@@ -1,15 +1,14 @@
 :root {
     --base-green-color: #60B1A7;
     --base-purple-color: #6D7FCC;
+    /* https://spectrum.adobe.com/page/color/  */
+    --theme-color-red: #e34850;
+    --theme-color-blue: #2680eb;
+    --theme-color-green: #2d9d78;
+    --theme-color-orange: #e68619;
+    --theme-color-yellow: #dfbf00;
+    --theme-color-purple: #6767ec;
 }
-
-
-/* 
-
-    red: FF3F3E
-    green: 179439
-    blue: 0079D6
-*/
 
 #sql-editor {
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
@@ -217,12 +216,12 @@ tr {
 }
 
 .fail {
-    background-color: #FF3F3E;
+    background-color: var(--theme-color-red);
     color: white;
 }
 
 .success {
-    background-color: #179439;
+    background-color: var(--theme-color-green);
     color: white;
 }
 
@@ -250,4 +249,8 @@ tr {
 .results-table>*>tr:hover {
     background-color: var(--base-green-color);
     color: white;
+}
+
+#visualize {
+    height: calc(100vh - 280px);
 }

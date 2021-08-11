@@ -119,6 +119,7 @@ function execute() {
                 ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
             update_history(_query, true);
+            update_visualization(_query, response)
         })
         .catch(error => {
             console.log(error.message)
