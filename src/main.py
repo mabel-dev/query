@@ -22,7 +22,6 @@ import datetime
 from pydantic import BaseModel
 
 
-
 class SearchModel(BaseModel):
     start_date: Optional[
         Union[datetime.datetime, datetime.date]
@@ -47,8 +46,8 @@ def do_search(search: SearchModel):
         end_date=search.end_date,
         cursor=search.cursor,
         sql_statement=search.query,
-        #inner_reader=DiskReader,
-        #raw_path=True,
+        # inner_reader=DiskReader,
+        # raw_path=True,
         project=os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader
@@ -98,21 +97,20 @@ def handle_start_request(request: SearchModel):
 from fastapi.responses import StreamingResponse
 from mabel import DictSet
 
+
 def join_lists(list_a, list_b):
     yield from list_a
     yield from list_b
 
+
 from internals.csv_writer import csv_set
+
 
 @application.get("/download/{start_date}/{end_date}/{query}")
 def download_results(start_date: datetime.date, end_date: datetime.date, query: str):
 
     try:
-        request = SearchModel(
-            start_date = start_date,
-            end_date = end_date,
-            query = query
-        )
+        request = SearchModel(start_date=start_date, end_date=end_date, query=query)
         results = do_search(request)
 
         # this allows us to get the columns from the first 10 records
@@ -122,7 +120,9 @@ def download_results(start_date: datetime.date, end_date: datetime.date, query: 
         # add the records back
         back_together = join_lists(head_results, results)
 
-        response = StreamingResponse(csv_set(back_together, columns), media_type="text/csv")
+        response = StreamingResponse(
+            csv_set(back_together, columns), media_type="text/csv"
+        )
         response.headers["Content-Disposition"] = "attachment; filename=export.csv"
 
         return response
