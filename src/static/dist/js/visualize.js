@@ -77,10 +77,22 @@ function update_visualization(query, results) {
             group_column = results.columns[i]
         }
     }
-    if (count_column && group_column) {
+
+    console.log(results.columns)
+    console.log(count_column)
+    console.log(group_column)
+
+    // if we're counting groups of things, draw a pie-chart
+    if ((count_column !== undefined) && (group_column !== undefined)) {
         document.getElementById("visualize").innerHTML = '<canvas id="visualization"></canvas>'
         draw_pie(count_column, group_column, results)
-    } else {
+    }
+    // if we're just counting everything, show a single value
+    else if ((count_column !== undefined) && (group_column === undefined)) {
+        document.getElementById("visualize").innerText = results.results[0][count_column]
+    }
+    // we don't have a auto chart for that yet
+    else {
         document.getElementById("visualize").innerText = "Cannot Automatically Determine Chart"
     }
 

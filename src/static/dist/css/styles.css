@@ -1,6 +1,7 @@
 :root {
-    --base-green-color: #60B1A7;
-    --base-purple-color: #6D7FCC;
+    --base-green-color: #24718B;
+    --base-purple-color: #500472;
+    --base-green-color-highlight: #3097ba;
     /* https://spectrum.adobe.com/page/color/  */
     --theme-color-red: #e34850;
     --theme-color-blue: #2680eb;
@@ -56,6 +57,11 @@
 .btn-action {
     background-color: var(--base-green-color);
     color: white
+}
+
+.btn-action:hover {
+    background-color: var(--base-green-color-highlight);
+    color: white;
 }
 
 .btn-outline-secondary {
@@ -201,14 +207,10 @@ tr {
 
 .table {
     width: 100%;
+    border: transparent;
     --bs-table-bg: transparent;
     --bs-table-accent-bg: transparent;
-    --bs-table-striped-color: #212529;
-    --bs-table-striped-bg: rgba(96, 177, 167, 0.1);
-    --bs-table-active-color: #212529;
-    --bs-table-active-bg: rgba(0, 0, 0, 0.1);
-    --bs-table-hover-color: #212529;
-    --bs-table-hover-bg: rgba(96, 177, 167, 0.25);
+    --bs-table-striped-bg: rgba(48, 151, 186, 0.1);
 }
 
 .mono-font {
@@ -247,10 +249,21 @@ tr {
 }
 
 .results-table>*>tr:hover {
-    background-color: var(--base-green-color);
-    color: white;
+    background-color: var(--base-green-color-highlight);
+    color: white !important;
 }
 
 #visualize {
     height: calc(100vh - 280px);
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #fff;
+    border-color: var(--base-green-color) var(--base-green-color) white;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid var(--base-green-color);
 }
