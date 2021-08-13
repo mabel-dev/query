@@ -17,7 +17,7 @@
     left: 0;
     height: 100vh;
     z-index: 999;
-    background: #60B1A7;
+    background: var(--base-green-color);
     color: #fff;
     transition: all 0.3s;
 }
@@ -34,17 +34,19 @@
     padding: 10px;
     font-size: 1.1em;
     display: block;
+    color: #fff;
+    text-decoration: none;
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: var(--base-purple-color);
     background: #fff;
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #6d7fcc;
+    background: var(--base-purple-color);
 }
 
 #content {
@@ -77,4 +79,9 @@ a[aria-expanded="true"] {
     #sidebarCollapse span {
         display: none;
     }
+}
+
+.sidebar-options i {
+    width: 1.5em;
+    margin-left: 0.5em
 }
