@@ -73,7 +73,7 @@ function execute() {
     data.page_size = _records_per_page
     data.cursor = _cursors[_page_number]
 
-    console.log(JSON.stringify(data))
+    //console.log(JSON.stringify(data))
 
     fetch(url, {
             method: "POST",
@@ -86,7 +86,7 @@ function execute() {
             return response.text().then(response => { throw new Error(response) })
         })
         .then(response => {
-            console.log(response)
+            //console.log(response)
 
             if (response.results.length == 0) {
                 e = {}
