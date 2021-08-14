@@ -1,6 +1,3 @@
-COLORS = ["#2680eb", "#e34850", "#e68619", "#2d9d78", "#6767ec", "#44b556", "#d83790", "#dfbf00", "#c038cc", "#1b959a", "#85d044", "#9256d9", "#6e6e6e"]
-
-
 function parallel_sort(list1, list2) {
 
     //1) combine the arrays:
@@ -23,10 +20,13 @@ function parallel_sort(list1, list2) {
 }
 
 
+
 function draw_pie(count_column, group_column, results) {
 
     labels = []
     data = []
+
+    colors = getColors(DEFAULT_COLORS, results.results.length)
 
     for (var i = 0; i < results.results.length; i++) {
         labels.push(results.results[i][group_column])
@@ -42,7 +42,7 @@ function draw_pie(count_column, group_column, results) {
         data: {
             labels: labels,
             datasets: [{
-                backgroundColor: COLORS,
+                backgroundColor: colors,
                 data: data,
             }]
         },
@@ -77,10 +77,6 @@ function update_visualization(query, results) {
             group_column = results.columns[i]
         }
     }
-
-    console.log(results.columns)
-    console.log(count_column)
-    console.log(group_column)
 
     // if we're counting groups of things, draw a pie-chart
     if ((count_column !== undefined) && (group_column !== undefined)) {
