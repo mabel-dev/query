@@ -2,6 +2,7 @@
     --base-green-color: #24718B;
     --base-purple-color: #500472;
     --base-green-color-highlight: #3097ba;
+    --base-black-color: #111111;
     /* https://spectrum.adobe.com/page/color/  */
     --theme-color-red: #e34850;
     --theme-color-blue: #2680eb;
@@ -24,6 +25,7 @@
     max-height: 108px;
     border: 2px solid var(--base-green-color);
     border-radius: 5px;
+    color: var(--base-black-color);
 }
 
 #sql-editor div {
@@ -244,8 +246,22 @@ tr {
     font-size: 1.1em;
     line-height: 1.25em;
     font-weight: 300;
-    color: #111111;
+    color: var(--base-black-color);
     display: block;
+}
+
+.history-table {
+    font-family: 'Open Sans Condensed', 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-size: 1.1em;
+    line-height: 1.25em;
+    font-weight: 300;
+    color: var(--base-black-color);
+    display: block;
+    width: 100%
+}
+
+.history-table>*>tr {
+    border-bottom: 1px solid var(--base-green-color-highlight);
 }
 
 .results-table>*>tr:hover {
@@ -259,7 +275,7 @@ tr {
 
 .nav-tabs .nav-item.show .nav-link,
 .nav-tabs .nav-link.active {
-    color: #495057;
+    color: var(--base-purple-color);
     background-color: #fff;
     border-color: var(--base-green-color) var(--base-green-color) white;
 }

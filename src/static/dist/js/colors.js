@@ -36,9 +36,9 @@ function colorGradient(colors, fadeFraction) {
     let interval = Math.trunc(fade);
     fade = fade - interval
     color1 = colors[interval].replace('#', '');
-    color2 = colors[interval + 1].replace('#', '')
+    color2 = colors[interval + 1].replace('#', '');
 
-    return '#' + interpolateColor(color1, color2, fade)
+    return '#' + interpolateColor(color1, color2, fade);
 }
 
 function getColors(scheme, steps) {
