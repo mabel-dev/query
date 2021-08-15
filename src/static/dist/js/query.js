@@ -192,7 +192,7 @@ function run_query() {
 }
 
 function download_query() {
-    query = document.getElementById('query').innerText
+    query = document.getElementById('sql-editor').innerText
     start_date = document.getElementById('start_date').value
     end_date = document.getElementById('end_date').value
 
@@ -238,8 +238,8 @@ function page_back() {
 function history_button_click(e) {
     if (e.id.startsWith('redo-')) {
         index = e.id.replace(/^redo-/, "");
-        document.getElementById("query").innerHTML = _history[index].query;
-        document.getElementById("query").dispatchEvent(new Event('change'));
+        document.getElementById("sql-editor").innerHTML = _history[index].query;
+        document.getElementById("sql-editor").dispatchEvent(new Event('change'));
 
     } else if (e.id.startsWith('del-')) {
         index = e.id.replace(/^del-/, "");
