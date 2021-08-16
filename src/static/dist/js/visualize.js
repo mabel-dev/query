@@ -1,3 +1,13 @@
+var chart = undefined
+
+
+function download_chart() {
+    var a = document.createElement('a');
+    a.href = chart.toBase64Image();
+    a.download = 'chart.png';
+    a.click();
+}
+
 function parallel_sort(list1, list2) {
 
     //1) combine the arrays:
@@ -58,7 +68,7 @@ function draw_pie(count_column, group_column, results) {
         }
     };
 
-    var myChart = new Chart(
+    chart = new Chart(
         document.getElementById('visualization'),
         config
     );

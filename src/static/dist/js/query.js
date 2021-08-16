@@ -182,7 +182,8 @@ function update_history(query, query_outcome) {
 
 
 function run_query() {
-    _query = document.getElementById("sql-editor").innerText;
+    _query = SqlEditor.getValue();
+    console.log(_query)
     _records = "Many"
     _cursors = []
     _cursors[0] = ""
@@ -192,7 +193,7 @@ function run_query() {
 }
 
 function download_query() {
-    query = document.getElementById('sql-editor').innerText
+    query = SqlEditor.getValue();
     start_date = document.getElementById('start_date').value
     end_date = document.getElementById('end_date').value
 
@@ -238,8 +239,7 @@ function page_back() {
 function history_button_click(e) {
     if (e.id.startsWith('redo-')) {
         index = e.id.replace(/^redo-/, "");
-        document.getElementById("sql-editor").innerHTML = _history[index].query;
-        document.getElementById("sql-editor").dispatchEvent(new Event('change'));
+        SqlEditor.setValue(_history[index].query);
 
     } else if (e.id.startsWith('del-')) {
         index = e.id.replace(/^del-/, "");

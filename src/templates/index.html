@@ -17,6 +17,8 @@
 
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="plugins/codemirror/css/codemirror.css">
+    <link rel="stylesheet" href="plugins/codemirror/css/show-hint.css">
 
     <link rel="stylesheet" href="dist/css/styles.css">
     <link rel="stylesheet" href="dist/css/nav.css">
@@ -34,6 +36,9 @@
                 <li class="active">
                     <a href="/"><i class="fas fa-table"></i> SQL Lab</a>
                 </li>
+                <!--<li>
+                    <a href="/"><i class="fas fa-chart-bar"></i> Visualize</a>
+                </li>-->
                 <li>
                     <a href="/help.html"><i class="fas fa-question"></i> Help</a>
                 </li>
@@ -54,10 +59,10 @@
                     <form onsubmit="return false" id="search-form">
                         <div class="form-group row">
                             <div class="col-sm-8">
-                                <div id="sql-editor" contenteditable="true" spellcheck="false">
-                                    <div>SELECT *</div>
-                                    <div>FROM mabel_data.RAW.NVD.CVE_LIST</div>
-                                </div>
+                                <textarea id="sql-editor" spellcheck="false">
+SELECT *
+FROM mabel_data.RAW.NVD.CVE_LIST
+</textarea>
                             </div>
                             <div class="col-sm-4">
                                 <div class="input-group">
@@ -165,8 +170,54 @@
     <script src="plugins/chart.js/js/chart.min.js"></script>
     <script src="plugins/custom-scrollbar/js/custom-scrollbar.js"></script>
 
+    <script src="plugins/codemirror/js/codemirror.js"></script>
+    <script src="plugins/codemirror/js/sql.js"></script>
+    <script src="plugins/codemirror/js/match_brackets.js"></script>
+    <script src="plugins/codemirror/js/close_brackets.js"></script>
+    <script src="plugins/codemirror/js/show-hint.js"></script>
+    <script src="plugins/codemirror/js/sql-hint.js"></script>
+
+    <script type="text/javascript">
+        var SqlEditor = CodeMirror.fromTextArea(
+            document.getElementById("sql-editor"), {
+                mode: "sql",
+                lineNumbers: true,
+                cursorHeight: 0.85,
+                autocapitalize: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                hint: CodeMirror.hint.sql,
+                showHint: true,
+                extraKeys: {
+                    'Ctrl-Space': 'autocomplete'
+                },
+            }
+        );
+
+        function initAutoComplete() {
+            CodeMirror.commands.autocomplete = function(cmeditor) {
+                CodeMirror.showHint(cmeditor, CodeMirror.hint.sql, {
+                    //completeSingle: false,
+                    tables: {
+                        "mabel_data.RAW.NVD.CVE_LIST": ["cve.CVE_data_meta.ID", "cve.CVE_data_meta.ID", "cve.problemtype.problemtype_data.0.description.0.value"]
+                    }
+                });
+            }
+        }
+
+        SqlEditor.on("inputRead", function(instance) {
+            if (instance.state.completionActive) {
+                return;
+            }
+            var cur = instance.getCursor();
+            var token = instance.getTokenAt(cur);
+            if (token.type && token.type != "comment") {
+                CodeMirror.commands.autocomplete(instance);
+            }
+        });
+    </script>
+
     <script src="dist/js/colors.js"></script>
-    <script src="dist/js/code-editor.js"></script>
     <script src="dist/js/query.js"></script>
     <script src="dist/js/data-table.js"></script>
     <script src="dist/js/visualize.js"></script>
@@ -178,6 +229,7 @@
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
+            initAutoComplete();
         });
     </script>
 </body>
