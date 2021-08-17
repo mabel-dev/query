@@ -57,6 +57,10 @@ function colorGradient(colors, fadeFraction) {
 }
 
 function getColors(scheme, steps) {
+    // if we're using fewer colors than in the scheme
+    if (steps <= scheme.length) {
+        return scheme
+    }
     colors = []
     for (var i = 0; i < steps; i++) {
         colors.push(colorGradient(scheme, (i / (steps - 1))))
