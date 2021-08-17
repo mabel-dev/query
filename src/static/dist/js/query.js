@@ -73,8 +73,6 @@ function execute() {
     data.page_size = _records_per_page
     data.cursor = _cursors[_page_number]
 
-    //console.log(JSON.stringify(data))
-
     fetch(url, {
             method: "POST",
             body: JSON.stringify(data),
@@ -129,7 +127,6 @@ function execute() {
 
             update_history(_query, false);
         })
-
 }
 
 function update_history(query, query_outcome) {
@@ -162,10 +159,9 @@ function update_history(query, query_outcome) {
         if (_history[i].outcome) {
             status = '<span class="badge success mono-font">okay</span>'
         }
-
         entry = `
         <tr>
-            <td>${status}</td>
+            <td class="align-middle">${status}</td>
             <td class="align-middle trim">${_history[i].query}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
             <td>
