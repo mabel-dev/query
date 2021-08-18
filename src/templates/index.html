@@ -58,7 +58,7 @@
                 <div>
                     <form onsubmit="return false" id="search-form">
                         <div class="form-group row">
-                            <div class="col-sm-8">
+                            <div class="col-sm-8 clear-padding">
                                 <textarea id="sql-editor" spellcheck="false">
 SELECT *
 FROM mabel_data.RAW.NVD.CVE_LIST
@@ -93,7 +93,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                 </div>
 
                 <div class="row" id="button-row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 clear-padding">
                         <ul class="nav nav-tabs">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false"><i class="fas fa-th-list"></i> Results</button>
@@ -106,7 +106,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                             </li>
                         </ul>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 clear-padding">
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn-fixed-width btn btn-action" id="run">
                             <i class="fas fa-sync-alt"></i> Run
@@ -116,7 +116,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                     <div class="col-sm-1">
                         <span id="clock" class="btn">-</span>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 clear-padding">
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn-fixed-width btn btn-outline-secondary" id="download">
                             <i class="fas fa-cloud-download-alt"></i> Download
@@ -129,14 +129,33 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                 <div class="tab-content" id="tabs">
                     <div class="tab-pane fade show active" id="results" role="tabpanel" aria-labelledby="results-tab">
                         <div id="data-table-wrapper">
-                            No Query has been run
+                            <div class="alert alert-primary col-sm-8" role="alert">
+                                No queries have been run.
+                            </div>
+                            <p>Here are some suggestions:</p>
+                            <hr />
+                            <pre id="query1">
+SELECT COUNT(*)
+FROM mabel_data.RAW.NVD.CVE_LIST
+GROUP BY impact.baseMetricV2.cvssV2.baseScore</pre><button class="btn btn-action" id="example-query-1"><i class="fas fa-arrow-up"></i> Try This Query</button>
+                            <hr />
+                            <pre id="query2">
+SELECT COUNT(*)
+FROM mabel_data.RAW.NVD.CVE_LIST
+GROUP BY cve.CVE_data_meta.ASSIGNER</pre><button class="btn btn-action" id="example-query-2"><i class="fas fa-arrow-up"></i> Try This Query</button>
+                            <hr />
+
                         </div>
                     </div>
                     <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-                        No Query has been run
+                        <div class="alert alert-primary col-sm-8" role="alert">
+                            No queries have been run.
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="visualize" role="tabpanel" aria-labelledby="visualize-tab">
-                        No Query has been run
+                        <div class="alert alert-primary col-sm-8" role="alert">
+                            No queries have been run.
+                        </div>
                     </div>
                 </div>
             </section>
@@ -182,11 +201,15 @@ FROM mabel_data.RAW.NVD.CVE_LIST
             document.getElementById("sql-editor"), {
                 mode: "sql",
                 lineNumbers: true,
+                indentUnit: 4,
                 cursorHeight: 0.85,
                 autocapitalize: true,
+                lineWrapping: true,
                 matchBrackets: true,
+                lineSeparator: "\n",
                 autoCloseBrackets: true,
                 hint: CodeMirror.hint.sql,
+                inputStyle: "contenteditable",
                 showHint: true,
                 extraKeys: {
                     'Ctrl-Space': 'autocomplete'
@@ -231,6 +254,13 @@ FROM mabel_data.RAW.NVD.CVE_LIST
             });
             initAutoComplete();
         });
+
+        document.getElementById("example-query-1").addEventListener("click", function() {
+            SqlEditor.setValue(document.getElementById("query1").innerText);
+        }, false)
+        document.getElementById("example-query-2").addEventListener("click", function() {
+            SqlEditor.setValue(document.getElementById("query2").innerText);
+        }, false)
     </script>
 </body>
 

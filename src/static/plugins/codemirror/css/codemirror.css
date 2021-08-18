@@ -309,10 +309,11 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
     /* Things will break if this is overridden */
     /* 50px is the magic margin used to hide the element's real scrollbars */
     /* See overflow: hidden in .CodeMirror */
-    margin-bottom: -50px;
-    margin-right: -50px;
-    padding-bottom: 50px;
-    height: 100%;
+    margin-bottom: -70px;
+    margin-right: 0px;
+    padding-bottom: 70px;
+    min-height: 108px;
+    max-height: 108px;
     outline: none;
     /* Prevent dragging from highlighting the element */
     position: relative;

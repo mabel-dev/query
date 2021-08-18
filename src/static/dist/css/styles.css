@@ -10,6 +10,12 @@
     --theme-color-orange: #e68619;
     --theme-color-yellow: #dfbf00;
     --theme-color-purple: #6767ec;
+    /* @90% l */
+    --theme-color-light-red: #f8d3d5;
+    --theme-color-light-blue: #d1e3fa;
+    /* 20% l */
+    --theme-color-dark-red: #580e10;
+    --theme-color-dark-blue: #092f5d;
 }
 
 .btn-fixed-width {
@@ -56,26 +62,6 @@
 
 .no-border {
     border-color: transparent !important;
-}
-
-.code-keyword {
-    color: blue;
-}
-
-.code-numbers {
-    color: purple;
-}
-
-.code-logical {
-    color: red;
-}
-
-.code-literal {
-    color: gray;
-}
-
-.code-function {
-    color: green;
 }
 
 .brand-text {
@@ -195,6 +181,11 @@ tr {
     color: white;
 }
 
+.waiting {
+    background-color: var(--theme-color-blue);
+    color: white;
+}
+
 .trim {
     max-width: 700px;
     overflow: hidden;
@@ -248,4 +239,18 @@ tr {
 
 .nav-tabs {
     border-bottom: 1px solid var(--base-green-color);
+}
+
+.clear-padding {
+    padding: 0px;
+}
+
+.alert-primary {
+    background-color: var(--theme-color-light-blue);
+    color: var(--theme-color-dark-blue);
+}
+
+.alert-error {
+    background-color: var(--theme-color-light-red);
+    color: var(--theme-color-dark-red);
 }

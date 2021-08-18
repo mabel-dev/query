@@ -31,17 +31,9 @@ function parallel_sort(list1, list2) {
 
 
 
-function draw_pie(count_column, group_column, results) {
+function draw_pie(data, labels) {
 
-    labels = []
-    data = []
-
-    colors = getColors(DEFAULT_COLORS, results.results.length)
-
-    for (var i = 0; i < results.results.length; i++) {
-        labels.push(results.results[i][group_column])
-        data.push(results.results[i][count_column])
-    }
+    colors = getColors(DEFAULT_COLORS, labels.length)
 
     res = parallel_sort(data, labels)
     data = res[0]
@@ -67,13 +59,50 @@ function draw_pie(count_column, group_column, results) {
             }
         }
     };
-
     chart = new Chart(
         document.getElementById('visualization'),
         config
     );
-
 }
+
+function draw_histogram(data, labels) {
+
+    colors = getColors(DEFAULT_COLORS, labels.length)
+
+    res = parallel_sort(labels, data)
+    labels = res[0].reverse()
+    data = res[1].reverse()
+
+    const config = {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        },
+    };
+    chart = new Chart(
+        document.getElementById('visualization'),
+        config
+    );
+}
+
 
 function update_visualization(query, results) {
 
@@ -88,10 +117,20 @@ function update_visualization(query, results) {
         }
     }
 
-    // if we're counting groups of things, draw a pie-chart
+    // we're couting groups of things
     if ((count_column !== undefined) && (group_column !== undefined)) {
+        data = []
+        labels = []
+        for (var i = 0; i < results.results.length; i++) {
+            labels.push(results.results[i][group_column])
+            data.push(results.results[i][count_column])
+        }
         document.getElementById("visualize").innerHTML = '<canvas id="visualization"></canvas>'
-        draw_pie(count_column, group_column, results)
+        if (!labels.some(isNaN)) {
+            draw_histogram(data, labels)
+        } else {
+            draw_pie(data, labels)
+        }
     }
     // if we're just counting everything, show a single value
     else if ((count_column !== undefined) && (group_column === undefined)) {
@@ -99,7 +138,7 @@ function update_visualization(query, results) {
     }
     // we don't have a auto chart for that yet
     else {
-        document.getElementById("visualize").innerText = "Cannot Automatically Determine Chart"
+        document.getElementById("visualize").innerHTML = '<div class="alert alert-primary col-sm-8" role="alert">Cannot Automatically Determine Chart</div>'
     }
 
 }

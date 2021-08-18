@@ -22,6 +22,7 @@ _Query_ is built using:
 - **[bootstrap](https://getbootstrap.com/)**
 - **[chart.js](https://www.chartjs.org/)**
 - **[mabel](https://github.com/mabel-dev/mabel)**
+- **[CodeMirror](https://codemirror.net/)**
 
 NOTE: _Query_ currently requires an alpha version of _mabel_, v0.5, which is available using:
 

@@ -56,6 +56,7 @@ function isEmptyObject(obj) {
 
 function execute() {
     ticker_start = Date.now()
+    update_history(_query, undefined)
 
     function do_ticker() {
         document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
@@ -116,16 +117,22 @@ function execute() {
             document.getElementById('record_counter').innerText =
                 ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
-            update_history(_query, true);
+            update_history(_query, "okay");
             update_visualization(_query, response)
         })
         .catch(error => {
+            update_history(_query, "fail");
             console.log(error.message)
             errorObject = JSON.parse(error.message).detail
             document.getElementById("data-table-wrapper").innerHTML =
-                "<p><strong>" + errorObject.error + "</strong></p>" + errorObject.detail;
-
-            update_history(_query, false);
+                `
+<div class="alert alert-error col-sm-8" role="alert">
+  <h4 class="alert-heading">${errorObject.error}</h4>
+  <p>${errorObject.detail}</p>
+  <hr>
+  <p class="mb-0">Update your query and try again.</p>
+</div>
+                `;
         })
 }
 
@@ -155,9 +162,11 @@ function update_history(query, query_outcome) {
     history_table += "<tbody>"
     for (var i = 0; i < _history.length; i++) {
 
-        let status = '<span class="badge fail mono-font">fail</span>'
-        if (_history[i].outcome) {
+        let status = '<span class="badge waiting mono-font">wait</span>'
+        if (_history[i].outcome == "okay") {
             status = '<span class="badge success mono-font">okay</span>'
+        } else if (_history[i].outcome == "fail") {
+            status = '<span class="badge fail mono-font">fail</span>'
         }
         entry = `
         <tr>
@@ -178,7 +187,7 @@ function update_history(query, query_outcome) {
 
 
 function run_query() {
-    _query = SqlEditor.getValue();
+    _query = SqlEditor.getValue(' ');
     console.log(_query)
     _records = "Many"
     _cursors = []
@@ -189,7 +198,12 @@ function run_query() {
 }
 
 function download_query() {
-    query = SqlEditor.getValue();
+
+    download_button = document.getElementById('download')
+    original_text = download_button.innerHTML;
+    download_button.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only"></span></div> Download'
+
+    query = SqlEditor.getValue(' ');
     start_date = document.getElementById('start_date').value
     end_date = document.getElementById('end_date').value
 
@@ -204,12 +218,19 @@ function download_query() {
             //  Authorization: authHeader
         }
     };
+
     fetch(url, options)
-        .then(res => res.blob())
-        .then(blob => {
-            var file = window.URL.createObjectURL(blob);
-            window.location.assign(file);
+        .then(response => {
+            const filename = response.headers.get('Content-Disposition').split('filename=')[1];
+            response.blob().then(blob => {
+                let url = window.URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+            });
         });
+
 }
 
 function set_records_per_page() {

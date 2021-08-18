@@ -10,6 +10,8 @@ PLASMA and VIRIDIS are color schemes available in plotly even though that librar
 isn't used.
 
 VINTAGE and MACARON are schemes from eCharts, this library isn't used
+
+SPROUT is the default color scheme - it's extracted and tweaked from an image
 */
 
 // CONTINUOUS
