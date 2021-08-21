@@ -10,6 +10,29 @@ var outcome
 
 const history_timestampFormat = "YYYY-MM-DD HH:mm:ss"
 
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 function get_columns(data) {
     if (data.columns === undefined) {
         var columns = [];
@@ -175,6 +198,7 @@ function update_history(query, query_outcome) {
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
             <td>
                 <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
+                <button type="button" id="save-${i}" class="btn btn-sm button-query-white" title="Save Query"><i class="fas fa-save"></i></button>
                 <button type="button" id="del-${i}" class="btn btn-sm button-query-white" title="Remove Query from History"><i class="fas fa-trash-alt"></i></button>
             </td>
         </tr>
@@ -182,9 +206,55 @@ function update_history(query, query_outcome) {
         history_table = entry + history_table
     }
     history_table += "</tbody>"
-    document.getElementById("history").innerHTML = "<table class='table table-sm history-table table-responsive'>" + history_table + "</table>"
+    document.getElementById("recent").innerHTML = "<table class='table table-sm history-table table-responsive'>" + history_table + "</table>"
 }
 
+function update_saved(query) {
+
+    let saved = getCookie("saved_sql")
+    if (saved) {
+        saved_list = JSON.parse(getCookie("saved_sql"))
+    } else {
+        saved_list = []
+    }
+
+    if (query) {
+        index = -1
+        for (var i = 0; i < saved_list.length; i++) {
+            if (saved_list[i] == query) {
+                index = i
+            }
+        }
+        if (index > -1) {
+            _history.splice(index, 1);
+        }
+
+        saved_list.push(query);
+        setCookie("saved_sql", JSON.stringify(saved_list));
+    }
+
+    if (saved_list.length == 0) {
+        document.getElementById("saved").innerHTML = '<div class="alert alert-primary col-sm-8" role="alert">No queries have been Saved.</div>'
+        return
+    }
+
+    saved_table = "<thead><tr><th>Query</th<th></th></tr></thead>"
+    saved_table += "<tbody>"
+    for (var i = 0; i < saved_list.length; i++) {
+        entry = `
+        <tr>
+            <td class="align-middle trim">${saved_list[i]}</td>
+            <td>
+                <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
+                <button type="button" id="del-${i}" class="btn btn-sm button-query-white" title="Remove Query from Saved"><i class="fas fa-trash-alt"></i></button>
+            </td>
+        </tr>
+        `
+        saved_table = entry + saved_table
+    }
+    saved_table += "</tbody>"
+    document.getElementById("saved").innerHTML = "<table class='table table-sm history-table table-responsive'>" + saved_table + "</table>"
+}
 
 function run_query() {
     _query = SqlEditor.getValue(' ');
@@ -233,6 +303,11 @@ function download_query() {
 
 }
 
+function save_query() {
+    let query = SqlEditor.getValue(' ');
+    update_saved(query);
+}
+
 function set_records_per_page() {
     _records_per_page = document.getElementById("records_per_page").value;
     _page_number = 1;
@@ -262,6 +337,9 @@ function history_button_click(e) {
         index = e.id.replace(/^del-/, "");
         _history.splice(index, 1);
         update_history();
+    } else if (e.id.startsWith('save-')) {
+        index = e.id.replace(/^save-/, "");
+        update_saved(_history[index].query);
 
     } else {
         if (e.parentElement) {
@@ -270,12 +348,46 @@ function history_button_click(e) {
     }
 }
 
+function saved_button_click(e) {
+
+    let saved = getCookie("saved_sql")
+    if (saved) {
+        saved_list = JSON.parse(getCookie("saved_sql"))
+    } else {
+        saved_list = []
+    }
+
+    if (e.id.startsWith('redo-')) {
+        index = e.id.replace(/^redo-/, "");
+        SqlEditor.setValue(saved_list[index]);
+
+    } else if (e.id.startsWith('del-')) {
+        index = e.id.replace(/^del-/, "");
+        saved_list.splice(index, 1);
+        setCookie("saved_sql", JSON.stringify(saved_list))
+        update_saved();
+
+    } else {
+        if (e.parentElement) {
+            saved_button_click(e.parentElement)
+        }
+    }
+}
+
 document.getElementById('run').addEventListener('click', run_query, false);
 document.getElementById('download').addEventListener('click', download_query, false);
+document.getElementById('save').addEventListener('click', save_query, false);
 document.getElementById('records_per_page').addEventListener('change', set_records_per_page, false);
 document.getElementById('page-forward').addEventListener('click', page_forward, false);
 document.getElementById('page-back').addEventListener('click', page_back, false);
-document.getElementById("history").addEventListener('click', function(e) {
+document.getElementById("recent").addEventListener('click', function(e) {
     history_button_click(e.target)
 });
+document.getElementById("saved").addEventListener('click', function(e) {
+    saved_button_click(e.target)
+});
 document.getElementById("period").addEventListener('change', update_period, false);
+
+
+
+update_saved();

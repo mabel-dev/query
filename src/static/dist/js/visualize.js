@@ -31,7 +31,7 @@ function parallel_sort(list1, list2) {
 
 
 
-function draw_pie(data, labels) {
+function draw_pie(data, labels, group) {
 
     colors = getColors(DEFAULT_COLORS, labels.length)
 
@@ -59,13 +59,14 @@ function draw_pie(data, labels) {
             }
         }
     };
+    Chart.defaults.font.family = 'JetBrains Mono', 'Roboto Mono', 'monospace';
     chart = new Chart(
         document.getElementById('visualization'),
         config
     );
 }
 
-function draw_histogram(data, labels) {
+function draw_histogram(data, labels, group) {
 
     colors = getColors(DEFAULT_COLORS, labels.length)
 
@@ -87,7 +88,11 @@ function draw_histogram(data, labels) {
             responsive: true,
             scales: {
                 y: {
-                    beginAtZero: false
+                    min: 0,
+                    title: { display: true, text: "Count" }
+                },
+                x: {
+                    title: { display: true, text: group }
                 }
             },
             plugins: {
@@ -97,6 +102,7 @@ function draw_histogram(data, labels) {
             }
         },
     };
+    Chart.defaults.font.family = 'JetBrains Mono', 'Roboto Mono', 'monospace';
     chart = new Chart(
         document.getElementById('visualization'),
         config
@@ -127,9 +133,9 @@ function update_visualization(query, results) {
         }
         document.getElementById("visualize").innerHTML = '<canvas id="visualization"></canvas>'
         if (!labels.some(isNaN)) {
-            draw_histogram(data, labels)
+            draw_histogram(data, labels, group_column)
         } else {
-            draw_pie(data, labels)
+            draw_pie(data, labels, group_column)
         }
     }
     // if we're just counting everything, show a single value
