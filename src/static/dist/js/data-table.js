@@ -23,7 +23,7 @@ function zeroPad(num, places) {
     return Array(+(zero > 0 && zero)).join("0") + num;
 }
 
-function renderTable(data, start_index) {
+function renderTable(data, pageNumber, pageSize, dom) {
     var row_data = ''
     row_data += "<thead><tr>";
     row_data += '<th scope="col" class="mono-font">#</th>';
@@ -31,21 +31,25 @@ function renderTable(data, start_index) {
         row_data += `<th>${htmlEncode(data.columns[h])}</th>`
     }
     row_data += "</tr></thead><tbody>";
-    for (var i = 0; i < data.results.length; i++) {
-        row_data += `<tr><th scope="row" class="mono-font align-middle">${zeroPad(start_index + i, 2)}</th>`;
-        for (var h = 0; h < data.columns.length; h++) {
-            var cellValue = htmlEncode(data.results[i][data.columns[h]])
-            if (is_date(cellValue)) {
-                row_data += `<td>${moment(cellValue).format(timestampFormat)}</td>`
-            } else if (cellValue.length > 16) {
-                row_data += `<td title="${cellValue}">${cellValue}</td>`
-            } else {
-                row_data += `<td>${cellValue}</td>`
+    startIndex = (pageNumber - 1) * pageSize
+
+    for (var i = startIndex; i < (startIndex + pageSize); i++) {
+        if (i < data.results.length) {
+            row_data += `<tr><th scope="row" class="mono-font align-middle">${zeroPad(i + 1, 2)}</th>`;
+            for (var h = 0; h < data.columns.length; h++) {
+                var cellValue = htmlEncode(data.results[i][data.columns[h]])
+                if (is_date(cellValue)) {
+                    row_data += `<td>${moment(cellValue).format(timestampFormat)}</td>`
+                } else if (cellValue.length > 16) {
+                    row_data += `<td title="${cellValue}">${cellValue}</td>`
+                } else {
+                    row_data += `<td>${cellValue}</td>`
+                }
             }
+            row_data += "</tr>";
         }
-        row_data += "</tr>";
     }
     row_data += "</tbody>"
 
-    return "<table class='table table-striped table-sm results-table table-responsive'>" + row_data + "</table>";
+    dom.innerHTML = "<table class='table table-striped table-sm results-table table-responsive'>" + row_data + "</table>";
 }

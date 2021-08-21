@@ -21,6 +21,7 @@ logger = get_logger()
 import datetime
 from pydantic import BaseModel
 
+RESULT_BATCH = 5000
 
 class SearchModel(BaseModel):
     start_date: Optional[
@@ -38,16 +39,13 @@ from mabel.adapters.disk import DiskReader
 
 def do_search(search: SearchModel):
 
-    search.page_size = min(100000, search.page_size)
-    search.page_size = max(1, search.page_size)
-
     sql_reader = SqlReader(
         start_date=search.start_date,
         end_date=search.end_date,
         cursor=search.cursor,
         sql_statement=search.query,
-        # inner_reader=DiskReader,
-        # raw_path=True,
+        #inner_reader=DiskReader,
+        #raw_path=True,
         project=os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader
@@ -80,7 +78,7 @@ def handle_start_request(request: SearchModel):
     try:
         results = do_search(request)
         response = {
-            "results": results.take(request.page_size).collect(),
+            "results": results.take(min(RESULT_BATCH, request.page_size)).collect(),
             "cursor": results.cursor(),
             "record_count": results.count(),
         }
@@ -113,8 +111,10 @@ def download_results(start_date: datetime.date, end_date: datetime.date, query: 
         request = SearchModel(start_date=start_date, end_date=end_date, query=query)
         results = do_search(request)
 
-        # this allows us to get the columns from the first 10 records
-        head_results = DictSet(results.take(10).collect())
+        # this allows us to get the columns from the first 25 records,
+        # if the data is more hetreogenous than that, it's not going to
+        # play well with being in a table
+        head_results = DictSet(results.take(25).collect())
         columns = head_results.keys()
 
         # add the records back

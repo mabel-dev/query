@@ -1,13 +1,14 @@
-var _records_per_page = document.getElementById("records_per_page").value;
-var _query = ""
-var _records = "Many"
-var _cursors = []
-var _history = []
-var _page_number = 0
-var _interval_obj = null
+var _records_per_page = parseInt(document.getElementById("records_per_page").value);
+var _query = "";
+var _records = "Many";
+var _results = {};
+var _history = [];
+var _page_number = 0;
+var _interval_obj = null;
 
 var outcome
 
+const recordBufferSize = 1000
 const history_timestampFormat = "YYYY-MM-DD HH:mm:ss"
 
 function setCookie(cname, cvalue, exdays) {
@@ -89,13 +90,12 @@ function execute() {
     }
     _interval_obj = setInterval(function() { do_ticker() }, 250);
 
-    var url = '/v1/search'
-    data = {}
-    data.query = _query
-    data.start_date = document.getElementById('start_date').value
-    data.end_date = document.getElementById('end_date').value
-    data.page_size = _records_per_page
-    data.cursor = _cursors[_page_number]
+    var url = '/v1/search';
+    data = {};
+    data.query = _query;
+    data.start_date = document.getElementById('start_date').value;
+    data.end_date = document.getElementById('end_date').value;
+    data.page_size = recordBufferSize;
 
     fetch(url, {
             method: "POST",
@@ -119,20 +119,19 @@ function execute() {
                 throw new Error(JSON.stringify(wrapper))
             }
             response.columns = get_columns(response.results[0]);
-            document.getElementById('data-table-wrapper').innerHTML = renderTable(response, (_page_number - 1) * _records_per_page + 1)
+            _results = response
 
+            renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'))
             document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(2)
             document.getElementById('page-back').disabled = (_page_number == 1)
-            document.getElementById('page-forward').disabled = isEmptyObject(response.cursor)
-
-            _cursors[_page_number + 1] = JSON.stringify(response.cursor)
+            document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length;
 
             max_record = _page_number * _records_per_page
-            if (response.records > 0) {
-                _records = response.records
+            if (_results.records > 0) {
+                _records = _results.records
             }
-            if (isEmptyObject(response.cursor)) {
-                _records = (_page_number - 1) * _records_per_page + response.results.length
+            if (isEmptyObject(_results.cursor)) {
+                _records = _results.results.length
             }
             if (max_record > _records) {
                 max_record = _records
@@ -141,7 +140,7 @@ function execute() {
                 ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
             update_history(_query, "okay");
-            update_visualization(_query, response)
+            update_visualization(_query, _results)
         })
         .catch(error => {
             update_history(_query, "fail");
@@ -258,7 +257,6 @@ function update_saved(query) {
 
 function run_query() {
     _query = SqlEditor.getValue(' ');
-    console.log(_query)
     _records = "Many"
     _cursors = []
     _cursors[0] = ""
@@ -304,28 +302,33 @@ function download_query() {
 }
 
 function save_query() {
-    let query = SqlEditor.getValue(' ');
+    let query = SqlEditor.getValue('\n');
     update_saved(query);
 }
 
 function set_records_per_page() {
-    _records_per_page = document.getElementById("records_per_page").value;
+    _records_per_page = parseInt(document.getElementById("records_per_page").value);
     _page_number = 1;
-    execute();
+
+    if (_results.length > 0) {
+        renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
+        document.getElementById('page-back').disabled = (_page_number == 1)
+        document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+    }
 }
 
 function page_forward() {
-    document.getElementById('page-back').disabled = true
-    document.getElementById('page-forward').disabled = true
     _page_number++;
-    execute();
+    renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
+    document.getElementById('page-back').disabled = (_page_number == 1)
+    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
 }
 
 function page_back() {
-    document.getElementById('page-back').disabled = true
-    document.getElementById('page-forward').disabled = true
     _page_number--;
-    execute();
+    renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
+    document.getElementById('page-back').disabled = (_page_number == 1)
+    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
 }
 
 function history_button_click(e) {
