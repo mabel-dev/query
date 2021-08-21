@@ -194,7 +194,7 @@ function update_history(query, query_outcome) {
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
-            <td class="align-middle">${_history[i].query}</td>
+            <td class="align-middle trim">${_history[i].query}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
             <td>
                 <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
@@ -311,7 +311,7 @@ function set_records_per_page() {
     _records_per_page = parseInt(document.getElementById("records_per_page").value);
     _page_number = 1;
 
-    if (_results.length > 0) {
+    if (_results.results !== undefined) {
         renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
         document.getElementById('page-back').disabled = (_page_number == 1)
         document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length

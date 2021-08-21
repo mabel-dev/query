@@ -120,7 +120,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                         </div>
                     </div>
                     <div class="col-sm-1">
-                        <span id="clock" class="btn">-</span>
+                        <span id="clock" class="btn mono-font">-</span>
                     </div>
                     <div class="col-sm-3 clear-padding">
                         <div class="d-flex justify-content-end">
@@ -140,12 +140,12 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                             </div>
                             <p>Here are some suggestions:</p>
                             <hr />
-                            <pre id="query1">
+                            <pre id="query1" class="code">
 SELECT COUNT(*)
 FROM mabel_data.RAW.NVD.CVE_LIST
 GROUP BY impact.baseMetricV2.cvssV2.baseScore</pre><button class="btn btn-action" id="example-query-1"><i class="fas fa-arrow-up"></i> Try This Query</button>
                             <hr />
-                            <pre id="query2">
+                            <pre id="query2" class="code">
 SELECT COUNT(*)
 FROM mabel_data.RAW.NVD.CVE_LIST
 GROUP BY cve.CVE_data_meta.ASSIGNER</pre><button class="btn btn-action" id="example-query-2"><i class="fas fa-arrow-up"></i> Try This Query</button>

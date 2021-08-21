@@ -153,14 +153,15 @@ tr {
 }
 
 .results-table>*>*>td {
-    max-width: 250px;
+    max-width: 320px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .table {
-    width: 100%;
+    width: auto;
+    min-width: 50%;
     border: transparent;
     --bs-table-bg: transparent;
     --bs-table-accent-bg: transparent;
@@ -191,6 +192,10 @@ tr {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.cell_right {
+    text-align: right;
 }
 
 #tabs {
@@ -237,6 +242,11 @@ thead {
 
 th {
     font-weight: normal;
+}
+
+.code {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-size: 1.1em;
 }
 
 #visualize {

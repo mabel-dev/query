@@ -18,6 +18,13 @@ function is_date(sDate) {
     return (tryDate && tryDate.toString() != "NaN" && tryDate != "Invalid Date" && m.isValid());
 }
 
+function is_number(sNum) {
+    if (sNum === undefined || sNum == null) { return false }
+    if (sNum.toString().trim() == parseFloat(sNum).toString()) return true;
+    if (sNum.toString().trim() == parseInt(sNum).toString()) return true;
+    return false;
+}
+
 function zeroPad(num, places) {
     var zero = places - num.toString().length + 1;
     return Array(+(zero > 0 && zero)).join("0") + num;
@@ -25,13 +32,10 @@ function zeroPad(num, places) {
 
 function renderTable(data, pageNumber, pageSize, dom) {
     var row_data = ''
-    row_data += "<thead><tr>";
-    row_data += '<th scope="col" class="mono-font">#</th>';
-    for (var h = 0; h < data.columns.length; h++) {
-        row_data += `<th>${htmlEncode(data.columns[h])}</th>`
-    }
-    row_data += "</tr></thead><tbody>";
+
     startIndex = (pageNumber - 1) * pageSize
+
+    right_justified_headers = []
 
     for (var i = startIndex; i < (startIndex + pageSize); i++) {
         if (i < data.results.length) {
@@ -39,8 +43,16 @@ function renderTable(data, pageNumber, pageSize, dom) {
             for (var h = 0; h < data.columns.length; h++) {
                 var cellValue = htmlEncode(data.results[i][data.columns[h]])
                 if (is_date(cellValue)) {
-                    row_data += `<td>${moment(cellValue).format(timestampFormat)}</td>`
-                } else if (cellValue.length > 16) {
+                    row_data += `<td class="cell_right">${moment(cellValue).format(timestampFormat)}</td>`
+                    if (!right_justified_headers.includes(data.columns[h])) {
+                        right_justified_headers.push(data.columns[h])
+                    }
+                } else if (is_number(cellValue)) {
+                    row_data += `<td class="cell_right">${cellValue}</td>`
+                    if (!right_justified_headers.includes(data.columns[h])) {
+                        right_justified_headers.push(data.columns[h])
+                    }
+                } else if (cellValue.length > 32) {
                     row_data += `<td title="${cellValue}">${cellValue}</td>`
                 } else {
                     row_data += `<td>${cellValue}</td>`
@@ -51,5 +63,16 @@ function renderTable(data, pageNumber, pageSize, dom) {
     }
     row_data += "</tbody>"
 
-    dom.innerHTML = "<table class='table table-striped table-sm results-table table-responsive'>" + row_data + "</table>";
+    header_data = "<thead><tr>";
+    header_data += '<th scope="col" class="mono-font">#</th>';
+    for (var h = 0; h < data.columns.length; h++) {
+        if (right_justified_headers.includes(data.columns[h])) {
+            header_data += `<th class="cell_right">${htmlEncode(data.columns[h])}</th>`
+        } else {
+            header_data += `<th>${htmlEncode(data.columns[h])}</th>`
+        }
+    }
+    header_data += "</tr></thead><tbody>";
+
+    dom.innerHTML = "<table class='table table-striped table-sm results-table table-responsive'>" + header_data + row_data + "</table>";
 }
