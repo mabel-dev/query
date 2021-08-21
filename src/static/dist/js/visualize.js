@@ -60,6 +60,7 @@ function draw_pie(data, labels, group) {
         }
     };
     Chart.defaults.font.family = 'JetBrains Mono', 'Roboto Mono', 'monospace';
+    Chart.defaults.font.size = 16;
     chart = new Chart(
         document.getElementById('visualization'),
         config
@@ -103,6 +104,7 @@ function draw_histogram(data, labels, group) {
         },
     };
     Chart.defaults.font.family = 'JetBrains Mono', 'Roboto Mono', 'monospace';
+    Chart.defaults.font.size = 16;
     chart = new Chart(
         document.getElementById('visualization'),
         config
