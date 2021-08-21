@@ -181,7 +181,7 @@ function update_history(query, query_outcome) {
     }
 
 
-    history_table = "<thead><tr><th></th><th>Query</th><th>Last Run</th><th></th></tr></thead>"
+    history_table = "<thead><tr><th>Status</th><th>Query</th><th>Last Run</th><th>Actions</th></tr></thead>"
     history_table += "<tbody>"
     for (var i = 0; i < _history.length; i++) {
 
@@ -194,7 +194,7 @@ function update_history(query, query_outcome) {
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
-            <td class="align-middle trim">${_history[i].query}</td>
+            <td class="align-middle">${_history[i].query}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
             <td>
                 <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
@@ -238,7 +238,7 @@ function update_saved(query) {
         return
     }
 
-    saved_table = "<thead><tr><th>Query</th<th></th></tr></thead>"
+    saved_table = "<thead><tr><th>Query</th><th>Actions</th></tr></thead>"
     saved_table += "<tbody>"
     for (var i = 0; i < saved_list.length; i++) {
         entry = `

@@ -143,7 +143,7 @@ body {
 }
 
 .table-sm>:not(caption)>*>* {
-    padding: .2rem .2rem;
+    padding: .3rem .3rem;
 }
 
 tr {
@@ -199,22 +199,19 @@ tr {
 }
 
 .results-table {
-    font-family: 'Open Sans Condensed', 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-size: 1.1em;
     line-height: 1.25em;
     font-weight: 300;
     color: var(--base-black-color);
-    display: block;
 }
 
 .history-table {
-    font-family: 'Open Sans Condensed', 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-size: 1.1em;
-    line-height: 1.25em;
+    line-height: 1.1em;
     font-weight: 300;
     color: var(--base-black-color);
-    display: block;
-    width: 100%
 }
 
 .history-table>*>tr {
@@ -224,6 +221,22 @@ tr {
 .results-table>*>tr:hover {
     background-color: var(--base-green-color-highlight);
     color: white !important;
+}
+
+.table>:not(caption)>*>* {
+    border-bottom: 0;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+thead {
+    border-bottom: 1px solid var(--base-green-color);
+}
+
+th {
+    font-weight: normal;
 }
 
 #visualize {
