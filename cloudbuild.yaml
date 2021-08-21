@@ -34,6 +34,10 @@ steps:
         "--allow-unauthenticated",
         "--timeout",
         "900",
+        "--cpu",
+        "4",
+        "--memory",
+        "2Gi",
         "--update-env-vars",
         "SERVICE=$REPO_NAME,PROJECT_NAME=$PROJECT_ID,PROJECT_NUMBER=$PROJECT_NUMBER"
       ]

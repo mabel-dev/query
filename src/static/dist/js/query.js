@@ -8,7 +8,7 @@ var _interval_obj = null;
 
 var outcome
 
-const recordBufferSize = 1000
+const recordBufferSize = 2500
 const history_timestampFormat = "YYYY-MM-DD HH:mm:ss"
 
 function setCookie(cname, cvalue, exdays) {
@@ -130,7 +130,8 @@ function execute() {
             if (_results.records > 0) {
                 _records = _results.records
             }
-            if (isEmptyObject(_results.cursor)) {
+            console.log(_results.cursor)
+            if (_results.cursor === null) {
                 _records = _results.results.length
             }
             if (max_record > _records) {
