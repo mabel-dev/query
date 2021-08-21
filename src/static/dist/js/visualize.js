@@ -90,7 +90,7 @@ function draw_histogram(data, labels, group) {
             scales: {
                 y: {
                     min: 0,
-                    title: { display: true, text: "Count" }
+                    title: { display: true, text: "Frequency" }
                 },
                 x: {
                     title: { display: true, text: group }
