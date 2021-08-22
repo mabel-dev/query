@@ -213,7 +213,7 @@ function update_saved(query) {
 
     let saved = getCookie("saved_sql")
     if (saved) {
-        saved_list = JSON.parse(getCookie("saved_sql"))
+        saved_list = JSON.parse(saved)
     } else {
         saved_list = []
     }
@@ -226,7 +226,7 @@ function update_saved(query) {
             }
         }
         if (index > -1) {
-            _history.splice(index, 1);
+            saved_list.splice(index, 1);
         }
 
         saved_list.push(query);
