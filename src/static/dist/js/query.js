@@ -130,7 +130,7 @@ function execute() {
             if (_results.records > 0) {
                 _records = _results.records
             }
-            console.log(_results.cursor)
+
             if (_results.cursor === null) {
                 _records = _results.results.length
             }
@@ -230,7 +230,7 @@ function update_saved(query) {
         }
 
         saved_list.push(query);
-        setCookie("saved_sql", JSON.stringify(saved_list));
+        setCookie("saved_sql", JSON.stringify(saved_list), 366);
     }
 
     if (saved_list.length == 0) {
@@ -257,7 +257,7 @@ function update_saved(query) {
 }
 
 function run_query() {
-    _query = SqlEditor.getValue(' ');
+    _query = SqlEditor.getValue('\n');
     _records = "Many"
     _cursors = []
     _cursors[0] = ""
@@ -272,7 +272,7 @@ function download_query() {
     original_text = download_button.innerHTML;
     download_button.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only"></span></div> Download'
 
-    query = SqlEditor.getValue(' ');
+    query = SqlEditor.getValue('\n');
     start_date = document.getElementById('start_date').value
     end_date = document.getElementById('end_date').value
 
@@ -368,7 +368,7 @@ function saved_button_click(e) {
     } else if (e.id.startsWith('del-')) {
         index = e.id.replace(/^del-/, "");
         saved_list.splice(index, 1);
-        setCookie("saved_sql", JSON.stringify(saved_list))
+        setCookie("saved_sql", JSON.stringify(saved_list), 366)
         update_saved();
 
     } else {

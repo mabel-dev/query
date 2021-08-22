@@ -17,11 +17,13 @@ from mabel.logging import get_logger, set_log_name
 
 set_log_name("SEARCH API")
 logger = get_logger()
+get_logger().setLevel(15)
 
 import datetime
 from pydantic import BaseModel
 
 RESULT_BATCH = 5000
+
 
 class SearchModel(BaseModel):
     start_date: Optional[
