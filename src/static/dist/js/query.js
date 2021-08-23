@@ -120,25 +120,26 @@ function execute() {
             }
             response.columns = get_columns(response.results[0]);
             _results = response
+            _record_count = response.results.length
 
             renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'))
             document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(2)
             document.getElementById('page-back').disabled = (_page_number == 1)
             document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length;
 
-            max_record = _page_number * _records_per_page
-            if (_results.records > 0) {
-                _records = _results.records
-            }
-
             if (_results.cursor === null) {
                 _records = _results.results.length
+            } else {
+                _records = "Many"
             }
-            if (max_record > _records) {
-                max_record = _records
+
+            let max_record = _page_number * _records_per_page
+            if (_records != "Many") {
+                max_record = Math.min(_records, _page_number * _records_per_page)
             }
-            document.getElementById('record_counter').innerText =
-                ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
+            document.getElementById('page-back').disabled = (_page_number == 1)
+            document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+            document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
             update_history(_query, "okay");
             update_visualization(_query, _results)
@@ -313,23 +314,38 @@ function set_records_per_page() {
 
     if (_results.results !== undefined) {
         renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
+        let max_record = _page_number * _records_per_page
+        if (_records != "Many") {
+            max_record = Math.min(_records, _page_number * _records_per_page)
+        }
         document.getElementById('page-back').disabled = (_page_number == 1)
         document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+        document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
     }
 }
 
 function page_forward() {
     _page_number++;
     renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
+    let max_record = _page_number * _records_per_page
+    if (_records != "Many") {
+        max_record = Math.min(_records, _page_number * _records_per_page)
+    }
     document.getElementById('page-back').disabled = (_page_number == 1)
     document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+    document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 }
 
 function page_back() {
     _page_number--;
     renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
+    let max_record = _page_number * _records_per_page
+    if (_records != "Many") {
+        max_record = Math.min(_records, _page_number * _records_per_page)
+    }
     document.getElementById('page-back').disabled = (_page_number == 1)
     document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+    document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 }
 
 function history_button_click(e) {
