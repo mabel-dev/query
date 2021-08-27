@@ -2,6 +2,7 @@
 Search Backend
 
 """
+from glob import glob
 import os
 import sys
 
@@ -14,8 +15,19 @@ from fastapi import FastAPI, HTTPException, Request
 import os
 import uvicorn
 from mabel.logging import get_logger, set_log_name
+from mabel.utils.common import build_context
 
-set_log_name("SEARCH API")
+
+def find_path(path):
+    import glob
+
+    paths = glob.iglob(f"**/{path}", recursive=True)
+    for i in paths:
+        if i.endswith(path):
+            return i
+
+context = build_context()
+set_log_name(context["job_name"])
 logger = get_logger()
 get_logger().setLevel(15)
 
@@ -48,6 +60,7 @@ def do_search(search: SearchModel):
         sql_statement=search.query,
         #inner_reader=DiskReader,
         #raw_path=True,
+        thread_count=8,
         project=os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader
@@ -57,13 +70,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 
-def find_path(path):
-    import glob
 
-    paths = glob.iglob(f"**/{path}", recursive=True)
-    for i in paths:
-        if i.endswith(path):
-            return i
 
 
 # set up API interface
@@ -93,6 +100,27 @@ def handle_start_request(request: SearchModel):
         logger.alert(err)
         raise HTTPException(status_code=500, detail=err)
 
+
+@application.get("/v1/datastores", response_class=UJSONResponse)
+def handle_start_request(datastore:Optional[str]=None):
+    try:
+        if not datastore:
+            return context["datastores"]
+        if not datastore in context["datastores"]:
+            return "Datastore Doesn't Exist"
+        
+        
+
+
+    except HTTPException:
+        raise
+    except Exception as err:
+        error_message = {"error": type(err).__name__, "detail": str(err)}
+        logger.error(error_message)
+        raise HTTPException(status_code=418, detail=error_message)
+    except SystemExit as err:
+        logger.alert(err)
+        raise HTTPException(status_code=500, detail=err)
 
 from fastapi.responses import StreamingResponse
 from mabel import DictSet
