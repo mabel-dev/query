@@ -20,21 +20,21 @@ from mabel.utils.common import build_context
 
 def find_path(path):
     import glob
-
     paths = glob.iglob(f"**/{path}", recursive=True)
     for i in paths:
         if i.endswith(path):
             return i
 
+
 context = build_context()
 set_log_name(context["job_name"])
 logger = get_logger()
-get_logger().setLevel(15)
+get_logger().setLevel(5)
 
 import datetime
 from pydantic import BaseModel
 
-RESULT_BATCH = 5000
+RESULT_BATCH = int(context.get("maximum_return")) or 5000
 
 
 class SearchModel(BaseModel):
@@ -43,8 +43,6 @@ class SearchModel(BaseModel):
     ] = datetime.date.today()
     end_date: Optional[Union[datetime.datetime, datetime.date]] = datetime.date.today()
     query: Optional[str] = ""
-    cursor: Optional[str] = None
-    page_size: Optional[int] = 100
 
 
 from mabel.data.readers.internals.sql_reader import SqlReader
@@ -56,11 +54,9 @@ def do_search(search: SearchModel):
     sql_reader = SqlReader(
         start_date=search.start_date,
         end_date=search.end_date,
-        cursor=search.cursor,
         sql_statement=search.query,
         #inner_reader=DiskReader,
         #raw_path=True,
-        thread_count=8,
         project=os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader
@@ -87,7 +83,7 @@ def handle_start_request(request: SearchModel):
     try:
         results = do_search(request)
         response = {
-            "results": results.take(min(RESULT_BATCH, request.page_size)).collect(),
+            "results": results.take(RESULT_BATCH).collect(),
             "cursor": results.cursor(),
             "record_count": results.count(),
         }
@@ -181,6 +177,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:application",
         host="0.0.0.0",  # nosec - targetting CloudRun
-        port=int(os.environ.get("PORT", 8080)),
+        port=int(os.environ.get("PORT", 8082)),
         lifespan='on'
     )

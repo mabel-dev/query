@@ -18,6 +18,10 @@
     --theme-color-dark-blue: #092f5d;
 }
 
+.btn {
+    white-space: nowrap;
+}
+
 .btn-fixed-width {
     width: 132px !important;
     margin-left: 5px;
