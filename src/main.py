@@ -89,12 +89,16 @@ def handle_start_request(request: SearchModel):
             "record_count": results.count(),
         }
         return response
+    except HTTPException:
+        raise
     except Exception as err:
+        trace = traceback.format_exc()
         error_message = {"error": type(err).__name__, "detail": str(err)}
-        logger.error(error_message)
+        logger.error(f"Error {type(err).__name__} - {err}:\n{trace}")
         raise HTTPException(status_code=418, detail=error_message)
     except SystemExit as err:
-        logger.alert(err)
+        trace = traceback.format_exc()
+        logger.alert(f"Fatal Error {type(err).__name__} - {err}:\n{trace}")
         raise HTTPException(status_code=500, detail=err)
 
 
