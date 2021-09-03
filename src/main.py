@@ -196,4 +196,5 @@ log = {
 }
 ## textPayload: "text"
 
-print(log)
+import json
+print(json.dumps(log))
