@@ -110,9 +110,6 @@ def handle_start_request(datastore:Optional[str]=None):
         if not datastore in context["datastores"]:
             return "Datastore Doesn't Exist"
         
-        
-
-
     except HTTPException:
         raise
     except Exception as err:
@@ -184,6 +181,19 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:application",
         host="0.0.0.0",  # nosec - targetting CloudRun
-        port=int(os.environ.get("PORT", 8082)),
+        port=int(os.environ.get("PORT", 8083)),
         lifespan='on'
     )
+
+
+log = {
+    "severity": "ERROR",
+    "message": "this is a text log",
+    "logging.googleapis.com/labels": {"label_1": "one", "label_2": "two"},
+    "logging.googleapis.com/sourceLocation": {"file":"get_data.py","line":"142","function":"getData"},
+    "jsonPayload": {"a":"1", "b": 2},
+    "logging.googleapis.com/spanId": '0000000000000001'
+}
+## textPayload: "text"
+
+print(log)
