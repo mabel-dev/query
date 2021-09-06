@@ -11,7 +11,7 @@ isn't used.
 
 VINTAGE and MACARON are schemes from eCharts, this library isn't used
 
-SPROUT is the default color scheme - it's extracted and tweaked from an image
+SPROUT is the default color scheme
 */
 
 // CONTINUOUS
@@ -63,6 +63,9 @@ function colorGradient(colors, fadeFraction) {
 function getColors(scheme, steps) {
     // if we're using fewer colors than in the scheme
     if (steps <= scheme.length) {
+        if (steps == 2) {
+            return [scheme[0], scheme[scheme.length - 1]]
+        }
         return scheme
     }
     colors = []

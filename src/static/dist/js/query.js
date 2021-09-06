@@ -15,7 +15,7 @@ function setCookie(cname, cvalue, exdays) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     let expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    document.cookie = cname + "=" + encodeURI(cvalue) + ";" + expires + ";path=/";
 }
 
 function getCookie(cname) {
@@ -127,7 +127,8 @@ function execute() {
             document.getElementById('page-back').disabled = (_page_number == 1)
             document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length;
 
-            if (_results.cursor === null) {
+            if (_results.cursor !== null) {
+                console.log(_results.cursor)
                 _records = _results.results.length
             } else {
                 _records = "Many"
