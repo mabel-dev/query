@@ -61,7 +61,7 @@ def do_search(search: SearchModel):
         import pyarrow.parquet
 
         gcs_bucket_name = 'mabel'
-        GCP_Project_Name = 'mabel_data'
+        GCP_Project_Name = 'mabeldev'
 
         gs_path = "gcs://mabel_data/PARQUET/tweets.parquet"
 
