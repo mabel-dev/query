@@ -76,7 +76,7 @@ def do_sql_search(search: SearchModel):
 def do_search(search: SearchModel):
 
     if "PARQUET" in search.query.upper():
-        DictSet(do_sql_search(search.query))
+        return DictSet(do_sql_search(search.query))
 
     else:
         sql_reader = SqlReader(
