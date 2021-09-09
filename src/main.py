@@ -65,7 +65,7 @@ def do_search(search: SearchModel):
         
         credentials, _ = google.auth.default()
         fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
-        arrow_data = pyarrow.parquet.read_table("/PARQUET/**", filesystem=fs_gcs)
+        arrow_data = pyarrow.parquet.read_table("/mabel_data/PARQUET/**", filesystem=fs_gcs)
         s = conn.register_arrow("tweets", arrow_data)
 
         res = conn.execute(search.query)
