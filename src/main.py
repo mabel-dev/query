@@ -50,29 +50,33 @@ from mabel.data.readers.internals.sql_reader import SqlReader
 from mabel.adapters.disk import DiskReader
 
 
+def do_sql_search(search: SearchModel):
+    import duckdb
+    conn = duckdb.connect()
+
+    import gcsfs
+    import google.auth
+    import pyarrow.parquet
+
+    gcs_bucket_name = 'mabel'
+    GCP_Project_Name = 'mabeldev'
+
+    gs_path = "gcs://mabel_data/PARQUET/tweets.parquet"
+
+    credentials, _ = google.auth.default()
+    fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
+    arrow_data = pyarrow.parquet.read_table(gs_path, filesystem=fs_gcs)
+    s = conn.register_arrow("tweets", arrow_data)
+
+    res = conn.execute(search.query)
+    cols = res.description
+    for row in range(10):
+        yield ({cols[i][0]:v for i,v in enumerate(res.fetchone())})
+
 def do_search(search: SearchModel):
 
     if "PARQUET" in search.query.upper():
-        import duckdb
-        conn = duckdb.connect()
-
-        import gcsfs
-        import google.auth
-        import pyarrow.parquet
-
-        gcs_bucket_name = 'mabel'
-        GCP_Project_Name = 'mabeldev'
-
-        gs_path = "gcs://mabel_data/PARQUET/tweets.parquet"
-
-        credentials, _ = google.auth.default()
-        fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
-        arrow_data = pyarrow.parquet.read_table(gs_path, filesystem=fs_gcs)
-        s = conn.register_arrow("tweets", arrow_data)
-
-        res = conn.execute(search.query)
-        for i in range(10):
-            print(res.fetchone())
+        DictSet(do_sql_search(search.query))
 
     else:
         sql_reader = SqlReader(
