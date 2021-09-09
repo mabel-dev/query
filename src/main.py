@@ -64,8 +64,6 @@ def do_search(search: SearchModel):
         GCP_Project_Name = 'mabel_data'
 
         gs_path = "gs://mabel_data/PARQUET/*.parquet"
-        all_paths_from_gs = gcsfs.glob(path=gs_path)
-        
 
         credentials, _ = google.auth.default()
         fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
