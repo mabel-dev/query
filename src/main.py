@@ -57,7 +57,7 @@ def do_search(search: SearchModel):
         end_date=search.end_date,
         sql_statement=search.query,
         #inner_reader=DiskReader,
-        #raw_path=True,
+        raw_path=True,
         project=os.environ.get("PROJECT_NAME"),
     )
     return sql_reader.reader
@@ -141,10 +141,10 @@ def download_results(start_date: datetime.date, end_date: datetime.date, query: 
         request = SearchModel(start_date=start_date, end_date=end_date, query=query)
         results = do_search(request)
 
-        # this allows us to get the columns from the first 25 records,
+        # this allows us to get the columns from the first 100 records,
         # if the data is more hetreogenous than that, it's not going to
         # play well with being in a table
-        head_results = DictSet(results.take(25).collect())
+        head_results = DictSet(results.take(100).collect())
         columns = head_results.keys()
 
         # add the records back
@@ -181,20 +181,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:application",
         host="0.0.0.0",  # nosec - targetting CloudRun
-        port=int(os.environ.get("PORT", 8083)),
+        port=int(os.environ.get("PORT", 8080)),
         lifespan='on'
     )
-
-
-log = {
-    "severity": "ERROR",
-    "message": "this is a text log",
-    "logging.googleapis.com/labels": {"label_1": "one", "label_2": "two"},
-    "logging.googleapis.com/sourceLocation": {"file":"get_data.py","line":"142","function":"getData"},
-    "jsonPayload": {"a":"1", "b": 2},
-    "logging.googleapis.com/spanId": '0000000000000001'
-}
-## textPayload: "text"
-
-import json
-print(json.dumps(log))
