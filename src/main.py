@@ -62,10 +62,14 @@ def do_search(search: SearchModel):
 
         gcs_bucket_name = 'mabel'
         GCP_Project_Name = 'mabel_data'
+
+        gs_path = "gs://mabel_data/PARQUET/*.parquet"
+        all_paths_from_gs = gcsfs.glob(path=gs_path)
         
+
         credentials, _ = google.auth.default()
         fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
-        arrow_data = pyarrow.parquet.read_table("/mabel_data/PARQUET/**", filesystem=fs_gcs)
+        arrow_data = pyarrow.parquet.read_table(gs_path, filesystem=fs_gcs)
         s = conn.register_arrow("tweets", arrow_data)
 
         res = conn.execute(search.query)
