@@ -52,15 +52,28 @@ from mabel.adapters.disk import DiskReader
 
 def do_search(search: SearchModel):
 
-    sql_reader = SqlReader(
-        start_date=search.start_date,
-        end_date=search.end_date,
-        sql_statement=search.query,
-        #inner_reader=DiskReader,
-        raw_path=True,
-        project=os.environ.get("PROJECT_NAME"),
-    )
-    return sql_reader.reader
+    if "PARQUET" in search.query.upper():
+        import duckdb
+        conn = duckdb.connect()
+
+        import pyarrow.parquet
+        arrow_data = pyarrow.parquet.read_table("gs://mabel_data/PARQUET/**")
+        s = conn.register_arrow("tweets", arrow_data)
+
+        res = conn.execute(search.query)
+        for i in range(10):
+            print(res.fetchone())
+
+    else:
+        sql_reader = SqlReader(
+            start_date=search.start_date,
+            end_date=search.end_date,
+            sql_statement=search.query,
+            #inner_reader=DiskReader,
+            raw_path=True,
+            project=os.environ.get("PROJECT_NAME"),
+        )
+        return sql_reader.reader
 
 
 from fastapi.staticfiles import StaticFiles
