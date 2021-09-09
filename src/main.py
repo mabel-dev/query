@@ -71,7 +71,7 @@ def do_sql_search(search: SearchModel):
     res = conn.execute(search.query)
     cols = res.description
     for row in range(10):
-        yield ({cols[i][0]:v for i,v in enumerate(res.fetchone())})
+        yield {cols[i][0]:v for i,v in enumerate(res.fetchone())}
 
 def do_search(search: SearchModel):
 
@@ -90,11 +90,9 @@ def do_search(search: SearchModel):
         return sql_reader.reader
 
 
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
-
-
 
 
 # set up API interface
