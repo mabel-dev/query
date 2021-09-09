@@ -59,6 +59,9 @@ def do_search(search: SearchModel):
         import gcsfs
         import google.auth
         import pyarrow.parquet
+
+        gcs_bucket_name = 'mabel'
+        GCP_Project_Name = 'mabel_data'
         
         credentials, _ = google.auth.default()
         fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
