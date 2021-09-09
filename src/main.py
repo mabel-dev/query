@@ -56,8 +56,13 @@ def do_search(search: SearchModel):
         import duckdb
         conn = duckdb.connect()
 
+        import gcsfs
+        import google.auth
         import pyarrow.parquet
-        arrow_data = pyarrow.parquet.read_table("gs://mabel_data/PARQUET/**")
+        
+        credentials, _ = google.auth.default()
+        fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
+        arrow_data = pyarrow.parquet.read_table("gs://mabel_data/PARQUET/**", filesystem=fs_gcs)
         s = conn.register_arrow("tweets", arrow_data)
 
         res = conn.execute(search.query)
