@@ -58,13 +58,11 @@ def do_sql_search(search: SearchModel):
     import google.auth
     import pyarrow.parquet
 
-    gcs_bucket_name = 'mabel'
-    GCP_Project_Name = 'mabeldev'
-
-    gs_path = "gcs://mabel_data/PARQUET/tweets.parquet"
+    project = 'mabeldev'
+    gs_path = "gcs://mabel_data/PARQUET/NVD/**.parquet"
 
     credentials, _ = google.auth.default()
-    fs_gcs = gcsfs.GCSFileSystem(project=GCP_Project_Name, token=credentials)
+    fs_gcs = gcsfs.GCSFileSystem(project=project, token=credentials)
     arrow_data = pyarrow.parquet.read_table(gs_path, filesystem=fs_gcs)
     s = conn.register_arrow("tweets", arrow_data)
 
