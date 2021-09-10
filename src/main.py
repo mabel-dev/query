@@ -70,8 +70,11 @@ def do_sql_search(search: SearchModel):
 
     res = conn.execute(search.query)
     cols = res.description
-    for row in range(10):
-        yield {cols[i][0]:v for i,v in enumerate(res.fetchone())}
+    for counter in range(RESULT_BATCH):
+        row = res.fetchone()
+        if not row:
+            break
+        yield {cols[i][0]:v for i,v in enumerate(row)}
 
 def do_search(search: SearchModel):
 
