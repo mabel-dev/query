@@ -59,7 +59,7 @@ def do_sql_search(search: SearchModel):
     import pyarrow.parquet
 
     project = 'mabeldev'
-    gs_path = "gcs://mabel_data/PARQUET/NVD/**.parquet"
+    gs_path = "gcs://mabel_data/PARQUET/NVD/year_2021/month_09/day_10/as_at_20210910-183604/**.parquet"
 
     credentials, _ = google.auth.default()
     fs_gcs = gcsfs.GCSFileSystem(project=project, token=credentials)
