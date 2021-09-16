@@ -85,10 +85,10 @@ def do_search(search: SearchModel):
             end_date=search.end_date,
             sql_statement=search.query,
             #inner_reader=DiskReader,
-            raw_path=True,
+            #raw_path=True,
             project=os.environ.get("PROJECT_NAME"),
         )
-        return sql_reader.reader
+        return sql_reader
 
 
 
