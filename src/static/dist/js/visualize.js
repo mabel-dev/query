@@ -136,6 +136,8 @@ function update_visualization(query, results) {
         document.getElementById("visualize").innerHTML = '<canvas id="visualization"></canvas>'
         if (!labels.some(isNaN)) {
             draw_histogram(data, labels, group_column)
+        } else if (labels.every(date => Date.parse(date) != NaN)) {
+            draw_histogram(data, labels, group_column)
         } else {
             draw_pie(data, labels, group_column)
         }
