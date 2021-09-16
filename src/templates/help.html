@@ -1,16 +1,17 @@
 <section id="main">
-    <h1>Help</h1>
+    <h1>Query Help</h1>
     <h2>SQL Lab</h2>
-    <h3>Query Editor</h3>
     <p>Query supports a limited Data Query Language.</p>
-    <code>
-        SELECT * | <var>select_expression</var> | DISTINCT 
-        FROM <var>dataset</var> 
-        [WHERE <var>filter_expression</var>]
-        [GROUP BY <var>column_name</var>]
-        [ORDER BY <var>column_name</var> ASC|DESC] 
-        [LIMIT <var>n</var>]
-    </code>
+    <pre>
+        <code>
+            SELECT * | <var>select_expression</var> | DISTINCT 
+            FROM <var>dataset</var> 
+            [WHERE <var>filter_expression</var>]
+            [GROUP BY <var>column_name</var>]
+            [ORDER BY <var>column_name</var> ASC|DESC] 
+            [LIMIT <var>n</var>]
+        </code>
+    </pre>
     <p>JOINs are not supported implemented</p>
 
     <h4>select_expression</h4>
@@ -49,20 +50,29 @@
         <li>MIN</li>
     </ul>
 
-    <p>Scalar Functions:</p>
+    <p>Functions:</p>
     <ul>
         <li>DAY - extract the day of the month from a date</li>
         <li>MONTH - extract the month of the year from a date</li>
         <li>YEAR - extract the year from a date</li>
         <li>DATE - extract/convert the date from a timestamp</li>
         <li>QUARTER - extract the quarter of the year from a date</li>
+        <li>WEEK - extract the week of the year (ISO 8601)</li>
+        <li>TIME **</li>
+        <li>HOUR **</li>
+        <li>MINUTE **</li>
+        <li>SECOND **</li>
+
         <li>UCASE - convert a string to upper case</li>
         <li>LCASE- convert a string to lower case</li>
         <li>LEN - calculate the length of a string</li>
+        <li>TRIM - remove whitespace from the start and end of a string</li>
+
         <li>ROUND - round a number</li>
         <li>TRUNC - truncate a number</li>
         <li>INT - convert a number or string to an integer (same logic as INT)</li>
         <li>FLOAT - convert a number or string to a floating point number</li>
+
         <li>BOOLEAN - convert a string TRUE/FALSE to a boolean</li>
         <li>ISNONE - returns TRUE (boolean) if a value is none/null</li>
     </ul>
