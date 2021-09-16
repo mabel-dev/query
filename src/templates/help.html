@@ -2,17 +2,16 @@
     <h1>Help</h1>
     <h2>SQL Lab</h2>
     <h3>Query Editor</h3>
-    <p>Only a subset of the DQL (Data Query Language) is supported.</p>
-    <ul>
-        <li>SELECT</li>
-        <li>DISTINCT</li>
-        <li>FROM</li>
-        <li>WHERE</li>
-        <li>GROUP BY</li>
-        <li>ORDER BY</li>
-        <li>LIMIT</li>
-    </ul>
-    <p>NOTE: as at time of writing help, JOINs and HAVING were not implemented</p>
+    <p>Query supports a limited Data Query Language.</p>
+    <code>
+        SELECT * | <var>select_expression</var> | DISTINCT 
+        FROM <var>dataset</var> 
+        [WHERE <var>filter_expression</var>]
+        [GROUP BY <var>column_name</var>]
+        [ORDER BY <var>column_name</var> ASC|DESC] 
+        [LIMIT <var>n</var>]
+    </code>
+    <p>JOINs are not supported implemented</p>
 
     <p>Filter Operations:</p>
     <ul>
@@ -42,6 +41,7 @@
         <li>MONTH - extract the month of the year from a date</li>
         <li>YEAR - extract the year from a date</li>
         <li>DATE - extract/convert the date from a timestamp</li>
+        <li>QUARTER - extract the quarter of the year from a date</li>
         <li>UCASE - convert a string to upper case</li>
         <li>LCASE- convert a string to lower case</li>
         <li>LEN - calculate the length of a string</li>
@@ -49,6 +49,8 @@
         <li>TRUNC - truncate a number</li>
         <li>INT - convert a number or string to an integer (same logic as INT)</li>
         <li>FLOAT - convert a number or string to a floating point number</li>
+        <li>BOOLEAN - convert a string TRUE/FALSE to a boolean</li>
+        <li>ISNONE - returns TRUE (boolean) if a value is none/null</li>
     </ul>
     </p>
 
