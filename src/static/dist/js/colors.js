@@ -11,7 +11,8 @@ isn't used.
 
 VINTAGE and MACARON are schemes from eCharts, this library isn't used
 
-SPROUT is the default color scheme
+SPROUT is the default color scheme, it based on a color scheme from a presentation by
+a company called 'Sprout' not from a charting library.
 */
 
 // CONTINUOUS

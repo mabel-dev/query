@@ -129,9 +129,9 @@ function update_visualization(query, results) {
     if ((count_column !== undefined) && (group_column !== undefined)) {
         data = []
         labels = []
-        for (var i = 0; i < results.results.length; i++) {
-            labels.push(results.results[i][group_column])
-            data.push(results.results[i][count_column])
+        for (var i = 0; i < results.length; i++) {
+            labels.push(results[i][group_column])
+            data.push(results[i][count_column])
         }
         document.getElementById("visualize").innerHTML = '<canvas id="visualization"></canvas>'
         if (!labels.some(isNaN)) {
@@ -144,7 +144,7 @@ function update_visualization(query, results) {
     }
     // if we're just counting everything, show a single value
     else if ((count_column !== undefined) && (group_column === undefined)) {
-        document.getElementById("visualize").innerText = results.results[0][count_column]
+        document.getElementById("visualize").innerText = results[0][count_column]
     }
     // we don't have a auto chart for that yet
     else {

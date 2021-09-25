@@ -1,7 +1,7 @@
 var _records_per_page = parseInt(document.getElementById("records_per_page").value);
 var _query = "";
 var _records = "Many";
-var _results = {};
+var _results = [];
 var _history = [];
 var _page_number = 0;
 var _interval_obj = null;
@@ -88,6 +88,8 @@ function execute() {
     if (_interval_obj) {
         clearInterval(_interval_obj)
     }
+
+    do_ticker();
     _interval_obj = setInterval(function() { do_ticker() }, 250);
 
     var url = '/v1/search';
@@ -104,60 +106,65 @@ function execute() {
         })
         .then(response => {
             clearInterval(_interval_obj);
-            if (response.ok) return response.json();
-            return response.text().then(response => { throw new Error(response) })
-        })
-        .then(response => {
-            //console.log(response)
+            if (response.ok) {
+                response.text().then(function(text) {
+                    _results = text.toString().split(/[\n]/).filter(x => x).map(JSON.parse)
 
-            if (response.results.length == 0) {
-                e = {}
-                e.error = "No Records Found"
-                e.detail = "The query appears to be valid, but it matched no records"
-                wrapper = {}
-                wrapper.detail = e
-                throw new Error(JSON.stringify(wrapper))
-            }
-            response.columns = get_columns(response.results[0]);
-            _results = response
-            _record_count = response.results.length
+                    _record_count = _results.length
+                    if (_record_count == 0) {
+                        throw new Error(JSON.stringify({
+                            "error": "Zero Records Found",
+                            "detail": "The query returned no records"
+                        }))
+                    }
 
-            renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'))
-            document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(2)
-            document.getElementById('page-back').disabled = (_page_number == 1)
-            document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length;
+                    _results.columns = get_columns(_results[0]);
+                    renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'))
 
-            if (_results.cursor !== null) {
-                console.log(_results.cursor)
-                _records = _results.results.length
+                    let max_record = _page_number * _records_per_page
+                    if (_results.length != recordBufferSize) {
+                        _records = _results.length
+                    } else {
+                        _records = "Many (" + _results.length + " available)"
+                        max_record = Math.min(_records, _page_number * _records_per_page)
+                    }
+
+                    document.getElementById('page-back').disabled = (_page_number == 1)
+                    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
+                    document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
+
+                    update_history(_query, "okay");
+                    update_visualization(_query, _results);
+                })
             } else {
-                _records = "Many"
+                console.log("THROW AN ERROR " + JSON.stringify(response))
+                if (response.status == "404") {
+                    throw new Error(JSON.stringify({
+                        "error": "Dataset Not Found",
+                        "detail": "The dataset was not able to be found, it may be missing for the selected period or it may not exist."
+                    }))
+                }
+                return response.text().then(response => {
+                    error_object = JSON.parse(response).detail
+                    error_object.error = error_object.error.replace(/([A-Z])/g, ' $1').trim()
+                    throw new Error(JSON.stringify(error_object))
+                })
             }
-
-            let max_record = _page_number * _records_per_page
-            if (_records != "Many") {
-                max_record = Math.min(_records, _page_number * _records_per_page)
-            }
-            document.getElementById('page-back').disabled = (_page_number == 1)
-            document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
-            document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
-
-            update_history(_query, "okay");
-            update_visualization(_query, _results)
         })
         .catch(error => {
+            clearInterval(_interval_obj);
             update_history(_query, "fail");
             console.log(error.message)
-            errorObject = JSON.parse(error.message).detail
+            errorObject = JSON.parse(error.message)
             document.getElementById("data-table-wrapper").innerHTML =
                 `
 <div class="alert alert-error col-sm-8" role="alert">
-  <h4 class="alert-heading">${errorObject.error}</h4>
-  <p>${errorObject.detail}</p>
-  <hr>
-  <p class="mb-0">Update your query and try again.</p>
+    <h4 class="alert-heading">${errorObject.error}</h4>
+    <p>${errorObject.detail}</p>
+    <hr />
+    <p class="mb-0">Update your query and try again.</p>
 </div>
-                `;
+`;
         })
 }
 
@@ -262,7 +269,6 @@ function run_query() {
     _query = SqlEditor.getValue('\n');
     _records = "Many"
     _cursors = []
-    _cursors[0] = ""
     _page_number = 1
 
     execute();
@@ -274,25 +280,26 @@ function download_query() {
     original_text = download_button.innerHTML;
     download_button.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only"></span></div> Download'
 
-    query = SqlEditor.getValue('\n');
-    start_date = document.getElementById('start_date').value
-    end_date = document.getElementById('end_date').value
+    let url = '/download/'
+    let data = {};
+    data.query = SqlEditor.getValue('\n');
+    data.start_date = document.getElementById('start_date').value
+    data.end_date = document.getElementById('end_date').value
 
-    var url = '/download/' + start_date + '/' + end_date + '/' + query
+    //    const authHeader = "Bearer 6Q************"
+    //    const options = {
+    //        headers: {
+    //            //  Authorization: authHeader
+    //        }
+    //    };
 
-    console.log(url)
-
-    const authHeader = "Bearer 6Q************"
-
-    const options = {
-        headers: {
-            //  Authorization: authHeader
-        }
-    };
-
-    fetch(url, options)
+    fetch(url, {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
         .then(response => {
-            const filename = response.headers.get('Content-Disposition').split('filename=')[1];
+            const filename = "download.csv" //response.headers.get('Content-Disposition').split('filename=')[1];
             response.blob().then(blob => {
                 let url = window.URL.createObjectURL(blob);
                 let a = document.createElement('a');
@@ -300,6 +307,8 @@ function download_query() {
                 a.download = filename;
                 a.click();
             });
+            download_button.innerHTML = original_text
+
         });
 
 }
@@ -320,7 +329,7 @@ function set_records_per_page() {
             max_record = Math.min(_records, _page_number * _records_per_page)
         }
         document.getElementById('page-back').disabled = (_page_number == 1)
-        document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+        document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
         document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
     }
 }
@@ -333,7 +342,7 @@ function page_forward() {
         max_record = Math.min(_records, _page_number * _records_per_page)
     }
     document.getElementById('page-back').disabled = (_page_number == 1)
-    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
     document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 }
 
@@ -345,7 +354,7 @@ function page_back() {
         max_record = Math.min(_records, _page_number * _records_per_page)
     }
     document.getElementById('page-back').disabled = (_page_number == 1)
-    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.results.length
+    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
     document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 }
 

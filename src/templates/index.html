@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="dist/img/q-logo.png">
 
     <link href="dist/fonts/JetBrains Mono/font.css" rel="stylesheet" />
-    <link href="dist/fonts/Pacifico/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Rubik/font.css" rel="stylesheet" />
     <link href="dist/fonts/Roboto Condensed/font.css" rel="stylesheet" />
     <link href="dist/fonts/Roboto/font.css" rel="stylesheet" />
     <link href="dist/fonts/Open Sans Condensed/font.css" rel="stylesheet" />
@@ -30,7 +30,7 @@
 
         <nav id="sidebar">
             <div class="sidebar-header">
-                <span class="brand-text">Query</span>
+                <span class="brand-text"><i class="far fa-compass"></i> Query</span>
             </div>
             <ul class="list-unstyled sidebar-options">
                 <li class="active">
@@ -61,7 +61,7 @@
                             <div class="col-sm-8 clear-padding">
                                 <textarea id="sql-editor" spellcheck="false">
 SELECT *
-FROM mabel_data.RAW.NVD.CVE_LIST
+FROM dcsgva-data/PROCESSED/NVD/CVE_LIST
 </textarea>
                             </div>
                             <div class="col-sm-4">
@@ -142,13 +142,13 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                             <hr />
                             <pre id="query1" class="code">
 SELECT COUNT(*)
-FROM mabel_data.RAW.NVD.CVE_LIST
-GROUP BY impact.baseMetricV2.cvssV2.baseScore</pre><button class="btn btn-action" id="example-query-1"><i class="fas fa-arrow-up"></i> Try This Query</button>
+FROM dcsgva-data/PROCESSED/NVD/CVE_LIST
+GROUP BY YEAR(publishedDate)</pre><button class="btn btn-action" id="example-query-1"><i class="fas fa-arrow-up"></i> Try This Query</button>
                             <hr />
                             <pre id="query2" class="code">
 SELECT COUNT(*)
-FROM mabel_data.RAW.NVD.CVE_LIST
-GROUP BY cve.CVE_data_meta.ASSIGNER</pre><button class="btn btn-action" id="example-query-2"><i class="fas fa-arrow-up"></i> Try This Query</button>
+FROM dcsgva-data/PROCESSED/VIEWS/QVM_OWNERS
+GROUP BY Allocation</pre><button class="btn btn-action" id="example-query-2"><i class="fas fa-arrow-up"></i> Try This Query</button>
                             <hr />
 
                         </div>

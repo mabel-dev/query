@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="dist/img/q-logo.png">
 
     <link href="dist/fonts/JetBrains Mono/font.css" rel="stylesheet" />
-    <link href="dist/fonts/Pacifico/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Rubik/font.css" rel="stylesheet" />
     <link href="dist/fonts/Roboto Condensed/font.css" rel="stylesheet" />
     <link href="dist/fonts/Roboto/font.css" rel="stylesheet" />
     <link href="dist/fonts/Open Sans Condensed/font.css" rel="stylesheet" />
@@ -78,29 +78,33 @@
 
         <p>Functions:</p>
         <ul>
-            <li>DAY - extract the day of the month from a date</li>
-            <li>MONTH - extract the month of the year from a date</li>
-            <li>YEAR - extract the year from a date</li>
-            <li>DATE - extract/convert the date from a timestamp</li>
-            <li>QUARTER - extract the quarter of the year from a date</li>
-            <li>WEEK - extract the week of the year (ISO 8601)</li>
-            <li>TIME **</li>
-            <li>HOUR **</li>
-            <li>MINUTE **</li>
-            <li>SECOND **</li>
+            <li>DAY(date) - extract the day of the month from a date</li>
+            <li>MONTH(date) - extract the month of the year from a date</li>
+            <li>YEAR(date) - extract the year from a date</li>
+            <li>DATE(date) - extract/convert the date from a timestamp</li>
+            <li>QUARTER(date) - extract the quarter of the year from a date</li>
+            <li>WEEK(date) - extract the week of the year (ISO 8601)</li>
+            <li>TIME(timestamp) - extract the time from a timestamp</li>
+            <li>HOUR(timestamp) - extract the hour from a timestamp</li>
+            <li>MINUTE(timestamp) - extract the minutes from a timestamp</li>
+            <li>SECOND(timestamp) - extract the seconds from a timestamp</li>
 
-            <li>UCASE - convert a string to upper case</li>
-            <li>LCASE- convert a string to lower case</li>
-            <li>LEN - calculate the length of a string</li>
-            <li>TRIM - remove whitespace from the start and end of a string</li>
+            <li>UPPER(string) - convert a string to upper case (also UCASE)</li>
+            <li>LOWER(string) - convert a string to lower case (also LCASE)</li>
+            <li>LEN(string) - calculate the length of a string</li>
+            <li>TRIM(string) - remove whitespace from the start and end of a string</li>
+            <li>LEFT(string, characters) extract the leftmost characters from a string</li>
+            <li>RIGHT(string, characters) - extract the rightmost characters from a string</li>
+            <li>MID(string, start, length) - extract a substring from a string</li>
+            <li>CONCAT(string, string ... ) - concatenate a set of strings</li>
 
-            <li>ROUND - round a number</li>
-            <li>TRUNC - truncate a number</li>
-            <li>INT - convert a number or string to an integer (same logic as INT)</li>
-            <li>FLOAT - convert a number or string to a floating point number</li>
+            <li>ROUND(number) - round a number</li>
+            <li>TRUNC(number) - truncate a number</li>
+            <li>INT(number) - convert a number or string to an integer (same logic as INT)</li>
+            <li>FLOAT(number) - convert a number or string to a floating point number</li>
 
-            <li>BOOLEAN - convert a string TRUE/FALSE to a boolean</li>
-            <li>ISNONE - returns TRUE (boolean) if a value is none/null</li>
+            <li>BOOLEAN(string) - convert a string TRUE/FALSE to a boolean</li>
+            <li>ISNONE(any) - returns TRUE (boolean) if a value is none/null</li>
         </ul>
         </p>
 

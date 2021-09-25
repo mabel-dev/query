@@ -1,36 +1,35 @@
-"""
-Search Backend
-
-"""
-from glob import glob
 import os
 import sys
-import traceback
 
 sys.path.insert(0, os.path.join(sys.path[0], "../../mabel/"))
 
-
-from typing import Optional, Union, List, Any
-from fastapi.responses import UJSONResponse, HTMLResponse
+import orjson
+import traceback
+from typing import Optional, Union
+from fastapi.responses import UJSONResponse, HTMLResponse, Response
 from fastapi import FastAPI, HTTPException, Request
-import os
 import uvicorn
 from mabel.logging import get_logger, set_log_name
 from mabel.utils.common import build_context
 
+from mabel.errors import DataNotFoundError
+
 
 def find_path(path):
     import glob
+
     paths = glob.iglob(f"**/{path}", recursive=True)
     for i in paths:
         if i.endswith(path):
+            get_logger().info(f"Found `{path}` at `{i}`")
             return i
+    get_logger().error(f"Did not find `{path}`")
 
 
 context = build_context()
 set_log_name(context["job_name"])
 logger = get_logger()
-get_logger().setLevel(5)
+logger.setLevel(5)
 
 import datetime
 from pydantic import BaseModel
@@ -50,46 +49,24 @@ from mabel.data.readers.internals.sql_reader import SqlReader
 from mabel.adapters.disk import DiskReader
 
 
-def do_sql_search(search: SearchModel):
-    import duckdb
-    conn = duckdb.connect()
-
-    import gcsfs
-    import google.auth
-    import pyarrow.parquet
-
-    project = 'mabeldev'
-    gs_path = "mabel_data/PARQUET/NVD/year_2021/month_09/day_10/as_at_20210910-183604/"
-
-    credentials, _ = google.auth.default()
-    fs_gcs = gcsfs.GCSFileSystem(project=project, token=credentials)
-    arrow_data = pyarrow.parquet.read_table(gs_path, filesystem=fs_gcs)
-    s = conn.register_arrow("tweets", arrow_data)
-
-    res = conn.execute(search.query)
-    cols = res.description
-    for counter in range(RESULT_BATCH):
-        row = res.fetchone()
-        if not row:
-            break
-        yield {cols[i][0]:v for i,v in enumerate(row)}
-
 def do_search(search: SearchModel):
 
-    if "PARQUET" in search.query.upper():
-        return DictSet(do_sql_search(search))
+    raw_path = False
+    inner_reader = None
 
-    else:
-        sql_reader = SqlReader(
-            start_date=search.start_date,
-            end_date=search.end_date,
-            sql_statement=search.query,
-            #inner_reader=DiskReader,
-            #raw_path=True,
-            project=os.environ.get("PROJECT_NAME"),
-        )
-        return sql_reader
+    if os.environ.get("K_SERVICE") is None:
+        raw_path = True
+        inner_reader = DiskReader
 
+    sql_reader = SqlReader(
+        start_date=search.start_date,
+        end_date=search.end_date,
+        sql_statement=search.query,
+        raw_path=raw_path,
+        inner_reader=inner_reader,
+        project=os.environ.get("PROJECT_NAME"),
+    )
+    return sql_reader
 
 
 from fastapi.staticfiles import StaticFiles
@@ -105,18 +82,33 @@ application.mount(
 )
 
 
-@application.post("/v1/search", response_class=UJSONResponse)
+def serialize_response(response, max_records):
+    i = -1
+    for i, record in enumerate(response):
+        if i == max_records:
+            break
+        if hasattr(record, "mini"):
+            yield record.mini + b"\n"
+        else:
+            yield orjson.dumps(record) + b"\n"
+
+
+@application.post("/v1/search")
 def handle_start_request(request: SearchModel):
     try:
         results = do_search(request)
-        response = {
-            "results": results.take(RESULT_BATCH).collect(),
-            "cursor": results.cursor(),
-            "record_count": results.count(),
-        }
+        response = Response(
+            b"\n".join(serialize_response(results, RESULT_BATCH)),
+            media_type="application/jsonlines",
+        )
+
         return response
+
     except HTTPException:
         raise
+    except DataNotFoundError as err:
+
+        raise HTTPException(status_code=404, detail="Dataset not Found")
     except Exception as err:
         trace = traceback.format_exc()
         error_message = {"error": type(err).__name__, "detail": str(err)}
@@ -129,13 +121,13 @@ def handle_start_request(request: SearchModel):
 
 
 @application.get("/v1/datastores", response_class=UJSONResponse)
-def handle_start_request(datastore:Optional[str]=None):
+def handle_start_request(datastore: Optional[str] = None):
     try:
         if not datastore:
             return context["datastores"]
         if not datastore in context["datastores"]:
             return "Datastore Doesn't Exist"
-        
+
     except HTTPException:
         raise
     except Exception as err:
@@ -148,8 +140,9 @@ def handle_start_request(datastore:Optional[str]=None):
         logger.alert(f"Fatal Error {type(err).__name__} - {err}:\n{trace}")
         raise HTTPException(status_code=500, detail=err)
 
+
 from fastapi.responses import StreamingResponse
-from mabel import DictSet
+from mabel.data import DictSet, STORAGE_CLASS
 
 
 def join_lists(list_a, list_b):
@@ -157,24 +150,31 @@ def join_lists(list_a, list_b):
     yield from list_b
 
 
-from internals.csv_writer import csv_set
+from internals.drivers.csv_writer import csv_set
 
 
-@application.get("/download/{start_date}/{end_date}/{query}")
-def download_results(start_date: datetime.date, end_date: datetime.date, query: str):
+@application.post("/download/")
+def download_results(request: SearchModel):
 
     try:
-        request = SearchModel(start_date=start_date, end_date=end_date, query=query)
+        request = SearchModel(
+            start_date=request.start_date,
+            end_date=request.end_date,
+            query=request.query,
+        )
         results = do_search(request)
 
         # this allows us to get the columns from the first 100 records,
         # if the data is more hetreogenous than that, it's not going to
         # play well with being in a table
-        head_results = DictSet(results.take(100).collect())
+
+        temp_head = results.take(100).collect()
+
+        head_results = DictSet(temp_head)
         columns = head_results.keys()
 
         # add the records back
-        back_together = join_lists(head_results, results)
+        back_together = join_lists(temp_head, results)
 
         response = StreamingResponse(
             csv_set(back_together, columns), media_type="text/csv"
@@ -208,5 +208,5 @@ if __name__ == "__main__":
         "main:application",
         host="0.0.0.0",  # nosec - targetting CloudRun
         port=int(os.environ.get("PORT", 8080)),
-        lifespan='on'
+        lifespan="on",
     )

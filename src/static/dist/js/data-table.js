@@ -38,10 +38,10 @@ function renderTable(data, pageNumber, pageSize, dom) {
     right_justified_headers = []
 
     for (var i = startIndex; i < (startIndex + pageSize); i++) {
-        if (i < data.results.length) {
+        if (i < data.length) {
             row_data += `<tr><th scope="row" class="mono-font align-middle">${zeroPad(i + 1, 2)}</th>`;
             for (var h = 0; h < data.columns.length; h++) {
-                var cellValue = htmlEncode(data.results[i][data.columns[h]])
+                var cellValue = htmlEncode(data[i][data.columns[h]])
                 if (is_date(cellValue)) {
                     row_data += `<td class="cell_right">${moment(cellValue).format(timestampFormat)}</td>`
                     if (!right_justified_headers.includes(data.columns[h])) {
