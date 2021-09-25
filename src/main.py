@@ -84,7 +84,7 @@ application.mount(
 
 def serialize_response(response, max_records):
     i = -1
-    for i, record in enumerate(iter(response)):
+    for i, record in enumerate(response):
         if i == max_records:
             break
         if hasattr(record, "mini"):
