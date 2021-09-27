@@ -34,7 +34,7 @@
             </div>
             <ul class="list-unstyled sidebar-options">
                 <li class="active">
-                    <a href="/"><i class="fas fa-table"></i> SQL Lab</a>
+                    <a href="/"><i class="fas fa-table"></i> Lab</a>
                 </li>
                 <!--<li>
                     <a href="/"><i class="fas fa-chart-bar"></i> Visualize</a>
@@ -48,10 +48,30 @@
 
         <div id="content">
 
-            <nav id="top-navbar" class="navbar navbar-expand-lg">
+            <nav id="top-navbar" class="navbar navbar-expand-md">
                 <button type="button" id="sidebarCollapse" class="btn button-query-white">
-                        <i class="fas fa-bars"></i>
+                    <i class="fas fa-bars"></i>
                 </button>
+                <div class="container-fluid">
+                    <div class="navbar-collapse collapse">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link header-link" href="#"><i class="far fa-compass"></i> Explorer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link header-link" href="#"><i class="fas fa-flask"></i> Lab</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link header-link" href="#"><i class="fas fa-chart-bar"></i> Visualise</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                Identity
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
 
             <section id="main">
@@ -61,7 +81,7 @@
                             <div class="col-sm-8 clear-padding">
                                 <textarea id="sql-editor" spellcheck="false">
 SELECT *
-FROM dcsgva-data/PROCESSED/NVD/CVE_LIST
+FROM mabel_data.RAW.NVD.CVE_LIST
 </textarea>
                             </div>
                             <div class="col-sm-4">
@@ -142,12 +162,12 @@ FROM dcsgva-data/PROCESSED/NVD/CVE_LIST
                             <hr />
                             <pre id="query1" class="code">
 SELECT COUNT(*)
-FROM dcsgva-data/PROCESSED/NVD/CVE_LIST
+FROM mabel_data/PROCESSED/NVD/CVE_LIST
 GROUP BY YEAR(publishedDate)</pre><button class="btn btn-action" id="example-query-1"><i class="fas fa-arrow-up"></i> Try This Query</button>
                             <hr />
                             <pre id="query2" class="code">
 SELECT COUNT(*)
-FROM dcsgva-data/PROCESSED/VIEWS/QVM_OWNERS
+FROM mabel_data/PROCESSED/VIEWS/QVM_OWNERS
 GROUP BY Allocation</pre><button class="btn btn-action" id="example-query-2"><i class="fas fa-arrow-up"></i> Try This Query</button>
                             <hr />
 

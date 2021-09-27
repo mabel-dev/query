@@ -281,3 +281,13 @@ th {
     background-color: var(--theme-color-light-red);
     color: var(--theme-color-dark-red);
 }
+
+.sql-keyword {
+    color: var(--theme-color-dark-red);
+    font-weight: 300;
+}
+
+.sql-statement {
+    color: var(--theme-color-dark-blue);
+    font-weight: 400;
+}

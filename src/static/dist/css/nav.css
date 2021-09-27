@@ -10,6 +10,16 @@
     margin-bottom: 10px;
 }
 
+.content {
+    font-size: 1.2em;
+}
+
+.header-link {
+    font-size: 1.1em;
+    min-width: 5.5em;
+    text-align: center;
+}
+
 .wrapper {
     display: flex;
     width: 100%;

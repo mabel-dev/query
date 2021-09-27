@@ -11,28 +11,22 @@ var outcome
 const recordBufferSize = 2500
 const history_timestampFormat = "YYYY-MM-DD HH:mm:ss"
 
-function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + encodeURI(cvalue) + ";" + expires + ";path=/";
+function putData(key, value) {
+    localStorage.setItem(key, value);
 }
 
-function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
+function getData(key) {
+    return localStorage.getItem(key)
 }
+
+function colorize_sql(str) {
+    // this is used to colorize in tables, just to help readability
+    let keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|AND|OR|NOT|LIKE)\b/gi;
+    var literal_reg = /"([^\"]*)"/g
+    s = str.replace(keyword_reg, "<span class='sql-keyword'>$1</span>");
+    return s
+}
+
 
 function get_columns(data) {
     if (data.columns === undefined) {
@@ -80,7 +74,7 @@ function isEmptyObject(obj) {
 
 function execute() {
     ticker_start = Date.now()
-    update_history(_query, undefined)
+    update_history(_query, undefined, "--", "--")
 
     function do_ticker() {
         document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
@@ -90,7 +84,7 @@ function execute() {
     }
 
     do_ticker();
-    _interval_obj = setInterval(function() { do_ticker() }, 250);
+    _interval_obj = setInterval(function() { do_ticker() }, 100);
 
     var url = '/v1/search';
     data = {};
@@ -106,18 +100,11 @@ function execute() {
         })
         .then(response => {
             clearInterval(_interval_obj);
-            if (response.ok) {
+            console.log(response.status)
+            if (response.status == "200") {
                 response.text().then(function(text) {
                     _results = text.toString().split(/[\n]/).filter(x => x).map(JSON.parse)
-
                     _record_count = _results.length
-                    if (_record_count == 0) {
-                        throw new Error(JSON.stringify({
-                            "error": "Zero Records Found",
-                            "detail": "The query returned no records"
-                        }))
-                    }
-
                     _results.columns = get_columns(_results[0]);
                     renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'))
 
@@ -133,15 +120,44 @@ function execute() {
                     document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
                     document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
-                    update_history(_query, "okay");
+                    update_history(_query, "okay", _results.length, document.getElementById('clock').innerText);
                     update_visualization(_query, _results);
                 })
             } else {
-                console.log("THROW AN ERROR " + JSON.stringify(response))
+                if (response.status == "204") {
+                    throw new Error(JSON.stringify({
+                        "error": "No Matching Records",
+                        "detail": "The query ran with any problems but returned no records."
+                    }))
+                }
+                if (response.status == "401") {
+                    throw new Error(JSON.stringify({
+                        "error": "Session Expired",
+                        "detail": "Your session has expired, please reauthenticate."
+                    }))
+                }
+                if (response.status == "403") {
+                    throw new Error(JSON.stringify({
+                        "error": "Access Denied",
+                        "detail": "You do not have access to this resource, you may have access after authenticating."
+                    }))
+                }
                 if (response.status == "404") {
                     throw new Error(JSON.stringify({
                         "error": "Dataset Not Found",
                         "detail": "The dataset was not able to be found, it may be missing for the selected period or it may not exist."
+                    }))
+                }
+                if (response.status == "500") {
+                    throw new Error(JSON.stringify({
+                        "error": "Server Error",
+                        "detail": "The server failed to respond to your request."
+                    }))
+                }
+                if (response.status == "503") {
+                    throw new Error(JSON.stringify({
+                        "error": "Server Failure",
+                        "detail": "The server terminated unexpectedly whilst handing your request, this is not expected to be a persistent error."
                     }))
                 }
                 return response.text().then(response => {
@@ -153,7 +169,7 @@ function execute() {
         })
         .catch(error => {
             clearInterval(_interval_obj);
-            update_history(_query, "fail");
+            update_history(_query, "fail", "--", "--");
             console.log(error.message)
             errorObject = JSON.parse(error.message)
             document.getElementById("data-table-wrapper").innerHTML =
@@ -168,7 +184,7 @@ function execute() {
         })
 }
 
-function update_history(query, query_outcome) {
+function update_history(query, query_outcome, records, duration) {
 
     if (query) {
         index = -1
@@ -185,12 +201,14 @@ function update_history(query, query_outcome) {
         history_object.query = query;
         history_object.last_run = Date.now();
         history_object.outcome = query_outcome;
+        history_object.runtime = duration;
+        history_object.rowcount = records;
 
         _history.push(history_object);
     }
 
 
-    history_table = "<thead><tr><th>Status</th><th>Query</th><th>Last Run</th><th>Actions</th></tr></thead>"
+    history_table = "<thead><tr><th>Status</th><th>Query</th><th>Last Run</th><th>Duration</th><th>Rows</th><th class='text-end'>Actions</th></tr></thead>"
     history_table += "<tbody>"
     for (var i = 0; i < _history.length; i++) {
 
@@ -203,8 +221,10 @@ function update_history(query, query_outcome) {
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
-            <td class="align-middle trim">${_history[i].query}</td>
+            <td class="align-middle trim sql-statement">${colorize_sql(_history[i].query)}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
+            <td class="align-middle text-end">${_history[i].runtime}</td>
+            <td class="align-middle text-end">${_history[i].rowcount}</td>
             <td>
                 <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
                 <button type="button" id="save-${i}" class="btn btn-sm button-query-white" title="Save Query"><i class="fas fa-save"></i></button>
@@ -220,7 +240,7 @@ function update_history(query, query_outcome) {
 
 function update_saved(query) {
 
-    let saved = getCookie("saved_sql")
+    let saved = getData("saved_sql")
     if (saved) {
         saved_list = JSON.parse(saved)
     } else {
@@ -239,7 +259,7 @@ function update_saved(query) {
         }
 
         saved_list.push(query);
-        setCookie("saved_sql", JSON.stringify(saved_list), 366);
+        putData("saved_sql", JSON.stringify(saved_list));
     }
 
     if (saved_list.length == 0) {
@@ -252,7 +272,7 @@ function update_saved(query) {
     for (var i = 0; i < saved_list.length; i++) {
         entry = `
         <tr>
-            <td class="align-middle trim">${saved_list[i]}</td>
+            <td class="align-middle trim sql-statement">${colorize_sql(saved_list[i])}</td>
             <td>
                 <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
                 <button type="button" id="del-${i}" class="btn btn-sm button-query-white" title="Remove Query from Saved"><i class="fas fa-trash-alt"></i></button>
@@ -380,9 +400,9 @@ function history_button_click(e) {
 
 function saved_button_click(e) {
 
-    let saved = getCookie("saved_sql")
+    let saved = getData("saved_sql")
     if (saved) {
-        saved_list = JSON.parse(getCookie("saved_sql"))
+        saved_list = JSON.parse(getData("saved_sql"))
     } else {
         saved_list = []
     }
@@ -394,7 +414,7 @@ function saved_button_click(e) {
     } else if (e.id.startsWith('del-')) {
         index = e.id.replace(/^del-/, "");
         saved_list.splice(index, 1);
-        setCookie("saved_sql", JSON.stringify(saved_list), 366)
+        putData("saved_sql", JSON.stringify(saved_list))
         update_saved();
 
     } else {

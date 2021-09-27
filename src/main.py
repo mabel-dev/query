@@ -18,7 +18,9 @@ from mabel.errors import DataNotFoundError
 def find_path(path):
     import glob
 
-    paths = glob.iglob(f"**/{path}", recursive=True)
+    paths = glob.glob(f"/app/src/**/{path}", recursive=True)
+    if len(paths) == 0:
+        paths = glob.glob(f"**/{path}", recursive=True)
     for i in paths:
         if i.endswith(path):
             get_logger().info(f"Found `{path}` at `{i}`")
@@ -54,6 +56,7 @@ def do_search(search: SearchModel):
     raw_path = False
     inner_reader = None
 
+    # K_SERVICE is a K8s flag
     if os.environ.get("K_SERVICE") is None:
         raw_path = True
         inner_reader = DiskReader
@@ -64,7 +67,7 @@ def do_search(search: SearchModel):
         sql_statement=search.query,
         raw_path=raw_path,
         inner_reader=inner_reader,
-        project=os.environ.get("PROJECT_NAME"),
+        project="dcsgva-data-prd",
     )
     return sql_reader
 
@@ -91,6 +94,8 @@ def serialize_response(response, max_records):
             yield record.mini + b"\n"
         else:
             yield orjson.dumps(record) + b"\n"
+    if i == -1:
+        raise HTTPException(status_code=204)
 
 
 @application.post("/v1/search")
@@ -101,7 +106,6 @@ def handle_start_request(request: SearchModel):
             b"\n".join(serialize_response(results, RESULT_BATCH)),
             media_type="application/jsonlines",
         )
-
         return response
 
     except HTTPException:
