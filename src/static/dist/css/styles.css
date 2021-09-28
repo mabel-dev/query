@@ -90,9 +90,9 @@ body {
     height: calc(100vh - 60px);
 }
 
-#footer {
+#footer-lab {
     position: relative;
-    margin-top: -40px;
+    margin-top: -00px;
     margin-bottom: 0px;
     height: 40px;
     clear: both;

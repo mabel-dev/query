@@ -424,20 +424,41 @@ function saved_button_click(e) {
     }
 }
 
+function header_navigation(e) {
+
+    function setVisibility(elem, visibile) {
+        if (visibile) {
+            if (elem.classList.contains("d-none")) {
+                elem.classList.remove("d-none")
+            }
+        } else {
+            if (!elem.classList.contains("d-none")) {
+                elem.classList.add("d-none")
+            }
+        }
+    }
+
+    if (e.id.startsWith('nav-')) {
+        setVisibility(document.getElementById('main-explorer'), e.id.endsWith('explorer'))
+        setVisibility(document.getElementById('main-lab'), e.id.endsWith('lab'))
+        setVisibility(document.getElementById('main-visualize'), e.id.endsWith('visualize'))
+        setVisibility(document.getElementById('main-dashboard'), e.id.endsWith('dashboard'))
+    } else {
+        if (e.parentElement) {
+            header_navigation(e.parentElement)
+        }
+    }
+}
+
 document.getElementById('run').addEventListener('click', run_query, false);
 document.getElementById('download').addEventListener('click', download_query, false);
 document.getElementById('save').addEventListener('click', save_query, false);
 document.getElementById('records_per_page').addEventListener('change', set_records_per_page, false);
 document.getElementById('page-forward').addEventListener('click', page_forward, false);
 document.getElementById('page-back').addEventListener('click', page_back, false);
-document.getElementById("recent").addEventListener('click', function(e) {
-    history_button_click(e.target)
-});
-document.getElementById("saved").addEventListener('click', function(e) {
-    saved_button_click(e.target)
-});
+document.getElementById("recent").addEventListener('click', function(e) { history_button_click(e.target) });
+document.getElementById("saved").addEventListener('click', function(e) { saved_button_click(e.target) });
 document.getElementById("period").addEventListener('change', update_period, false);
-
-
+document.getElementById("header-nav").addEventListener('click', function(e) { header_navigation(e.target) });
 
 update_saved();
