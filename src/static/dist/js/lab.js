@@ -21,9 +21,12 @@ function getData(key) {
 
 function colorize_sql(str) {
     // this is used to colorize in tables, just to help readability
-    let keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|AND|OR|NOT|LIKE)\b/gi;
-    var literal_reg = /"([^\"]*)"/g
-    s = str.replace(keyword_reg, "<span class='sql-keyword'>$1</span>");
+    // we try to match the editor formatting but are using a different method
+    let keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|AND|OR|NOT|LIKE|COUNT|DISTINCT)\b/gi;
+    let builtin_reg = /\b(YEAR)\b/gi
+    let s = str
+    s = s.replace(keyword_reg, "<span class='cm-keyword'>$1</span>");
+    s = s.replace(builtin_reg, "<span class='cm-builtin'>$1</span>");
     return s
 }
 
@@ -221,7 +224,7 @@ function update_history(query, query_outcome, records, duration) {
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
-            <td class="align-middle trim sql-statement">${colorize_sql(_history[i].query)}</td>
+            <td class="align-middle trim code cm-s-default">${colorize_sql(_history[i].query)}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
             <td class="align-middle text-end">${_history[i].runtime}</td>
             <td class="align-middle text-end">${_history[i].rowcount}</td>
@@ -272,7 +275,7 @@ function update_saved(query) {
     for (var i = 0; i < saved_list.length; i++) {
         entry = `
         <tr>
-            <td class="align-middle trim sql-statement">${colorize_sql(saved_list[i])}</td>
+            <td class="align-middle trim code cm-s-default">${colorize_sql(saved_list[i])}</td>
             <td>
                 <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
                 <button type="button" id="del-${i}" class="btn btn-sm button-query-white" title="Remove Query from Saved"><i class="fas fa-trash-alt"></i></button>
@@ -443,6 +446,7 @@ function header_navigation(e) {
         setVisibility(document.getElementById('main-lab'), e.id.endsWith('lab'))
         setVisibility(document.getElementById('main-visualize'), e.id.endsWith('visualize'))
         setVisibility(document.getElementById('main-dashboard'), e.id.endsWith('dashboard'))
+        setVisibility(document.getElementById('main-help'), e.id.endsWith('help'))
     } else {
         if (e.parentElement) {
             header_navigation(e.parentElement)

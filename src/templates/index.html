@@ -55,7 +55,7 @@
                 <div class="container-fluid">
                     <div class="navbar-collapse collapse">
                         <ul class="navbar-nav" id="header-nav">
-                            <li class="nav-item d-none" id="nav-explorer">
+                            <li class="nav-item" id="nav-explorer">
                                 <a class="nav-link header-link btn" href="#"><i class="far fa-compass"></i> Explorer</a>
                             </li>
                             <li class="nav-item" id="nav-lab">
@@ -66,6 +66,9 @@
                             </li>
                             <li class="nav-item d-none" id="nav-dashboard">
                                 <a class="nav-link header-link btn" href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            </li>
+                            <li class="nav-item" id="nav-help">
+                                <a class="nav-link header-link btn" href="#"><i class="fas fa-question-circle"></i> Help</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav ms-auto">
@@ -78,11 +81,26 @@
             </nav>
 
             <section id="main-explorer" class="d-none">
+                <p>Here are some suggestions:</p>
+                <hr />
+                <pre id="query1" class="code">
+SELECT COUNT(*)
+FROM mabel_data/PROCESSED/NVD/CVE_LIST
+GROUP BY YEAR(publishedDate)</pre><button class="btn btn-action" id="example-query-1"><i class="fas fa-arrow-up"></i> Try This Query</button>
+                <hr />
+                <pre id="query2" class="code">
+SELECT COUNT(*)
+FROM mabel_data/PROCESSED/VIEWS/QVM_OWNERS
+GROUP BY Allocation</pre><button class="btn btn-action" id="example-query-2"><i class="fas fa-arrow-up"></i> Try This Query</button>
+                <hr />
+
                 <p>I'm looking for this data [ ] </p>
 
                 <p>+ dataset browser</p>
                 <p>+ schema</p>
                 <p>+ summarization</p>
+
+
             </section>
 
             <section id="main-lab">
@@ -98,10 +116,10 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                             <div class="col-sm-4">
                                 <div class="input-group">
                                     <select class="form-select col-2" id="period" size="1">
-                                <option value='today' selected>Today</option>
-                                <option value='yesterday' select>Yesterday</option>
-                                <option value="t-30">Last 30 days</option>
-                            </select>
+                                        <option value='today' selected>Today</option>
+                                        <option value='yesterday' select>Yesterday</option>
+                                        <option value="t-30">Last 30 days</option>
+                                    </select>
                                 </div>
                                 <div><br /></div>
                                 <div class="row" id="custom-date-range">
@@ -166,19 +184,6 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                             <div class="alert alert-primary col-sm-8" role="alert">
                                 No queries have been run.
                             </div>
-                            <p>Here are some suggestions:</p>
-                            <hr />
-                            <pre id="query1" class="code">
-SELECT COUNT(*)
-FROM mabel_data/PROCESSED/NVD/CVE_LIST
-GROUP BY YEAR(publishedDate)</pre><button class="btn btn-action" id="example-query-1"><i class="fas fa-arrow-up"></i> Try This Query</button>
-                            <hr />
-                            <pre id="query2" class="code">
-SELECT COUNT(*)
-FROM mabel_data/PROCESSED/VIEWS/QVM_OWNERS
-GROUP BY Allocation</pre><button class="btn btn-action" id="example-query-2"><i class="fas fa-arrow-up"></i> Try This Query</button>
-                            <hr />
-
                         </div>
                     </div>
                     <div class="tab-pane fade" id="recent" role="tabpanel" aria-labelledby="recent-tab">
@@ -219,10 +224,120 @@ GROUP BY Allocation</pre><button class="btn btn-action" id="example-query-2"><i 
                         No queries have been run.
                     </div>
                 </div>
+                <ul>
+                    <li>Title</li>
+                    <li>Chart Type</li>
+                    <li>Axis</li>
+                    <li>Data
+                        <ul>
+                            <li>label</li>
+                            <li>color</li>
+                            <li>aggregation (e.g. daily/monthly)</li>
+                        </ul>
+                    </li>
+                </ul>
             </section>
 
             <section id="main-dashboard" class="d-none">
                 <p>select prebuild dashboard</p>
+            </section>
+
+            <section id="main-help" class="d-none">
+                <p>Query supports a limited Data Query Language.</p>
+                <pre class="code cm-s-default">
+        <span class="cm-keyword">SELECT</span> [<span class="cm-keyword">DISTINCT</span>] * | select_expression 
+        <span class="cm-keyword">FROM</span> dataset
+        [<span class="cm-keyword">WHERE</span> <var>filter_expression</var>]
+        [<span class="cm-keyword">GROUP BY</span> <var>column_name</var>]
+        [<span class="cm-keyword">ORDER BY</span> <var>column_name</var> ASC|DESC] 
+        [<span class="cm-keyword">LIMIT</span> <var>n</var>]
+            </pre>
+                <p>Data is read only, DELETE, INSERT, CREATE, ALTER and UPDATE are not supported.</p>
+                <p>Some features, such as JOINs, Sub Queries, UNIONS are not supported.</p>
+
+                <h4>select_expression</h4>
+                <p>
+                    Sets the columns to populate the result set with, in a comma separated list. select_expressions can contain functions to perform on columns in the source dataset. At least one expression is required, GROUP BY statements must contain aggregation functions
+                    to perform on the groups.
+                </p>
+                <p>
+                    The columns referenced in the SELECT clause must exist in the target table. Columns in big data applications duplicate values. Use the DISTINCT keyword to return only distinct (different) values.
+                </p>
+
+                <h4>dataset</h4>
+                <p>
+                    Defines the
+                </p>
+
+                <p>Filter Operations:</p>
+                <ul>
+                    <li>equals (=), also as '=='</li>
+                    <li>not equals (&lt;&gt;), also as '!='</li>
+                    <li>greater than (&gt;)</li>
+                    <li>greater than or equal (&gt;=)</li>
+                    <li>less than (&lt;)</li>
+                    <li>less than or equal (&lt;=)</li>
+                    <li>is (IS)</li>
+                    <li>isn't (IS NOT)</li>
+                    <li>SQL like (LIKE)</li>
+                    <li>not SQL like (NOT LIKE)</li>
+                </ul>
+
+                <p>Aggregation Functions:</p>
+                <ul>
+                    <li>COUNT</li>
+                    <li>SUM</li>
+                    <li>MAX</li>
+                    <li>MIN</li>
+                </ul>
+
+                <p>Date and Time Functions:</p>
+                <ul>
+                    <li>DAY(date) - extract the day of the month from a date</li>
+                    <li>MONTH(date) - extract the month of the year from a date</li>
+                    <li>YEAR(date) - extract the year from a date</li>
+                    <li>DATE(date) - extract/convert the date from a timestamp</li>
+                    <li>QUARTER(date) - extract the quarter of the year from a date</li>
+                    <li>WEEK(date) - extract the week of the year (ISO 8601)</li>
+                    <li>TIME(timestamp) - extract the time from a timestamp</li>
+                    <li>HOUR(timestamp) - extract the hour from a timestamp</li>
+                    <li>MINUTE(timestamp) - extract the minutes from a timestamp</li>
+                    <li>SECOND(timestamp) - extract the seconds from a timestamp</li>
+                    <li>ADDDAYS(date, days) - add 'days' number of days to a date, negative values allowed</li>
+                    <li>NOW() - the current date and time</li>
+                </ul>
+
+                <p>String Functions:</p>
+                <ul>
+                    <li>UPPER(string) - convert a string to upper case (also UCASE)</li>
+                    <li>LOWER(string) - convert a string to lower case (also LCASE)</li>
+                    <li>LEN(string) - calculate the length of a string</li>
+                    <li>TRIM(string) - remove whitespace from the start and end of a string</li>
+                    <li>LEFT(string, characters) extract the leftmost characters from a string</li>
+                    <li>RIGHT(string, characters) - extract the rightmost characters from a string</li>
+                    <li>MID(string, start, length) - extract a substring from a string</li>
+                    <li>CONCAT(string, string ... ) - concatenate a set of strings</li>
+                    <li>STRING(string) - convert a value to a string</li>
+                </ul>
+
+                <p>Numbers Functions:</p>
+                <ul>
+                    <li>ROUND(number) - round a number</li>
+                    <li>TRUNC(number) - truncate a number</li>
+                    <li>INT(number) - convert a number or string to an integer (same logic as INT)</li>
+                    <li>FLOAT(number) - convert a number or string to a floating point number</li>
+                </ul>
+
+                <p>Other Functions:</p>
+                <ul>
+                    <li>BOOLEAN(string) - convert a string TRUE/FALSE to a boolean</li>
+                    <li>ISNONE(any) - returns TRUE (boolean) if a value is none/null</li>
+                    <li>FLATTEN(dictionary, separator) - flattens a JSON/Object field, separator is optional</li>
+                    <li>JOIN(list) - concatenates a list of items into a string</li>
+                    <li>HASH(any) - Hashes a value (uses SIPHASH)</li>
+                    <li>MD5(any) - Calculate the MD5 of a value</li>
+                    <li>RANDOM() - Return a random number between 0.000 to 0.999</li>
+                </ul>
             </section>
 
         </div>
@@ -287,8 +402,9 @@ GROUP BY Allocation</pre><button class="btn btn-action" id="example-query-2"><i 
     </script>
 
     <script src="dist/js/colors.js"></script>
-    <script src="dist/js/query.js"></script>
     <script src="dist/js/data-table.js"></script>
+    <script src="dist/js/explorer.js"></script>
+    <script src="dist/js/lab.js"></script>
     <script src="dist/js/visualize.js"></script>
 
     <script type="text/javascript">
@@ -299,14 +415,9 @@ GROUP BY Allocation</pre><button class="btn btn-action" id="example-query-2"><i 
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
             initAutoComplete();
-        });
 
-        document.getElementById("example-query-1").addEventListener("click", function() {
-            SqlEditor.setValue(document.getElementById("query1").innerText);
-        }, false)
-        document.getElementById("example-query-2").addEventListener("click", function() {
-            SqlEditor.setValue(document.getElementById("query2").innerText);
-        }, false)
+            initExplorer();
+        });
     </script>
 </body>
 

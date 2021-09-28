@@ -1,15 +1,14 @@
 {
     "job_name": "QUERY",
     "maximum_return": 2000,
-    "datastores": [
-        { "path": "mabel_data" }
-    ],
     "environments": {
         "": {
 
         },
         "mabeldev": {
-
+            "datastores": [
+                { "path": "mabel_data" }
+            ]
         }
     }
 }

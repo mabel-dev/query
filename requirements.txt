@@ -12,5 +12,4 @@ google-cloud-secret-manager
 aiofiles
 jinja2
 pyarrow
-duckdb
-gcsfs
+pyjwt

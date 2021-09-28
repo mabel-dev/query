@@ -1,18 +1,43 @@
 import os
 import sys
 
+from starlette.responses import JSONResponse
+
 sys.path.insert(0, os.path.join(sys.path[0], "../../mabel/"))
 
 import orjson
+import uvicorn
 import traceback
 from typing import Optional, Union
 from fastapi.responses import UJSONResponse, HTMLResponse, Response
 from fastapi import FastAPI, HTTPException, Request
-import uvicorn
 from mabel.logging import get_logger, set_log_name
 from mabel.utils.common import build_context
-
 from mabel.errors import DataNotFoundError
+
+
+def get_identity(request):
+    try:
+        import jwt
+
+        encoded_jwt = None
+
+        if "Authorization" in request.headers:
+            # if we have a auth header, use that regardless of a cookie value
+            encoded_jwt = request.headers["Authorization"].split(' ')[1]
+        else:
+            # the name of the cookie isn't fixed, try to find it
+            for cookie in request.cookies:
+                if cookie.startswith("GCP_IAAP_AUTH_TOKEN"):
+                    encoded_jwt = request.cookies[cookie]
+                    break
+
+        if encoded_jwt:
+            decoded_jwt = jwt.get_unverified_header(encoded_jwt)
+            return decoded_jwt["email"]
+        return "unknown"
+    except:
+        return "error"
 
 
 def find_path(path):
@@ -196,14 +221,24 @@ def download_results(request: SearchModel):
         raise HTTPException(status_code=500, detail=err)
 
 
+@application.get("/user", response_class=JSONResponse)
+def get_user_informations(request: Request):
+    """
+    Get User information
+    """
+    return {
+        "identity": get_identity(request),
+        "saved_queries": [],
+        "shared_queries": []
+    }
+
 @application.get("/", response_class=HTMLResponse)
 def home(request: Request):
+    """
+    This is a single page app, we deliver a single HTML page and interact
+    with the backend using APIs.
+    """
     return templates.TemplateResponse("index.html", {"request": request})
-
-
-@application.get("/help.html", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("help.html", {"request": request})
 
 
 # tell the server to start
