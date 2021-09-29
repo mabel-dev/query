@@ -22,8 +22,8 @@ function getData(key) {
 function colorize_sql(str) {
     // this is used to colorize in tables, just to help readability
     // we try to match the editor formatting but are using a different method
-    let keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|AND|OR|NOT|LIKE|COUNT|DISTINCT)\b/gi;
-    let builtin_reg = /\b(YEAR)\b/gi
+    let keyword_reg = /\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|LIMIT|AND|OR|NOT|LIKE|COUNT|DISTINCT|DESC|ASC)\b/gi;
+    let builtin_reg = /\b(YEAR|DATE)\b/gi
     let s = str
     s = s.replace(keyword_reg, "<span class='cm-keyword'>$1</span>");
     s = s.replace(builtin_reg, "<span class='cm-builtin'>$1</span>");

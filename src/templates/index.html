@@ -36,9 +36,6 @@
                 <li class="active">
                     <a href="/"><i class="fas fa-table"></i> Lab</a>
                 </li>
-                <!--<li>
-                    <a href="/"><i class="fas fa-chart-bar"></i> Visualize</a>
-                </li>-->
                 <li>
                     <a href="/help.html"><i class="fas fa-question"></i> Help</a>
                 </li>
@@ -72,7 +69,7 @@
                             </li>
                         </ul>
                         <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
+                            <li class="nav-item" id="identity">
                                 Identity
                             </li>
                         </ul>
@@ -403,6 +400,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
 
     <script src="dist/js/colors.js"></script>
     <script src="dist/js/data-table.js"></script>
+    <script src="dist/js/user.js"></script>
     <script src="dist/js/explorer.js"></script>
     <script src="dist/js/lab.js"></script>
     <script src="dist/js/visualize.js"></script>
@@ -414,6 +412,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
+            initUser();
             initAutoComplete();
             initExplorer();
         });
