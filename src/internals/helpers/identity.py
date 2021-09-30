@@ -17,8 +17,8 @@ def get_identity(request):
                     break
 
         if encoded_jwt:
-            decoded_jwt = jwt.get_unverified_header(encoded_jwt)
+            decoded_jwt = jwt.decode(encoded_jwt, options={"verify_signature": False})
             return decoded_jwt["email"]
         return "unknown"
-    except:
+    except Exception as e:
         return "error"
