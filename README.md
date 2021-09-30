@@ -41,6 +41,24 @@ If you have a suggestion for an improvement or a bug,
 
 Want to help build mabel? See the [contribution guidance](https://github.com/mabel-dev/query/blob/main/.github/CONTRIBUTING.md).
 
+## Repository Map
+~~~
+query/
+  ├── assets/                <-- Items for this page
+  ├── src/
+  │     ├── internals/
+  │     │     ├── drivers/   <-- Transformers and adapters
+  │     │     ├── helpers/   <-- Reused functions
+  │     │     └── models/    <-- Pydantic models for API interfaces
+  │     ├── routers/         <-- API end-point handlers
+  │     ├── static/
+  │     │     ├── dist/      <-- Application specific assets (e.g. css, js)
+  │     │     └── plugins/   <-- Self-hosted 3rd party assets
+  │     └── templates/       <-- HTML assets
+  ├── tests/                 <-- Unit and Regression Tests
+  └── main.py                <-- application entry-point
+~~~
+
 ## Licence
 
 [MIT](LICENSE)
