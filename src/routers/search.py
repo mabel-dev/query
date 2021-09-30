@@ -1,5 +1,5 @@
 import orjson
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response, Request
 from mabel.logging import get_logger
 from mabel.errors import DataNotFoundError
 from internals.models import SearchModel
@@ -34,9 +34,12 @@ def serialize_response(response, max_records):
 
 
 @router.post("/v1/search")
-def handle_start_request(request: SearchModel):
+def handle_start_request(search: SearchModel, request: Request):
     try:
-        results = do_search(request)
+
+        print(request.headers)
+
+        results = do_search(search)
         response = Response(
             b"\n".join(serialize_response(results, RESULT_BATCH)),
             media_type="application/jsonlines",
