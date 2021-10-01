@@ -1,13 +1,15 @@
 import orjson
 from fastapi import APIRouter, HTTPException, Response, Request
-from mabel.logging import get_logger
+from mabel.logging import get_logger, set_log_name
 from mabel.errors import DataNotFoundError
 from internals.models import SearchModel
 from internals.helpers.search import do_search
 
 
 router = APIRouter()
+set_log_name("QUERY")
 logger = get_logger()
+logger.setLevel(5)
 
 
 RESULT_BATCH = 2000
@@ -20,27 +22,28 @@ def serialize_response(response, max_records):
     """
     i = -1
     for i, record in enumerate(response):
-        if i == max_records:
+        if i > max_records:
             break
-        if hasattr(record, "mini"):
+        if i < max_records and hasattr(record, "mini"):
             # we have a saved minified json string
             yield record.mini + b"\n"
-        else:
+        elif i < max_records:
             yield orjson.dumps(record) + b"\n"
     if i == -1:
         # UNABLE TO SATISFY RANGE
         raise HTTPException(status_code=416)
+    if i > max_records:
+        yield b'{"more_records": true}'
 
 
 @router.post("/v1/search")
 def search(search: SearchModel, request: Request):
     try:
+        from internals.helpers.identity import get_jwt, get_identity
+        encoded_jwt = get_jwt(request)
+        logger.info({**search.dict(), "user": get_identity(encoded_jwt)})
 
-        from internals.helpers.identity import get_identity
-        #print(request.headers)
-        logger.audit({**search.dict(), "user": get_identity(request)})
-
-        results = do_search(search)
+        results = do_search(search, encoded_jwt)
         response = Response(
             b"\n".join(serialize_response(results, RESULT_BATCH)),
             media_type="application/jsonlines",

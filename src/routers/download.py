@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from mabel import DictSet
-from mabel.logging import get_logger
+from mabel.logging import get_logger, set_log_name
 from mabel.errors import DataNotFoundError
 from internals.models import SearchModel
 from internals.helpers.search import do_search
@@ -9,7 +9,9 @@ from internals.drivers.csv_writer import csv_set
 
 
 router = APIRouter()
+set_log_name("QUERY")
 logger = get_logger()
+logger.setLevel(5)
 
 
 def join_lists(list_a, list_b):

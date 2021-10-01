@@ -1,12 +1,14 @@
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Response
 from fastapi.responses import UJSONResponse
-from mabel.logging import get_logger
+from mabel.logging import get_logger, set_log_name
 from mabel.errors import DataNotFoundError
 
 
 router = APIRouter()
+set_log_name("QUERY")
 logger = get_logger()
+logger.setLevel(5)
 
 
 @router.get("/v1/datastores", response_class=UJSONResponse)

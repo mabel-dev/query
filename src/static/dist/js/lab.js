@@ -5,6 +5,7 @@ var _results = [];
 var _history = [];
 var _page_number = 0;
 var _interval_obj = null;
+var _has_more_records = false
 
 var outcome
 
@@ -107,17 +108,23 @@ function execute() {
             if (response.status == "200") {
                 response.text().then(function(text) {
                     _results = text.toString().split(/[\n]/).filter(x => x).map(JSON.parse)
+
+                    _has_more_records = false
+                    if (_results[_results.length - 1].more_records !== undefined) {
+                        _results.pop()
+                        _has_more_records = true
+                    }
+
                     _record_count = _results.length
                     _results.columns = get_columns(_results[0]);
                     renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'))
 
-                    let max_record = _page_number * _records_per_page
-                    if (_results.length != recordBufferSize) {
-                        _records = _results.length
+                    if (_has_more_records) {
+                        _records = "Many (" + _results.length + " available)";
                     } else {
-                        _records = "Many (" + _results.length + " available)"
-                        max_record = Math.min(_records, _page_number * _records_per_page)
+                        _records = _results.length;
                     }
+                    max_record = Math.min(_results.length, _page_number * _records_per_page)
 
                     document.getElementById('page-back').disabled = (_page_number == 1)
                     document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
@@ -348,9 +355,8 @@ function set_records_per_page() {
     if (_results.results !== undefined) {
         renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
         let max_record = _page_number * _records_per_page
-        if (_records != "Many") {
-            max_record = Math.min(_records, _page_number * _records_per_page)
-        }
+        max_record = Math.min(_results.length, _page_number * _records_per_page)
+
         document.getElementById('page-back').disabled = (_page_number == 1)
         document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
         document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
@@ -361,9 +367,8 @@ function page_forward() {
     _page_number++;
     renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
     let max_record = _page_number * _records_per_page
-    if (_records != "Many") {
-        max_record = Math.min(_records, _page_number * _records_per_page)
-    }
+    max_record = Math.min(_results.length, _page_number * _records_per_page)
+
     document.getElementById('page-back').disabled = (_page_number == 1)
     document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
     document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
@@ -373,9 +378,8 @@ function page_back() {
     _page_number--;
     renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'));
     let max_record = _page_number * _records_per_page
-    if (_records != "Many") {
-        max_record = Math.min(_records, _page_number * _records_per_page)
-    }
+    max_record = Math.min(_results.length, _page_number * _records_per_page)
+
     document.getElementById('page-back').disabled = (_page_number == 1)
     document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
     document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records

@@ -2,7 +2,7 @@ import os
 from mabel.data.readers import SqlReader
 from internals.models import SearchModel
 
-def do_search(search: SearchModel):
+def do_search(search: SearchModel, auth_token = None):
 
     raw_path = False
     inner_reader = None
@@ -13,6 +13,12 @@ def do_search(search: SearchModel):
         raw_path = True
         inner_reader = DiskReader
 
+    jwt = None
+    if auth_token:
+        import google.auth.jwt
+        #jwt.token = auth_token
+        google.auth.jwt.load
+
     sql_reader = SqlReader(
         start_date=search.start_date,
         end_date=search.end_date,
@@ -20,5 +26,6 @@ def do_search(search: SearchModel):
         raw_path=raw_path,
         inner_reader=inner_reader,
         project="dcsgva-data-prd",
+        credentials=auth_token
     )
     return sql_reader

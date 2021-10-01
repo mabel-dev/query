@@ -16,4 +16,3 @@ def find_path(path):
         if i.endswith(path):
             logger.info(f"Found `{path}` at `{i}`")
             return i
-    logger.error(f"Did not find `{path}`")

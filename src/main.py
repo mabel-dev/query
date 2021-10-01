@@ -13,7 +13,7 @@ from internals.helpers.paths import find_path
 from routers import search, download, users, stores
 
 context = build_context()
-set_log_name(context["job_name"])
+set_log_name("QUERY")
 logger = get_logger()
 logger.setLevel(5)
 
