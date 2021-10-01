@@ -1,4 +1,3 @@
-
 def find_path(path):
     """
     Where files are is different depending on the environment, if we're in a
@@ -7,6 +6,7 @@ def find_path(path):
     """
     import glob
     from mabel.logging import get_logger
+
     logger = get_logger()
 
     paths = glob.glob(f"/app/src/**/{path}", recursive=True)

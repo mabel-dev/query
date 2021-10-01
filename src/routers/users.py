@@ -9,16 +9,16 @@ logger = get_logger()
 logger.setLevel(5)
 
 
-
 @router.get("/user", response_class=UJSONResponse)
 def get_user_informations(request: Request):
     """
     Get User information
     """
     from internals.helpers.identity import get_jwt, get_identity
+
     encoded_jwt = get_jwt(request)
     return {
         "identity": get_identity(encoded_jwt),
         "saved_queries": [],
-        "shared_queries": []
+        "shared_queries": [],
     }

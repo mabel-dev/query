@@ -56,6 +56,7 @@ def download_results(request: SearchModel):
         raise HTTPException(status_code=404, detail="Dataset not Found")
     except Exception as err:
         import traceback
+
         trace = traceback.format_exc()
         error_message = {"error": type(err).__name__, "detail": str(err)}
         logger.error(f"Error {type(err).__name__} - {err}:\n{trace}")
@@ -63,6 +64,7 @@ def download_results(request: SearchModel):
         raise HTTPException(status_code=418, detail=error_message)
     except SystemExit as err:
         import traceback
+
         trace = traceback.format_exc()
         logger.alert(f"Fatal Error {type(err).__name__} - {err}:\n{trace}")
         # ERROR

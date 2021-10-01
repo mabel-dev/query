@@ -40,6 +40,7 @@ def serialize_response(response, max_records):
 def search(search: SearchModel, request: Request):
     try:
         from internals.helpers.identity import get_jwt, get_identity
+
         encoded_jwt = get_jwt(request)
         logger.info({**search.dict(), "user": get_identity(encoded_jwt)})
 
@@ -57,6 +58,7 @@ def search(search: SearchModel, request: Request):
         raise HTTPException(status_code=404, detail="Dataset not Found")
     except Exception as err:
         import traceback
+
         trace = traceback.format_exc()
         error_message = {"error": type(err).__name__, "detail": str(err)}
         logger.error(f"Error {type(err).__name__} - {err}:\n{trace}")
@@ -64,6 +66,7 @@ def search(search: SearchModel, request: Request):
         raise HTTPException(status_code=418, detail=error_message)
     except SystemExit as err:
         import traceback
+
         trace = traceback.format_exc()
         logger.alert(f"Fatal Error {type(err).__name__} - {err}:\n{trace}")
         # ERROR

@@ -1,10 +1,9 @@
-
 def get_jwt(request):
     encoded_jwt = None
 
     if "Authorization" in request.headers:
         # if we have a auth header, use that regardless of a cookie value
-        encoded_jwt = request.headers["Authorization"].split(' ')[1]
+        encoded_jwt = request.headers["Authorization"].split(" ")[1]
     else:
         # the name of the cookie isn't always the same, try to find it
         for cookie in request.cookies:

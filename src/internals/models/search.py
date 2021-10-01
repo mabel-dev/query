@@ -1,7 +1,7 @@
-
 from pydantic import BaseModel
 from typing import Optional, Union
 import datetime
+
 
 class SearchModel(BaseModel):
     start_date: Optional[
