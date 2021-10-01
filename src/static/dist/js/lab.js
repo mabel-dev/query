@@ -127,7 +127,7 @@ function execute() {
                     update_visualization(_query, _results);
                 })
             } else {
-                if (response.status == "204") {
+                if (response.status == "416") {
                     throw new Error(JSON.stringify({
                         "error": "No Matching Records",
                         "detail": "The query ran with any problems but returned no records."

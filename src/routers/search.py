@@ -6,7 +6,6 @@ from internals.models import SearchModel
 from internals.helpers.search import do_search
 
 
-
 router = APIRouter()
 logger = get_logger()
 
@@ -29,15 +28,17 @@ def serialize_response(response, max_records):
         else:
             yield orjson.dumps(record) + b"\n"
     if i == -1:
-        # NO CONTENT
-        raise HTTPException(status_code=204)
+        # UNABLE TO SATISFY RANGE
+        raise HTTPException(status_code=416)
 
 
 @router.post("/v1/search")
-def handle_start_request(search: SearchModel, request: Request):
+def search(search: SearchModel, request: Request):
     try:
 
-        print(request.headers)
+        from internals.helpers.identity import get_identity
+        #print(request.headers)
+        logger.audit({**search.dict(), "user": get_identity(request)})
 
         results = do_search(search)
         response = Response(
