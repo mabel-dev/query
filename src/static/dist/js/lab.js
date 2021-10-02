@@ -2,22 +2,27 @@ var _records_per_page = parseInt(document.getElementById("records_per_page").val
 var _query = "";
 var _records = "Many";
 var _results = [];
-var _history = [];
+var _history = JSON.parse(getData("recent_queries"));
+if (_history == null) { _history = [] };
 var _page_number = 0;
 var _interval_obj = null;
 var _has_more_records = false
 
 var outcome
 
-const recordBufferSize = 2500
+const recordBufferSize = 2001
 const history_timestampFormat = "YYYY-MM-DD HH:mm:ss"
+
+
 
 function putData(key, value) {
     localStorage.setItem(key, value);
 }
 
 function getData(key) {
-    return localStorage.getItem(key)
+    fetched = localStorage.getItem(key)
+    if (fetched === undefined) { return "{}" }
+    return fetched;
 }
 
 function deleteData(key) {
@@ -35,6 +40,16 @@ function colorize_sql(str) {
     return s
 }
 
+function htmlEncode(str) {
+    if (str === undefined || str == null) { return '' }
+    return str.toString().replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+            return '&#' + i.charCodeAt(0) + ';'
+        })
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#39;");
+}
 
 function get_columns(data) {
     if (data.columns === undefined) {
@@ -221,8 +236,14 @@ function update_history(query, query_outcome, records, duration) {
         history_object.rowcount = records;
 
         _history.push(history_object);
-    }
 
+        while (_history.length > 10) {
+            // remove excess items from the list
+            _history.shift();
+        }
+
+        putData("recent_queries", JSON.stringify(_history))
+    }
 
     history_table = "<thead><tr><th>Status</th><th>Query</th><th>Last Run</th><th>Duration</th><th>Rows</th><th class='text-end'>Actions</th></tr></thead>"
     history_table += "<tbody>"
@@ -237,7 +258,7 @@ function update_history(query, query_outcome, records, duration) {
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
-            <td class="align-middle trim code cm-s-default">${colorize_sql(_history[i].query)}</td>
+            <td class="align-middle trim code cm-s-default" title="${htmlEncode(_history[i].query)}">${colorize_sql(_history[i].query)}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
             <td class="align-middle text-end">${_history[i].runtime}</td>
             <td class="align-middle text-end">${_history[i].rowcount}</td>
@@ -274,12 +295,6 @@ function update_saved(query) {
             saved_list.splice(index, 1);
         }
 
-        saved_list.push(query);
-        console.log("There are", saved_list.length, "items");
-        while (saved_list.length > 5) {
-            console.log("evicting item from MRU list");
-            saved_list.pop();
-        }
         putData("saved_sql", JSON.stringify(saved_list));
     }
 
@@ -474,3 +489,4 @@ document.getElementById("period").addEventListener('change', update_period, fals
 document.getElementById("header-nav").addEventListener('click', function(e) { header_navigation(e.target) });
 
 update_saved();
+update_history();

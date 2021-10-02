@@ -6,8 +6,12 @@ document.getElementById('end_date').valueAsDate = new Date();
 function htmlEncode(str) {
     if (str === undefined || str == null) { return '' }
     return str.toString().replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
-        return '&#' + i.charCodeAt(0) + ';'
-    });
+            return '&#' + i.charCodeAt(0) + ';'
+        })
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#39;");
 }
 
 function is_date(sDate) {
