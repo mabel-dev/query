@@ -2,13 +2,22 @@
     "job_name": "QUERY",
     "maximum_return": 2000,
     "environments": {
-        "": {
-
+        "dcsgva-data-prd": {
+            "datastores": [{
+                "bucket": "dcsgva-data",
+                "prefix": ""
+            }]
         },
         "mabeldev": {
-            "datastores": [
-                { "path": "mabel_data" }
-            ]
+            "datastores": [{
+                "bucket": "mabel_data",
+                "prefix": ""
+            }]
+        },
+        "LOCAL": {
+            "datastores": [{
+                "prefix": ""
+            }]
         }
     }
 }

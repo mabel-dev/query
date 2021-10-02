@@ -1,20 +1,25 @@
+import os
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Response
 from fastapi.responses import UJSONResponse
 from mabel.logging import get_logger, set_log_name
 from mabel.errors import DataNotFoundError
+from mabel.utils.common import build_context
 
 
+context = build_context()
 router = APIRouter()
 set_log_name("QUERY")
 logger = get_logger()
 logger.setLevel(5)
 
 
-@router.get("/v1/datastores", response_class=UJSONResponse)
-def handle_start_request(datastore: Optional[str] = None):
+@router.get("/v1/datastores/list", response_class=UJSONResponse)
+def handle_start_request():
     try:
-        return {"stores": []}
+        project = os.environ.get("PROJECT_NAME", "LOCAL")
+        environments = context["environments"][project]
+        return {"stores": environments["datastores"] }
 
     except HTTPException:
         raise

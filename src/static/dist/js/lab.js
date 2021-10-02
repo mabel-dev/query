@@ -206,8 +206,8 @@ function execute() {
             document.getElementById("data-table-wrapper").innerHTML =
                 `
 <div class="alert alert-error col-sm-8" role="alert">
-    <h4 class="alert-heading">${errorObject.error}</h4>
-    <p>${errorObject.detail}</p>
+    <h4 class="alert-heading">${htmlEncode(errorObject.error)}</h4>
+    <p>${htmlEncode(errorObject.detail)}</p>
     <hr />
     <p class="mb-0">Update your query and try again.</p>
 </div>
@@ -258,7 +258,7 @@ function update_history(query, query_outcome, records, duration) {
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
-            <td class="align-middle trim code cm-s-default" title="${htmlEncode(_history[i].query)}">${colorize_sql(_history[i].query)}</td>
+            <td class="align-middle trim code cm-s-default" title="${htmlEncode(_history[i].query)}">${colorize_sql(htmlEncode(_history[i].query))}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
             <td class="align-middle text-end">${_history[i].runtime}</td>
             <td class="align-middle text-end">${_history[i].rowcount}</td>
@@ -295,6 +295,8 @@ function update_saved(query) {
             saved_list.splice(index, 1);
         }
 
+        saved_list.push(query);
+
         putData("saved_sql", JSON.stringify(saved_list));
     }
 
@@ -308,7 +310,7 @@ function update_saved(query) {
     for (var i = 0; i < saved_list.length; i++) {
         entry = `
         <tr>
-            <td class="align-middle trim code cm-s-default">${colorize_sql(saved_list[i])}</td>
+            <td class="align-middle trim code cm-s-default">${colorize_sql(htmlEncode(saved_list[i]))}</td>
             <td>
                 <button type="button" id="redo-${i}" class="btn btn-sm button-query-white" title="Load Query into Editor"><i class="fas fa-redo"></i></button>
                 <button type="button" id="del-${i}" class="btn btn-sm button-query-white" title="Remove Query from Saved"><i class="fas fa-trash-alt"></i></button>
