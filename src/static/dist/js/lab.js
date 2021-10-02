@@ -20,6 +20,10 @@ function getData(key) {
     return localStorage.getItem(key)
 }
 
+function deleteData(key) {
+    localStorage.removeItem(key);
+}
+
 function colorize_sql(str) {
     // this is used to colorize in tables, just to help readability
     // we try to match the editor formatting but are using a different method
@@ -121,8 +125,10 @@ function execute() {
 
                     if (_has_more_records) {
                         _records = "Many (" + _results.length + " available)";
+                        update_history(_query, "okay", "Many", document.getElementById('clock').innerText);
                     } else {
                         _records = _results.length;
+                        update_history(_query, "okay", _records, document.getElementById('clock').innerText);
                     }
                     max_record = Math.min(_results.length, _page_number * _records_per_page)
 
@@ -130,7 +136,7 @@ function execute() {
                     document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
                     document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
-                    update_history(_query, "okay", _results.length, document.getElementById('clock').innerText);
+
                     update_visualization(_query, _results);
                 })
             } else {
@@ -269,6 +275,11 @@ function update_saved(query) {
         }
 
         saved_list.push(query);
+        console.log("There are", saved_list.length, "items");
+        while (saved_list.length > 5) {
+            console.log("evicting item from MRU list");
+            saved_list.pop();
+        }
         putData("saved_sql", JSON.stringify(saved_list));
     }
 
@@ -315,13 +326,6 @@ function download_query() {
     data.query = SqlEditor.getValue('\n');
     data.start_date = document.getElementById('start_date').value
     data.end_date = document.getElementById('end_date').value
-
-    //    const authHeader = "Bearer 6Q************"
-    //    const options = {
-    //        headers: {
-    //            //  Authorization: authHeader
-    //        }
-    //    };
 
     fetch(url, {
             method: "POST",

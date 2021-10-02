@@ -19,6 +19,5 @@ def get_user_informations(request: Request):
     encoded_jwt = get_jwt(request)
     return {
         "identity": get_identity(encoded_jwt),
-        "saved_queries": [],
-        "shared_queries": [],
+        "saved_queries": []
     }
