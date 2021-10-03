@@ -273,6 +273,8 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                     <li>isn't (IS NOT)</li>
                     <li>SQL like (LIKE)</li>
                     <li>not SQL like (NOT LIKE)</li>
+                    <li>IN</li>
+                    <li>CONTAINS</li>
                 </ul>
 
                 <p>Aggregation Functions:</p>
@@ -281,6 +283,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                     <li>SUM</li>
                     <li>MAX</li>
                     <li>MIN</li>
+                    <li>AVG</li>
                 </ul>
 
                 <p>Date and Time Functions:</p>
@@ -325,7 +328,6 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                     <li>BOOLEAN(string) - convert a string TRUE/FALSE to a boolean</li>
                     <li>ISNONE(any) - returns TRUE (boolean) if a value is none/null</li>
                     <li>FLATTEN(dictionary, separator) - flattens a JSON/Object field, separator is optional</li>
-                    <li>JOIN(list) - concatenates a list of items into a string</li>
                     <li>HASH(any) - Hashes a value (uses SIPHASH)</li>
                     <li>MD5(any) - Calculate the MD5 of a value</li>
                     <li>RANDOM() - Return a random number between 0.000 to 0.999</li>
