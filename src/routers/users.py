@@ -17,7 +17,4 @@ def get_user_informations(request: Request):
     from internals.helpers.identity import get_jwt, get_identity
 
     encoded_jwt = get_jwt(request)
-    return {
-        "identity": get_identity(encoded_jwt),
-        "saved_queries": []
-    }
+    return {"identity": get_identity(encoded_jwt), "saved_queries": []}

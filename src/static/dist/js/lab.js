@@ -14,7 +14,6 @@ const recordBufferSize = 2001
 const history_timestampFormat = "YYYY-MM-DD HH:mm:ss"
 
 
-
 function putData(key, value) {
     localStorage.setItem(key, value);
 }
@@ -241,9 +240,9 @@ function update_history(query, query_outcome, records, duration) {
             // remove excess items from the list
             _history.shift();
         }
-
-        putData("recent_queries", JSON.stringify(_history))
     }
+
+    putData("recent_queries", JSON.stringify(_history))
 
     history_table = "<thead><tr><th>Status</th><th>Query</th><th>Last Run</th><th>Duration</th><th>Rows</th><th class='text-end'>Actions</th></tr></thead>"
     history_table += "<tbody>"
@@ -294,11 +293,10 @@ function update_saved(query) {
         if (index > -1) {
             saved_list.splice(index, 1);
         }
-
         saved_list.push(query);
-
-        putData("saved_sql", JSON.stringify(saved_list));
     }
+
+    putData("saved_sql", JSON.stringify(saved_list));
 
     if (saved_list.length == 0) {
         document.getElementById("saved").innerHTML = '<div class="alert alert-primary col-sm-8" role="alert">No queries have been Saved.</div>'
@@ -324,7 +322,7 @@ function update_saved(query) {
 }
 
 function run_query() {
-    _query = SqlEditor.getValue('\n');
+    _query = SqlEditor.getValue('\n').trim();
     _records = "Many"
     _cursors = []
     _page_number = 1
@@ -340,7 +338,7 @@ function download_query() {
 
     let url = '/download/'
     let data = {};
-    data.query = SqlEditor.getValue('\n');
+    data.query = SqlEditor.getValue('\n').trim();
     data.start_date = document.getElementById('start_date').value
     data.end_date = document.getElementById('end_date').value
 
@@ -365,7 +363,7 @@ function download_query() {
 }
 
 function save_query() {
-    let query = SqlEditor.getValue('\n');
+    let query = SqlEditor.getValue('\n').trim();
     update_saved(query);
 }
 

@@ -19,7 +19,7 @@ def handle_start_request():
     try:
         project = os.environ.get("PROJECT_NAME", "LOCAL")
         environments = context["environments"][project]
-        return {"stores": environments["datastores"] }
+        return {"stores": environments["datastores"]}
 
     except HTTPException:
         raise
