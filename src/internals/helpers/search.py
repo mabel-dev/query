@@ -21,7 +21,6 @@ def do_search(search: SearchModel, auth_token=None):
         sql_statement=search.query,
         raw_path=raw_path,
         inner_reader=inner_reader,
-        project="dcsgva-data-prd",
-        credentials=auth_token,
+        project="dcsgva-data-prd"
     )
     return sql_reader

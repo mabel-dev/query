@@ -32,14 +32,26 @@
             <div class="sidebar-header">
                 <span class="brand-text"><i class="far fa-compass"></i> Query</span>
             </div>
-            <ul class="list-unstyled sidebar-options">
-                <li class="active">
-                    <a href="/"><i class="fas fa-table"></i> Lab</a>
-                </li>
-                <li>
-                    <a href="/help.html"><i class="fas fa-question"></i> Help</a>
-                </li>
-            </ul>
+
+
+            <div style="padding: 10px;">
+
+                <input class="form-control" list="lab-dataset-options" id="lab-dataset-filter" placeholder="Dataset Filter">
+                <datalist id="lab-dataset-options">
+              <option value="San Francisco">
+              <option value="New York">
+              <option value="Seattle">
+              <option value="Los Angeles">
+              <option value="Chicago">
+            </datalist>
+
+                <ul class="list-unstyled" style="padding-top: 10px;">
+                    <li><span class="field-name">name</span> <span class="field-type">STRING</span></li>
+                    <li><span class="field-name">age</span> <span class="field-type">INT</span></li>
+                    <li><span class="field-name">married</span> <span class="field-type">BOOLEAN</span></li>
+                    <li><span class="field-name">height</span> <span class="field-type">FLOAT</span></li>
+                </ul>
+            </div>
 
         </nav>
 
@@ -140,14 +152,14 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                                 <button class="nav-link" id="recent-tab" data-bs-toggle="tab" data-bs-target="#recent" type="button" role="tab" aria-controls="recent" aria-selected="false"><i class="fas fa-history"></i> Recent</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab" aria-controls="saved" aria-selected="false"><i class="fas fa-folder-open"></i> Saved</button>
+                                <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab" aria-controls="saved" aria-selected="false"><i class="fas fa-thumbtack"></i> Pinned</button>
                             </li>
                         </ul>
                     </div>
                     <div class="col-sm-2 clear-padding">
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn-fixed-width btn btn-outline-secondary" id="save">
-                                <i class="fas fa-save"></i> Save
+                                <i class="fas fa-thumbtack"></i> Pin
                             </button>
                             <button type="button" class="btn-fixed-width btn btn-action" id="run">
                             <i class="fas fa-sync-alt"></i> Run
@@ -182,7 +194,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                     </div>
                     <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="saved-tab">
                         <div class="alert alert-primary col-sm-8" role="alert">
-                            No queries have been Saved.
+                            No queries have been Pinned.
                         </div>
                     </div>
                 </div>
@@ -401,6 +413,7 @@ FROM mabel_data.RAW.NVD.CVE_LIST
     <script src="dist/js/explorer.js"></script>
     <script src="dist/js/lab.js"></script>
     <script src="dist/js/visualize.js"></script>
+    <script src="dist/js/autocomplete.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -412,6 +425,111 @@ FROM mabel_data.RAW.NVD.CVE_LIST
             initUser();
             initAutoComplete();
         });
+
+
+        var rawFilterFields = [{
+            "Display": "Free School Meal (FSM)",
+            "Field": "FSM",
+            "Value": "Y"
+        }, {
+            "Display": "Adopted",
+            "Field": "Adopted",
+            "Value": "Y"
+        }, {
+            "Display": "Looked After Child (LAC)",
+            "Field": "LAC",
+            "Value": "Y"
+        }, {
+            "Display": "English Additional Language (EAL)",
+            "Field": "EAL",
+            "Value": "Y"
+        }, {
+            "Display": "Pupil Premium (PPM)",
+            "Field": "PPM",
+            "Value": "Y"
+        }, {
+            "Display": "Autistic Spectrum Disorder (ASD)",
+            "Field": "ASD",
+            "Value": "Y"
+        }, {
+            "Display": "Hearing Impairment (HI)",
+            "Field": "HI",
+            "Value": "Y"
+        }, {
+            "Display": "Moderate Learning Difficulty (MLD)",
+            "Field": "MLD",
+            "Value": "Y"
+        }, {
+            "Display": "Other Difficulty/Disability (OTH)",
+            "Field": "OTH",
+            "Value": "Y"
+        }, {
+            "Display": "Physical Disability (PD)",
+            "Field": "PD",
+            "Value": "Y"
+        }, {
+            "Display": "Profound & Multiple Learning Difficulty (PMLD)",
+            "Field": "PMLD",
+            "Value": "Y"
+        }, {
+            "Display": "Severe Learning Difficulty (SLD)",
+            "Field": "SLD",
+            "Value": "Y"
+        }, {
+            "Display": "Speech, Language or Communication Need (SLCN)",
+            "Field": "SLCN",
+            "Value": "Y"
+        }, {
+            "Display": "Visual Impairment (VI)",
+            "Field": "VI",
+            "Value": "Y"
+        }, {
+            "Display": "Multi-Sensory Impairment (MSI)",
+            "Field": "MSI",
+            "Value": "Y"
+        }, {
+            "Display": "Social, Emotional and Mental Health (SEMH)",
+            "Field": "SEMH",
+            "Value": "Y"
+        }, {
+            "Display": "No Specialist Assessment (NSA)",
+            "Field": "NSA",
+            "Value": "Y"
+        }, {
+            "Display": "Specific Learning Difficulty (SPLD)",
+            "Field": "SPLD",
+            "Value": "Y"
+        }, {
+            "Display": "Male",
+            "Field": "Sex",
+            "Value": "M"
+        }, {
+            "Display": "Female",
+            "Field": "Sex",
+            "Value": "F"
+        }, {
+            "Display": "Progress Not Assessed",
+            "Field": "Progress",
+            "Value": "Not Assessed"
+        }, {
+            "Display": "Below Expected Progress",
+            "Field": "Progress",
+            "Value": "Below"
+        }, {
+            "Display": "Expected Progress",
+            "Field": "Progress",
+            "Value": "Expected"
+        }, {
+            "Display": "Above Expected Progress",
+            "Field": "Progress",
+            "Value": "Above"
+        }, {
+            "Display": "Outstanding Progress",
+            "Field": "Progress",
+            "Value": "Outstanding"
+        }];
+
+        autocomplete(document.getElementById("newfilter"), rawFilterFields);
     </script>
 </body>
 

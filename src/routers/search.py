@@ -1,4 +1,5 @@
 import orjson
+import datetime
 from fastapi import APIRouter, HTTPException, Response, Request
 from mabel.logging import get_logger, set_log_name
 from mabel.errors import DataNotFoundError
@@ -14,6 +15,26 @@ logger.setLevel(5)
 
 RESULT_BATCH = 2000
 
+##########################################################################
+def fix_dict(obj: dict) -> dict:
+    def fix_fields(dt):
+        if isinstance(dt, (datetime.date, datetime.datetime)):
+            return dt.isoformat()
+        if isinstance(dt, bytes):
+            return dt.decode("UTF8")
+        if hasattr(dt, "mini"):
+            return dt.mini.decode("UTF8")
+        if isinstance(dt, dict):
+            return {k: fix_fields(v) for k, v in dt.items()}
+        return str(dt)
+
+    if not isinstance(obj, dict):
+        return obj  # type:ignore
+    return {k: fix_fields(v) for k, v in obj.items()}
+
+
+########################################################################
+
 
 def serialize_response(response, max_records):
     """
@@ -28,7 +49,7 @@ def serialize_response(response, max_records):
             # we have a saved minified json string
             yield record.mini + b"\n"
         elif i < max_records:
-            yield orjson.dumps(record) + b"\n"
+            yield orjson.dumps(fix_dict(record)) + b"\n"
     if i == -1:
         # UNABLE TO SATISFY RANGE
         raise HTTPException(status_code=416)
@@ -45,10 +66,13 @@ def search(search: SearchModel, request: Request):
         logger.info({**search.dict(), "user": get_identity(encoded_jwt)})
 
         results = do_search(search, encoded_jwt)
+
+        body = b"\n".join(serialize_response(results, RESULT_BATCH))
         response = Response(
-            b"\n".join(serialize_response(results, RESULT_BATCH)),
+            body,
             media_type="application/jsonlines",
         )
+
         return response
 
     except HTTPException:
