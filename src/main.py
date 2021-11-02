@@ -43,6 +43,14 @@ def home(request: Request):
     """
     return templates.TemplateResponse("index.html", {"request": request})
 
+@application.get("/notebook", response_class=HTMLResponse)
+def home(request: Request):
+    """
+    This is a single page app, we deliver a single HTML page and interact
+    with the backend using APIs.
+    """
+    return templates.TemplateResponse("notebook.html", {"request": request})
+
 
 application.include_router(search.router)
 application.include_router(download.router)

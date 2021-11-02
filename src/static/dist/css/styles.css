@@ -2,6 +2,7 @@
     --base-green-color: #24718B;
     --base-purple-color: #500472;
     --base-green-color-highlight: #3097ba;
+    --base-purple-color-highlight: #a24cc9;
     --base-black-color: #111111;
     /* https://spectrum.adobe.com/page/color/  */
     --theme-color-red: #e34850;
@@ -16,6 +17,9 @@
     /* 20% l */
     --theme-color-dark-red: #580e10;
     --theme-color-dark-blue: #092f5d;
+    /* 50% */
+    --transparent-50: rgba(255, 255, 255, 0.5);
+    --grey-50: (128, 128, 128);
 }
 
 .btn {
@@ -71,9 +75,10 @@
 .brand-text {
     font-family: Rubik, Georgia, 'Times New Roman', Times, serif;
     font-size: 2em;
+    line-height: 2em;
     font-weight: 200;
     color: white;
-    padding: 55px 15px 15px 15px;
+    padding: 15px 15px 15px 15px;
 }
 
 html,
@@ -138,7 +143,7 @@ body {
 .vertical-separator {
     padding-left: 10px;
     padding-right: 10px;
-    color: #60B1A7;
+    color: var(--base-green-color-highlight);
 }
 
 .datepicker {
@@ -284,4 +289,110 @@ td.code {
 .alert-error {
     background-color: var(--theme-color-light-red);
     color: var(--theme-color-dark-red);
+}
+
+.autocomplete {
+    /*the container must be positioned relative:*/
+    position: relative;
+    display: inline-block;
+}
+
+.autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+}
+
+.autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+
+.autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: #d4d4d4;
+}
+
+.autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: #256EE9 !important;
+    color: #ffffff;
+}
+
+.field-name {
+    font-weight: 600;
+    line-height: 1.8em;
+    padding-left: 0.4em;
+}
+
+.field-type {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    color: var(--transparent-50);
+    padding-left: 1em;
+}
+
+.field-type-discoverer {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    color: var(--base-purple-color-highlight);
+    padding-left: 1em;
+}
+
+.discover-result-title {
+    font-family: Rubik, Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.2em;
+    font-weight: 400;
+    color: var(--base-green-color);
+}
+
+.discover-head {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-weight: 400;
+    font-size: 0.8em;
+    padding-left: 0.6rem;
+    color: var(--base-purple-color-highlight)
+}
+
+.discover-icon-row {
+    font-family: Rubik, Georgia, 'Times New Roman', Times, serif;
+    font-weight: 300;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--base-green-color);
+    background-color: transparent;
+    box-shadow: inset 0 -1px 0 rgb(0 0 0 / 13%);
+}
+
+.accordion-button {
+    padding: 0.5rem 0.75rem;
+}
+
+.color-alt {
+    color: var(--base-purple-color-highlight)
+}
+
+.profile-chart {
+    padding: 1rem;
+}
+
+.big-icon {
+    font-size: 3rem;
+}
+
+.card {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0rem;
+}
+
+.center {
+    text-align: center;
 }

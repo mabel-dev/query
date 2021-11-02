@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Explorer Notebooks</title>
+    <link rel="icon" type="image/png" href="dist/img/q-logo.png">
+
+    <link href="dist/fonts/JetBrains Mono/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Rubik/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Roboto Condensed/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Roboto/font.css" rel="stylesheet" />
+    <link href="dist/fonts/Open Sans Condensed/font.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="plugins/fontawesome-free-6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="plugins/bootstrap-5.1.3/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="dist/css/notebook.css">
+    <link rel="stylesheet" href="dist/css/nav.css">
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <span class="brand-text"><i class="far fa-compass"></i> Explorer</span>
+            </div>
+
+            <div style="padding: 10px;">
+                <input class="form-control" list="lab-dataset-options" id="lab-dataset-filter" placeholder="Dataset Filter">
+                <ul class="list-unstyled" style="padding-top: 10px;">
+                    <li><span class="field-name">name</span> <span class="field-type">STRING</span></li>
+                    <li><span class="field-name">age</span> <span class="field-type">INT</span></li>
+                    <li><span class="field-name">married</span> <span class="field-type">BOOLEAN</span></li>
+                    <li><span class="field-name">height</span> <span class="field-type">FLOAT</span></li>
+                </ul>
+            </div>
+
+        </nav>
+
+        <div id="content">
+            <div class="container-xxl">
+
+                <nav id="top-navbar" class="navbar navbar-expand-md">
+                    <button type="button" id="sidebarCollapse" class="btn button-query-white">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="container-fluid">
+                        <div class="navbar-collapse collapse">
+                            <ul class="navbar-nav" id="header-nav">
+                                <li class="nav-item" id="nav-explorer">
+                                    <a class="nav-link header-link btn" href="#"><i class="fa-regular fa-floppy-disk"></i> Save</a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item" id="identity">
+                                    Identity
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="row">
+
+                    <div id="cell-block"></div>
+
+                    <div class="notebook-cell">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-plus"></i> New Cell
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fas fa-fw fa-database"></i> SQL Query </a></li>
+                                <li><a class="dropdown-item" href="#" id="new-md-cell"><i class="fab fa-fw fa-markdown"></i> Text Block </a></li>
+                                <li><a class="dropdown-item" href="#" id="new-chart-cell"><i class="far fa-fw fa-chart-bar"></i> Visualization </a></li>
+                                <li><a class="dropdown-item" href="#" id="new-python-cell"><i class="fab fa-fw fa-python"></i> Python Block </a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/popper/js/popper.min.js"></script>
+    <script src="plugins/moment/js/moment.js"></script>
+    <script src="plugins/bootstrap-5.1.3/js/bootstrap.min.js"></script>
+    <script src="plugins/custom-scrollbar/js/custom-scrollbar.js"></script>
+    <script src="plugins/pyodide_0.18.1/pyodide.js"></script>
+    <script src="plugins/showdown-1.9.1/js/showdown.min.js"></script>
+
+    <script src=" dist/js/code-editor.js"></script>
+    <script src="dist/js/notebook-table.js"></script>
+
+    <script src="dist/js/notebook-base.js"></script>
+    <script src="dist/js/notebook-cell-sql.js"></script>
+
+    <script type="text/javascript">
+        var pyodide;
+
+        $(document).ready(function() {
+            $('#sidebarCollapse').on('click', function() {
+                $('#sidebar, #content').toggleClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+
+            async function main() {
+                pyodide = await loadPyodide({
+                    indexURL: "/plugins/pyodide_0.18.1/"
+                });
+                console.log(pyodide.runPython(`
+                    import sys
+                    sys.version
+                `));
+            }
+            main();
+        });
+    </script>
+</body>
+
+</html>

@@ -64,7 +64,7 @@
                 <div class="container-fluid">
                     <div class="navbar-collapse collapse">
                         <ul class="navbar-nav" id="header-nav">
-                            <li class="nav-item d-none" id="nav-explorer">
+                            <li class="nav-item" id="nav-explorer">
                                 <a class="nav-link header-link btn" href="#"><i class="far fa-compass"></i> Explorer</a>
                             </li>
                             <li class="nav-item" id="nav-lab">
@@ -91,16 +91,158 @@
 
             <section id="main-explorer" class="d-none">
 
-                <p>I'm looking for this data [ ] </p>
+                <div class="col-md-8">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text" id="inputGroup-sizing-lg"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Discover">
+                    </div>
+                </div>
 
-                <ul>
-                    <li>Omni search (tables, columns - names and description)</li>
-                    <li>Dataset tree</li>
-                    <li>Common queries against this table</li>
-                    <li>Summary , columns, types, nulls, distribution etc.</li>
-                    <li>Common users of this table</li>
-                    <li>Where this table sits in pipelines (what feeds it, where is it used)</li>
-                </ul>
+                <div class="card discover-card">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-1 align-left">
+                                <img src="dist/img/database.svg" width="48px" />
+                            </div>
+                            <div class="col-11">
+                                <div class="discover-result-title">
+                                    TABLE NAME
+                                    <span class="discover-head">10 columns</span>
+                                    <span class="discover-head">1000 rows</span>
+                                </div>
+                                <p class="card-text discover-summary-row">
+                                    Description
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card discover-card">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <div class="col-1 center">
+                                <img src="dist/img/column.svg" width="48px" />
+                            </div>
+                            <div class="col-11">
+                                <div class="discover-result-title">
+                                    COLUMN NAME
+                                    <span class="discover-head">TYPE</span>
+                                </div>
+                                <p class="card-text discover-summary-row">
+                                    Description
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card discover-card">
+                    <div class="card-body">
+                        <div class="discover-result-title">TABLE NAME</div>
+                        <p class="card-text discover-summary-row">
+                            Description
+                        </p>
+
+                        <div class="clear-padding">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="discover-tab-overview" data-bs-toggle="tab" data-bs-target="#discover-overview" type="button" role="tab" aria-controls="overview" aria-selected="false"><i class="far fa-file-alt"></i> Overview</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="discover-tab-columns" data-bs-toggle="tab" data-bs-target="#discover-columns" type="button" role="tab" aria-controls="recent" aria-selected="false"><i class="fas fa-columns"></i> Columns</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="discover-tab-usage" data-bs-toggle="tab" data-bs-target="#discover-usage" type="button" role="tab" aria-controls="saved" aria-selected="false"><i class="fas fa-code"></i> Usage</button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="tab-content" id="tabs">
+                            <div class="tab-pane fade show active" id="discover-overview" role="tabpanel" aria-labelledby="discover-tab-overview">
+                                Overview<i class="far fa-edit"></i>
+                                <br />
+                                <i class="fas fa-tags"></i>
+                                <ul>
+                                    <li>Owner</li>
+                                    <li>Licence</li>
+                                    <li>Confidentiality</li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="discover-columns" role="tabpanel" aria-labelledby="discover-tab-columns">
+                                <div class="card discover-card">
+
+                                    <div class="accordion accordion-flush">
+                                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="flush-headingOne">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                                        <div class="field-name">Name</div>
+                                                        <span class="field-type-discoverer">STR</span>
+                                                </button>
+                                                </h2>
+                                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-2">
+                                                            <canvas class="profile-chart" id="profile-one"></canvas>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <ul class="list-unstyled discover-head">
+                                                                <li>COUNT</li>
+                                                                <li class="color-alt">201001</li>
+                                                                <li>MISSING</li>
+                                                                <li class="color-alt">100002</li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            DISTINCT
+                                                        </div>
+                                                        <div class="col-3">
+                                                            COLUMN
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="flush-headingTwo">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                                        <div class="field-name">COLUMN NAME</div>
+                                                        <span class="field-type-discoverer">INT</span>
+                                                </button>
+                                                </h2>
+                                                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual
+                                                        content.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="flush-headingThree">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                                        <div class="field-name">COLUMN NAME</div>
+                                                        <span class="field-type-discoverer">INT</span>
+                                                </button>
+                                                </h2>
+                                                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms
+                                                        of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="discover-usage" role="tabpanel" aria-labelledby="discover-tab-usage">
+                                <ul>
+                                    <li>Popular Queries</li>
+                                    <li>Measures Derived</li>
+                                    <li>Lineage</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </section>
 
@@ -410,10 +552,9 @@ FROM mabel_data.RAW.NVD.CVE_LIST
     <script src="dist/js/colors.js"></script>
     <script src="dist/js/data-table.js"></script>
     <script src="dist/js/user.js"></script>
-    <script src="dist/js/explorer.js"></script>
+    <script src="dist/js/discover.js"></script>
     <script src="dist/js/lab.js"></script>
     <script src="dist/js/visualize.js"></script>
-    <script src="dist/js/autocomplete.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -427,109 +568,8 @@ FROM mabel_data.RAW.NVD.CVE_LIST
         });
 
 
-        var rawFilterFields = [{
-            "Display": "Free School Meal (FSM)",
-            "Field": "FSM",
-            "Value": "Y"
-        }, {
-            "Display": "Adopted",
-            "Field": "Adopted",
-            "Value": "Y"
-        }, {
-            "Display": "Looked After Child (LAC)",
-            "Field": "LAC",
-            "Value": "Y"
-        }, {
-            "Display": "English Additional Language (EAL)",
-            "Field": "EAL",
-            "Value": "Y"
-        }, {
-            "Display": "Pupil Premium (PPM)",
-            "Field": "PPM",
-            "Value": "Y"
-        }, {
-            "Display": "Autistic Spectrum Disorder (ASD)",
-            "Field": "ASD",
-            "Value": "Y"
-        }, {
-            "Display": "Hearing Impairment (HI)",
-            "Field": "HI",
-            "Value": "Y"
-        }, {
-            "Display": "Moderate Learning Difficulty (MLD)",
-            "Field": "MLD",
-            "Value": "Y"
-        }, {
-            "Display": "Other Difficulty/Disability (OTH)",
-            "Field": "OTH",
-            "Value": "Y"
-        }, {
-            "Display": "Physical Disability (PD)",
-            "Field": "PD",
-            "Value": "Y"
-        }, {
-            "Display": "Profound & Multiple Learning Difficulty (PMLD)",
-            "Field": "PMLD",
-            "Value": "Y"
-        }, {
-            "Display": "Severe Learning Difficulty (SLD)",
-            "Field": "SLD",
-            "Value": "Y"
-        }, {
-            "Display": "Speech, Language or Communication Need (SLCN)",
-            "Field": "SLCN",
-            "Value": "Y"
-        }, {
-            "Display": "Visual Impairment (VI)",
-            "Field": "VI",
-            "Value": "Y"
-        }, {
-            "Display": "Multi-Sensory Impairment (MSI)",
-            "Field": "MSI",
-            "Value": "Y"
-        }, {
-            "Display": "Social, Emotional and Mental Health (SEMH)",
-            "Field": "SEMH",
-            "Value": "Y"
-        }, {
-            "Display": "No Specialist Assessment (NSA)",
-            "Field": "NSA",
-            "Value": "Y"
-        }, {
-            "Display": "Specific Learning Difficulty (SPLD)",
-            "Field": "SPLD",
-            "Value": "Y"
-        }, {
-            "Display": "Male",
-            "Field": "Sex",
-            "Value": "M"
-        }, {
-            "Display": "Female",
-            "Field": "Sex",
-            "Value": "F"
-        }, {
-            "Display": "Progress Not Assessed",
-            "Field": "Progress",
-            "Value": "Not Assessed"
-        }, {
-            "Display": "Below Expected Progress",
-            "Field": "Progress",
-            "Value": "Below"
-        }, {
-            "Display": "Expected Progress",
-            "Field": "Progress",
-            "Value": "Expected"
-        }, {
-            "Display": "Above Expected Progress",
-            "Field": "Progress",
-            "Value": "Above"
-        }, {
-            "Display": "Outstanding Progress",
-            "Field": "Progress",
-            "Value": "Outstanding"
-        }];
 
-        autocomplete(document.getElementById("newfilter"), rawFilterFields);
+        draw_profile_pie([90, 10, 30], ["True", "False", "Other"], document.getElementById("profile-one"))
     </script>
 </body>
 

@@ -1,0 +1,144 @@
+:root {
+    --base-green-color: #24718B;
+    --base-purple-color: #500472;
+    --base-green-color-highlight: #3097ba;
+    --base-purple-color-highlight: #a24cc9;
+    --base-black-color: #111111;
+    /* https://spectrum.adobe.com/page/color/  */
+    --theme-color-red: #e34850;
+    --theme-color-blue: #2680eb;
+    --theme-color-green: #2d9d78;
+    --theme-color-orange: #e68619;
+    --theme-color-yellow: #dfbf00;
+    --theme-color-purple: #6767ec;
+    /* @90% l */
+    --theme-color-light-red: #f8d3d5;
+    --theme-color-light-blue: #d1e3fa;
+    /* 20% l */
+    --theme-color-dark-red: #580e10;
+    --theme-color-dark-blue: #092f5d;
+    /* 50% */
+    --transparent-50: rgba(255, 255, 255, 0.5);
+    --grey-50: (128, 128, 128);
+}
+
+.mono-font {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+}
+
+.notebook-cell {
+    margin-bottom: 1rem;
+}
+
+.notebook-cell-name {
+    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-size: 1.1em;
+}
+
+.snotebook-cell-buttons .btn {
+    padding: 0.4em;
+    font-size: 0.8rem;
+}
+
+.notebook-cell-editor {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    padding: 0.3em;
+    min-height: 4.5em;
+}
+
+
+/*
+code editor
+*/
+
+.editor {
+    padding-left: 48px;
+    counter-reset: line;
+    outline: none;
+    overflow-y: auto;
+    padding-left: 48px;
+    counter-reset: line;
+}
+
+.editor div {
+    display: block;
+    position: relative;
+    white-space: pre-wrap;
+}
+
+.editor div::before {
+    content: counter(line, decimal-leading-zero);
+    counter-increment: line;
+    position: absolute;
+    right: calc(100% + 16px);
+    opacity: 0.5;
+}
+
+.code-keyword {
+    color: #743084;
+}
+
+.code-function {
+    color: #157D58;
+}
+
+.code-numbers {
+    color: #C16E21;
+}
+
+.code-literal {
+    color: #A51317;
+}
+
+.code-comment {
+    color: #616568;
+}
+
+.code-blue {
+    color: #4581B1;
+}
+
+.code-yellow {
+    color: #FFC000;
+}
+
+
+/*
+table styling
+*/
+
+.table {
+    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    margin-bottom: 0;
+}
+
+.table>*>*>td {
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0.3em 0.8em;
+    border: 1px #D0D0D0 solid;
+}
+
+.table>*>*>th {
+    background-color: #EEEEEE;
+    font-weight: 400;
+    padding: 0.3em 0.8em;
+    border: 1px #D0D0D0 solid;
+}
+
+.table>:not(:first-child) {
+    border-top: 0;
+}
+
+
+/* 
+overwrite bootstrap styles 
+*/
+
+.card {
+    border-radius: 0rem;
+    border: 1px #D0D0D0 solid;
+}

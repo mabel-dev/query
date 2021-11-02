@@ -19,8 +19,9 @@ def do_search(search: SearchModel, auth_token=None):
         start_date=search.start_date,
         end_date=search.end_date,
         sql_statement=search.query,
+        #multiprocess=True,
         raw_path=raw_path,
         inner_reader=inner_reader,
-        project="dcsgva-data-prd"
+        project="dcsgva-data-prd",
     )
     return sql_reader
