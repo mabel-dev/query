@@ -1,15 +1,18 @@
 function sql_highlight(element) {
 
-    var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING)\b/gi;
+    var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)\b/gi;
     var function_reg = /\b(COUNT|MAX|MAX|MIN|AVG)\b/gi;
+    var values_reg = /\b(TRUE|FALSE|NONE|NULL)\b/gi;
     var numbers_reg = /\b(\d+)\b/g;
-    var literal_reg = /"([^\"]*)"/g
+    var literal_reg_dbl = /"([^\"]*)"/g
+        //var literal_reg_sng = /'([^\']*)'/g
 
     s = element.innerText;
-    s = s.replace(keyword_reg, function(m) { return "<span class='code-keyword'>" + m.toUpperCase() + "</span>" });
-    s = s.replace(function_reg, function(m) { return "<span class='code-function'>" + m.toUpperCase() + "</span>" });
-    s = s.replace(literal_reg, "\"<span class='code-literal'>$1</span>\"");
-    s = s.replace(numbers_reg, "<span class='code-numbers'>$1</span>");
+    s = s.replace(keyword_reg, function(m) { return "<span class='code-purple'>" + m.toUpperCase() + "</span>" });
+    s = s.replace(function_reg, function(m) { return "<span class='code-green'>" + m.toUpperCase() + "</span>" });
+    s = s.replace(literal_reg_dbl, "\"<span class='code-red'>$1</span>\"");
+    s = s.replace(numbers_reg, "<span class='code-orange'>$1</span>");
+    s = s.replace(values_reg, function(m) { return "<span class='code-blue'>" + m.toUpperCase() + "</span>" });
     element.innerHTML = s.split('\n').join('<br/>');
 }
 
@@ -25,8 +28,8 @@ function py_highlight(element) {
 
     s = s.replace(literal_dbl_reg, "\"<span class='code-yellow'>$1</span>\"");
     s = s.replace(literal_sng_reg, "\"<span class='code-yellow'>$1</span>\"");
-    s = s.replace(numbers_reg, "<span class='code-keyword'>$1</span>");
-    s = s.replace(control_reg, "<span class='code-literal'>$1</span>");
+    s = s.replace(numbers_reg, "<span class='code-purple'>$1</span>");
+    s = s.replace(control_reg, "<span class='code-red'>$1</span>");
     s = s.replace(keyword_reg, "<span class='code-blue'>$1</span>");
     element.innerHTML = s.split('\n').join('<br/>');
 }

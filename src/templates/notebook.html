@@ -54,7 +54,24 @@
                         <div class="navbar-collapse collapse">
                             <ul class="navbar-nav" id="header-nav">
                                 <li class="nav-item" id="nav-explorer">
-                                    <a class="nav-link header-link btn" href="#"><i class="fa-regular fa-floppy-disk"></i> Save</a>
+                                    <button id="notebook-save" type="button" class="btn btn-action">
+                                        <i class="fa-fw fa-regular fa-floppy-disk"></i> Save
+                                    </button>
+                                </li>
+                                <li class="nav-item" id="nav-explorer">
+                                    <button id="notebook-present" type="button" class="btn btn-action">
+                                        <i class="fa-fw fa-solid fa-tv"></i> Present
+                                    </button>
+                                </li>
+                                <li class="nav-item" id="nav-explorer">
+                                    <button id="notebook-load" type="button" class="btn btn-action">
+                                        <i class="fa-fw fa-regular fa-folder-open"></i> Load
+                                    </button>
+                                </li>
+                                <li class="nav-item" id="nav-explorer">
+                                    <button id="notebook-reset" type="button" class="btn btn-action">
+                                        <i class="fa-fw fa-solid fa-power-off"></i> Reset
+                                    </button>
                                 </li>
                             </ul>
                             <ul class="navbar-nav ms-auto">
@@ -76,10 +93,13 @@
                                 <i class="fa-solid fa-plus"></i> New Cell
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fas fa-fw fa-database"></i> SQL Query </a></li>
-                                <li><a class="dropdown-item" href="#" id="new-md-cell"><i class="fab fa-fw fa-markdown"></i> Text Block </a></li>
-                                <li><a class="dropdown-item" href="#" id="new-chart-cell"><i class="far fa-fw fa-chart-bar"></i> Visualization </a></li>
-                                <li><a class="dropdown-item" href="#" id="new-python-cell"><i class="fab fa-fw fa-python"></i> Python Block </a></li>
+                                <li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fas fa-fw fa-database"></i> SQL cell </a></li>
+                                <li><a class="dropdown-item" href="#" id="new-parameter-cell"><i class="fa-solid fa-fw fa-a"></i> Parameter cell </a></li>
+                                <li><a class="dropdown-item" href="#" id="new-markdown-cell"><i class="fab fa-fw fa-markdown"></i> Text cell </a></li>
+                                <!--
+                                <li><a class="dropdown-item" href="#" id="new-chart-cell"><i class="fa-solid fa-fw fa-chart-line"></i> Chart cell </a></li>
+                                <li><a class="dropdown-item" href="#" id="new-python-cell"><i class="fa-solid fa-fw fa-code"></i> Python cell </a></li>
+-->
                             </ul>
                         </div>
                     </div>
@@ -102,6 +122,8 @@
     <script src="dist/js/notebook-table.js"></script>
 
     <script src="dist/js/notebook-base.js"></script>
+    <script src="dist/js/notebook-cell-markdown.js"></script>
+    <script src="dist/js/notebook-cell-parameter.js"></script>
     <script src="dist/js/notebook-cell-sql.js"></script>
 
     <script type="text/javascript">
@@ -124,6 +146,9 @@
                 `));
             }
             main();
+
+            // so the user doesn't get an empty screen, give them a SQL cell
+            createNewCell("sql");
         });
     </script>
 </body>

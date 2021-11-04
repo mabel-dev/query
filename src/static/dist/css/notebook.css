@@ -4,6 +4,7 @@
     --base-green-color-highlight: #3097ba;
     --base-purple-color-highlight: #a24cc9;
     --base-black-color: #111111;
+    --base-highlight-color: #F30C13;
     /* https://spectrum.adobe.com/page/color/  */
     --theme-color-red: #e34850;
     --theme-color-blue: #2680eb;
@@ -26,6 +27,35 @@
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
 }
 
+.no-padding {
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.highlight-color {
+    color: var(--base-highlight-color);
+}
+
+.btn-action {
+    background-color: transparent;
+    color: var(--base-purple-color)
+}
+
+.btn-action:hover {
+    background-color: var(--base-purple-color);
+    color: white;
+}
+
+
+/*
+cells
+*/
+
+.notebook-cell-icon {
+    color: var(--base-purple-color)
+}
+
 .notebook-cell {
     margin-bottom: 1rem;
 }
@@ -42,8 +72,14 @@
 
 .notebook-cell-editor {
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-weight: 500;
     padding: 0.3em;
     min-height: 4.5em;
+}
+
+.notebook-cell-label {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    padding: 0.1em 1em 0.1em 0.3em;
 }
 
 
@@ -51,22 +87,20 @@
 code editor
 */
 
-.editor {
+.notebook-cell-editor-sql {
     padding-left: 48px;
     counter-reset: line;
     outline: none;
     overflow-y: auto;
-    padding-left: 48px;
-    counter-reset: line;
 }
 
-.editor div {
+.notebook-cell-editor-sql div {
     display: block;
     position: relative;
     white-space: pre-wrap;
 }
 
-.editor div::before {
+.notebook-cell-editor-sql div::before {
     content: counter(line, decimal-leading-zero);
     counter-increment: line;
     position: absolute;
@@ -74,32 +108,32 @@ code editor
     opacity: 0.5;
 }
 
-.code-keyword {
-    color: #743084;
+.code-purple {
+    color: #A42EA2;
 }
 
-.code-function {
-    color: #157D58;
+.code-green {
+    color: #53A053;
 }
 
-.code-numbers {
-    color: #C16E21;
+.code-orange {
+    color: #E2574E;
 }
 
-.code-literal {
-    color: #A51317;
+.code-red {
+    color: #FF3D5A;
 }
 
 .code-comment {
-    color: #616568;
+    color: #A0A1A7;
 }
 
 .code-blue {
-    color: #4581B1;
+    color: #447BEF;
 }
 
 .code-yellow {
-    color: #FFC000;
+    color: #976715;
 }
 
 
@@ -111,6 +145,7 @@ table styling
     font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-weight: 300;
     margin-bottom: 0;
+    width: 100%;
 }
 
 .table>*>*>td {
@@ -133,6 +168,10 @@ table styling
     border-top: 0;
 }
 
+.table-results {
+    overflow-x: scroll;
+}
+
 
 /* 
 overwrite bootstrap styles 
@@ -141,4 +180,13 @@ overwrite bootstrap styles
 .card {
     border-radius: 0rem;
     border: 1px #D0D0D0 solid;
+}
+
+.btn {
+    border-radius: 0.1rem;
+}
+
+.btn-group-sm>.btn,
+.btn-sm {
+    border-radius: 0.1rem;
 }

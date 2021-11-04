@@ -1,4 +1,4 @@
-cell_icon = '<i class="fab fa-fw fa-python"></i>'
+cell_icon = '<i class="fa-solid fa-fw fa-code"></i>'
 editor_class = 'notebook-cell-editor-python'
 
 document.getElementById("play-py").addEventListener("click", function() {

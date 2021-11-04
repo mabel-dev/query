@@ -1,11 +1,26 @@
 function createNewSqlCell(id, cellBlock) {
-    let cell_icon = '<i class="fas fa-fw fa-database"></i>';
+    let cell_icon = '<i class="fas fa-fw fa-database notebook-cell-icon"></i>';
     let editor_class = 'notebook-cell-editor-sql';
 
-    cellBlock.innerHTML += createCell(id, cell_icon, editor_class)
+    cellBlock.insertAdjacentHTML('beforeend', createCell(id, cell_icon, editor_class))
 
-    // add action for the play-function
-    document.getElementById(`play-${id}`).addEventListener("click", function() { temp_run_sql(id) }, false);
+    let control_bar = document.getElementById(`controls-${id}`)
+    control_bar.innerHTML = `
+<button id="history-${id}" type="button" class="btn btn-secondary">
+    <i class="fa-fw fa-solid fa-clock-rotate-left"></i>
+</button>
+<button id="dates-${id}" type="button" class="btn btn-secondary">
+    <i class="fa-fw fa-regular fa-calendar"></i>
+</button>
+    ` + control_bar.innerHTML
+
+    // add the actions for the control buttons
+    let play = document.getElementById(`play-${id}`);
+    play.addEventListener("click", function() { temp_run_sql(id) }, false);
+    let history = document.getElementById(`history-${id}`);
+    history.addEventListener("click", function() { temp_run_sql(id) }, false);
+    let dates = document.getElementById(`dates-${id}`);
+    dates.addEventListener("click", function() { temp_run_sql(id) }, false);
 
     // set up the syntax highlighting
     const sql_e = document.getElementById(`editor-${id}`);
@@ -242,5 +257,9 @@ function temp_run_sql(id) {
         "timestamp": "2020-01-16T16:10:25"
     }];
     data.columns = ["userid", "username", "user_verified", "followers", "tweet", "location", "sentiment", "timestamp"];
-    renderTable(data, 1, 10, document.getElementById(`result-cell-${id}`));
+    resultTable = renderTable(data, 1, 10);
+    resultHeader = ''
+    resultFooter = '<div class="card"><i class="fa-solid fa-angle-left"></i> 2000 Rows <i class="fa-solid fa-angle-right"></i><i class="fa-solid fa-right-to-bracket fa-rotate-90 "></i></div>'
+
+    document.getElementById(`result-cell-${id}`).innerHTML = resultHeader + "<div class='w-100 overflow-auto'>" + resultTable + "</div>" + resultFooter;
 }

@@ -31,7 +31,7 @@ function zeroPad(num, places) {
     return Array(+(zero > 0 && zero)).join("0") + num;
 }
 
-function renderTable(data, pageNumber, pageSize, dom) {
+function renderTable(data, pageNumber, pageSize) {
     var row_data = ''
 
     startIndex = (pageNumber - 1) * pageSize
@@ -75,5 +75,5 @@ function renderTable(data, pageNumber, pageSize, dom) {
     }
     header_data += "</tr></thead><tbody>";
 
-    dom.innerHTML = "<table class='table table-sm table-responsive'>" + header_data + row_data + "</table>";
+    return "<table class='table table-sm table-responsive table-results'>" + header_data + row_data + "</table>";
 }
