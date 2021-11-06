@@ -1,26 +1,30 @@
 :root {
-    --base-green-color: #24718B;
-    --base-purple-color: #500472;
-    --base-green-color-highlight: #3097ba;
-    --base-purple-color-highlight: #a24cc9;
-    --base-black-color: #111111;
-    --base-highlight-color: #F30C13;
+    --base-theme-color: #2D333A;
+    --base-accent-color: #406888;
+    --base-theme-color-highlight: #9052FB;
+    --base-font-color: #3F4255;
+    --base-accent-font-color: #747C94;
+    --base-background: #f3f2f3;
     /* https://spectrum.adobe.com/page/color/  */
     --theme-color-red: #e34850;
+    --theme-color-red-highlight: #800006;
     --theme-color-blue: #2680eb;
+    --theme-color-blue-highlight: #003a80;
     --theme-color-green: #2d9d78;
+    --theme-color-green-highlight: #08543b;
     --theme-color-orange: #e68619;
+    --theme-color-orange-highlight: #e67b00;
     --theme-color-yellow: #dfbf00;
+    --theme-color-yellow-highlight: #ffdb07;
     --theme-color-purple: #6767ec;
-    /* @90% l */
-    --theme-color-light-red: #f8d3d5;
-    --theme-color-light-blue: #d1e3fa;
-    /* 20% l */
-    --theme-color-dark-red: #580e10;
-    --theme-color-dark-blue: #092f5d;
-    /* 50% */
+    --theme-color-purple-highlight: #5a5af9;
     --transparent-50: rgba(255, 255, 255, 0.5);
     --grey-50: (128, 128, 128);
+}
+
+body {
+    background-color: var(--base-background);
+    color: var(--base-font-color)
 }
 
 .mono-font {
@@ -34,17 +38,13 @@
 }
 
 .highlight-color {
-    color: var(--base-highlight-color);
+    color: var(--theme-color-orange);
 }
 
-.btn-action {
-    background-color: transparent;
-    color: var(--base-purple-color)
-}
-
-.btn-action:hover {
-    background-color: var(--base-purple-color);
+.bg-pill {
     color: white;
+    background-color: var(--base-accent-color) !important;
+    font-weight: 500;
 }
 
 
@@ -53,7 +53,7 @@ cells
 */
 
 .notebook-cell-icon {
-    color: var(--base-purple-color)
+    color: var(--base-accent-color)
 }
 
 .notebook-cell {
@@ -74,7 +74,9 @@ cells
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
     font-weight: 500;
     padding: 0.3em;
-    min-height: 4.5em;
+    min-height: 6.5em;
+    max-height: 15em;
+    overflow-y: auto;
 }
 
 .notebook-cell-label {
@@ -82,16 +84,29 @@ cells
     padding: 0.1em 1em 0.1em 0.3em;
 }
 
+.notebook-cell-footer {
+    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    font-weight: 300;
+    padding: 0.3em 0.8em;
+}
+
 
 /*
 code editor
 */
 
+.result-cell-markdown {
+    border-top: 1px solid rgba(0, 0, 0, .125);
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+    border-radius: 0.25 rem;
+    padding: 0.6em;
+}
+
 .notebook-cell-editor-sql {
     padding-left: 48px;
     counter-reset: line;
     outline: none;
-    overflow-y: auto;
 }
 
 .notebook-cell-editor-sql div {
@@ -142,10 +157,11 @@ table styling
 */
 
 .table {
-    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-weight: 300;
     margin-bottom: 0;
     width: 100%;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 10pt;
 }
 
 .table>*>*>td {
@@ -155,11 +171,12 @@ table styling
     white-space: nowrap;
     padding: 0.3em 0.8em;
     border: 1px #D0D0D0 solid;
+    background-color: white;
 }
 
 .table>*>*>th {
     background-color: #EEEEEE;
-    font-weight: 400;
+    font-weight: 500;
     padding: 0.3em 0.8em;
     border: 1px #D0D0D0 solid;
 }
@@ -173,9 +190,35 @@ table styling
 }
 
 
+/*
+*/
+
+.setting-label {
+    padding-top: 0.5em;
+    padding-bottom: 0.1em;
+    font-family: "IBM Plex Sans", sans-serif;
+    color: var(--base-accent-font-color);
+    font-weight: 500;
+}
+
+
 /* 
 overwrite bootstrap styles 
 */
+
+.modal-content {
+    border-radius: 0;
+}
+
+.modal-header {
+    padding: 0.3em 0.8em;
+}
+
+.modal-title {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 12pt;
+    color: var(--base-font-color);
+}
 
 .card {
     border-radius: 0rem;
@@ -184,9 +227,79 @@ overwrite bootstrap styles
 
 .btn {
     border-radius: 0.1rem;
+    font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
 }
 
 .btn-group-sm>.btn,
 .btn-sm {
     border-radius: 0.1rem;
+}
+
+.btn-primary {
+    background-color: var(--theme-color-blue);
+    border: transparent;
+}
+
+.btn-primary:hover {
+    background-color: var(--theme-color-blue-highlight);
+    border: transparent;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--theme-color-blue-highlight);
+    border: transparent;
+}
+
+.btn-secondary:hover {
+    background-color: var(--theme-color-blue);
+    border: transparent;
+}
+
+.btn-success {
+    background-color: var(--theme-color-green);
+    border: transparent;
+}
+
+.btn-success:hover {
+    background-color: var(--theme-color-green-highlight);
+    border: transparent;
+}
+
+.btn-danger {
+    background-color: var(--theme-color-red);
+    border: transparent;
+}
+
+.btn-danger:hover {
+    background-color: var(--theme-color-red-highlight);
+    border: transparent;
+}
+
+.btn-light {
+    background-color: transparent;
+    border: transparent;
+    color: var(--base-accent-color)
+}
+
+.btn-light:hover {
+    background-color: var(--base-accent-color);
+    color: white;
+}
+
+
+/*
+restyling
+*/
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.6em;
+}
+
+h3 {
+    font-size: 1.2em;
 }

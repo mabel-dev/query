@@ -1,11 +1,10 @@
 function sql_highlight(element) {
 
     var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)\b/gi;
-    var function_reg = /\b(COUNT|MAX|MAX|MIN|AVG)\b/gi;
+    var function_reg = /\b(COUNT|MAX|MAX|MIN|AVG|DATE|YEAR|MONTH|STRING|CONCAT)\b/gi;
     var values_reg = /\b(TRUE|FALSE|NONE|NULL)\b/gi;
     var numbers_reg = /\b(\d+)\b/g;
     var literal_reg_dbl = /"([^\"]*)"/g
-        //var literal_reg_sng = /'([^\']*)'/g
 
     s = element.innerText;
     s = s.replace(keyword_reg, function(m) { return "<span class='code-purple'>" + m.toUpperCase() + "</span>" });
@@ -81,9 +80,30 @@ const editor = (el, highlight = js, tab = '    ') => {
         }
     });
 
-    el.addEventListener('keyup', e => {
-        if (e.code == "Space") {
+    function insertCharacter(str, char, pos) {
+        return [str.slice(0, pos), char, str.slice(pos)].join('');
+    }
+
+    el.addEventListener('keydown', e => {
+        if (e.code == "Space" ||
+            e.code == "Enter" ||
+            e.key == "\"" ||
+            e.key == "(" ||
+            e.key == ")" ||
+            e.key == "ArrowUp" ||
+            e.key == "ArrowDown" ||
+            e.key == "ArrowLeft" ||
+            e.key == "ArrowRight") {
             const pos = caret();
+
+            //            if (pos == el.innerText.replace(/\n/g, "").length) {
+            //                // if a user types a ( or a ", pre-empt them needing a close
+            //                if (e.key == "\"") { el.innerText = insertCharacter(el.innerText, "\"", pos + 1); }
+            //                if (e.key == "(") { el.innerText = insertCharacter(el.innerText, ")", pos + 1); }
+            //            } else {
+            //                console.log(pos, el.innerText.replace(/\n/g, "").length, el.innerText)
+            //            }
+
             highlight(el);
             setCaret(pos);
         }

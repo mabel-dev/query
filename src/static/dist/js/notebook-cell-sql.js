@@ -5,22 +5,65 @@ function createNewSqlCell(id, cellBlock) {
     cellBlock.insertAdjacentHTML('beforeend', createCell(id, cell_icon, editor_class))
 
     let control_bar = document.getElementById(`controls-${id}`)
-    control_bar.innerHTML = `
-<button id="history-${id}" type="button" class="btn btn-secondary">
-    <i class="fa-fw fa-solid fa-clock-rotate-left"></i>
-</button>
-<button id="dates-${id}" type="button" class="btn btn-secondary">
-    <i class="fa-fw fa-regular fa-calendar"></i>
-</button>
-    ` + control_bar.innerHTML
+    control_bar.insertAdjacentHTML('beforebegin', `
+<div class="btn-group btn-group-sm notebook-cell-buttons" role="group">
+    <button id="pins-${id}" type="button" class="btn btn-secondary">
+        Saved <span class="badge bg-pill">5</span>
+    </button>
+    <button id="history-${id}" type="button" class="btn btn-secondary">
+        Recent <span class="badge bg-pill">10</span>
+    </button>
+    <button id="dates-${id}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-fw fa-solid fa-calendar-days"></i> <span id="date-label-${id}">NOT SET</span> 
+    </button>
+    <ul class="dropdown-menu" id="notebook-new-cell-selector">
+        <li><a href="#" class="dropdown-item" id="dates-last-cycle-${id}">Last Reporting Cycle</a></li>
+        <li><a href="#" class="dropdown-item" id="dates-since-last-cycle-${id}">Since Last Reporting Cycle</a></li>
+        <li><a href="#" class="dropdown-item" id="dates-today-${id}">Today</a></li>
+        <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sql-date-modal-${id}">Select Custom Range</a></li>
+    </ul>
+</div>
+    `);
+
+    const sqlDateSelectorModal = `
+<div class="modal fade" id="sql-date-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select Date Range</h5>
+        <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <div class="setting-label">START DATE</div>
+            <input type="date" class="form-control datepicker" id="cell-start-date-${id}" />
+            <div class="setting-label">END DATE</div>
+            <input type="date" class="form-control datepicker" id="cell-end-date-${id}" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sql-date-modal-apply-${id}" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+`
+    cellBlock.insertAdjacentHTML('beforeend', sqlDateSelectorModal);
+
 
     // add the actions for the control buttons
     let play = document.getElementById(`play-${id}`);
     play.addEventListener("click", function() { temp_run_sql(id) }, false);
     let history = document.getElementById(`history-${id}`);
     history.addEventListener("click", function() { temp_run_sql(id) }, false);
-    let dates = document.getElementById(`dates-${id}`);
-    dates.addEventListener("click", function() { temp_run_sql(id) }, false);
+
+    // add the actions for the date selectors
+    document.getElementById(`dates-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, moment().subtract(2, 'months').date(27), moment().subtract(1, 'months').date(26)) });
+    document.getElementById(`dates-since-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, moment().subtract(1, 'months').date(27), moment()) });
+    document.getElementById(`dates-today-${id}`).addEventListener("click", function() { select_dates(id, moment(), moment()) });
+    document.getElementById(`sql-date-modal-apply-${id}`).addEventListener("click", function() { select_dates(id, moment(document.getElementById(`cell-start-date-${id}`).value), moment(document.getElementById(`cell-end-date-${id}`).value)) })
+
+    // default to the last reporting cycle
+    select_dates(id, moment().subtract(2, 'months').date(27), moment().subtract(1, 'months').date(26));
 
     // set up the syntax highlighting
     const sql_e = document.getElementById(`editor-${id}`);
@@ -28,6 +71,16 @@ function createNewSqlCell(id, cellBlock) {
     editor(sql_e, highlight = sql_highlight);
 }
 
+function select_dates(id, start, end) {
+    document.getElementById(`cell-start-date-${id}`).value = start.format('YYYY-MM-DD');
+    document.getElementById(`cell-end-date-${id}`).value = end.format('YYYY-MM-DD');
+
+    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
+        document.getElementById(`date-label-${id}`).innerText = start.format('DD MMM YYYY');
+    } else {
+        document.getElementById(`date-label-${id}`).innerText = start.format('DD MMM YYYY') + ' to ' + end.format('DD MMM YYYY');
+    }
+}
 
 function temp_run_sql(id) {
     data = [{
@@ -259,7 +312,32 @@ function temp_run_sql(id) {
     data.columns = ["userid", "username", "user_verified", "followers", "tweet", "location", "sentiment", "timestamp"];
     resultTable = renderTable(data, 1, 10);
     resultHeader = ''
-    resultFooter = '<div class="card"><i class="fa-solid fa-angle-left"></i> 2000 Rows <i class="fa-solid fa-angle-right"></i><i class="fa-solid fa-right-to-bracket fa-rotate-90 "></i></div>'
+    resultFooter = `
+    <div class="card d-flex flex-row justify-content-between notebook-cell-footer">
+        <div>
+            <button type="button" class="btn btn-sm btn-light">
+                <i class="fa-fw fa-regular fa-floppy-disk"></i> Save
+            </button>
+            <button type="button" class="btn btn-sm btn-light">
+                <i class="fa-fw fa-solid fa-right-to-bracket fa-rotate-90 "></i> Download
+            </button>
+        </div>
+        <div class="align-middle">
+            1 - 10 of Many (2000 available) 
+            <button type="button" class="btn btn-sm btn-light">
+                <i class="fa-fw fas fa-chevron-left"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-light">
+                <i class="fa-fw fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>`
 
     document.getElementById(`result-cell-${id}`).innerHTML = resultHeader + "<div class='w-100 overflow-auto'>" + resultTable + "</div>" + resultFooter;
 }
+
+
+// add the new SQL Cell option
+const newSqlCellOption = `<li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fas fa-fw fa-database"></i> SQL cell </a></li>`
+document.getElementById("notebook-new-cell-selector").insertAdjacentHTML('beforeend', newSqlCellOption)
+document.getElementById("new-sql-cell").addEventListener("click", function() { createNewCell("sql") }, false)

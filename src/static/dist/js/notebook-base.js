@@ -18,24 +18,22 @@ function createCell(id, cell_icon, editor_class) {
                     <i class="fa-fw fa-solid fa-asterisk highlight-color"></i>
                 </button>
                 <div id="controls-${id}" class="btn-group btn-group-sm notebook-cell-buttons" role="group">
-                    <button id="del-${id}" type="button" class="btn btn-secondary">
+                    <button id="del-${id}" type="button" class="btn btn-danger">
                         <i class="fa-regular fa-fw fa-trash-can"></i>
                     </button>
                 </div>
-                <button id="play-${id}" type="button" class="btn btn-sm btn-secondary">
+                <button id="play-${id}" type="button" class="btn btn-sm btn-success">
                     <i class="fa-fw fa-solid fa-play"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="card notebook-cell-body">
+    <div class="card notebook-cell-body" id="notebook-cell-body-${id}">
         <div contenteditable="true" spellcheck="false" class="notebook-cell-editor ${editor_class}" id="editor-${id}"></div>
     </div>
 
-    <div class="notebook-cell-results w-100" id="result-cell-${id}">
-
-    </div>
+    <div class="notebook-cell-results w-100" id="result-cell-${id}"></div>
 </div>
 `
 }
@@ -89,10 +87,3 @@ function removeCell(element) {
     let cell = document.getElementById(`cell-${id}`);
     cell.parentElement.removeChild(cell);
 }
-
-/*
-The functions supporting the new cell drop downs
-*/
-document.getElementById("new-sql-cell").addEventListener("click", function() { createNewCell("sql") }, false)
-document.getElementById("new-parameter-cell").addEventListener("click", function() { createNewCell("parameter") }, false)
-document.getElementById("new-markdown-cell").addEventListener("click", function() { createNewCell("markdown") }, false)

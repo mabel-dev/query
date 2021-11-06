@@ -1,6 +1,6 @@
 :root {
-    --sidebar-width: 320px;
-    --sidebar-width-neg: -320px;
+    --sidebar-width: 360px;
+    --sidebar-width-neg: -360px;
 }
 
 #top-navbar {
@@ -32,7 +32,7 @@
     left: 0;
     height: 100vh;
     z-index: 999;
-    background: var(--base-green-color);
+    background: var(--base-theme-color);
     color: #fff;
     transition: all 0.2s;
 }
@@ -55,14 +55,14 @@
 }
 
 #sidebar ul li a:hover {
-    color: var(--base-purple-color);
+    color: var(--base-theme-color);
     background: #fff;
 }
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: var(--base-purple-color);
+    background: var(--base-theme-color);
 }
 
 #content {

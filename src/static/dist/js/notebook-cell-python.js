@@ -14,3 +14,18 @@ document.getElementById("play-py").addEventListener("click", function() {
 //const py_ed = document.querySelector('.py_editor');
 //py_ed.focus();
 //editor(py_ed, highlight = py_highlight);
+
+//                                 <li><a class="dropdown-item" href="#" id="new-python-cell"><i class="fa-solid fa-fw fa-code"></i> Python cell </a></li>
+
+// <script src="plugins/pyodide_0.18.1/pyodide.js"></script>
+
+async function main() {
+    pyodide = await loadPyodide({
+        indexURL: "/plugins/pyodide_0.18.1/"
+    });
+    console.log(pyodide.runPython(`
+        import sys
+        sys.version
+    `));
+}
+main();
