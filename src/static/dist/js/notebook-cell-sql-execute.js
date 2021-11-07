@@ -132,12 +132,13 @@ function execute(id) {
     HISTORY
 **************************************************************************** */
 
-function update_history(query, query_outcome, records, duration, start_date, end_date) {
-    // we keep and show some summary information about the query
+function update_sql_history(query, query_outcome, records, duration, start_date, end_date) {
+
     const history_timestampFormat = "DD MMM YYYY HH:mm"
     let _history = JSON.parse(getLocalCache("recent_queries"));
     if (_history == null) { _sql_history = [] };
 
+    // if we've been given a query, update the history
     if (query) {
         index = -1
         for (var i = 0; i < _history.length; i++) {
@@ -167,13 +168,13 @@ function update_history(query, query_outcome, records, duration, start_date, end
         }
     }
 
+    // save the history
     putLocalCache("recent_queries", JSON.stringify(_history))
 
+    // render the history table
     history_table = "<thead><tr><th>Status</th><th>Query</th><th>Date Range</th><th>Last Run</th><th>Duration</th><th>Rows</th><th class='text-end'>Actions</th></tr></thead>"
     history_table += "<tbody>"
     for (var i = 0; i < _history.length; i++) {
-
-        console.log(_history[i]);
 
         let status = '<span class="badge waiting mono-font">wait</span>'
         if (_history[i].outcome == "okay") {
@@ -202,12 +203,72 @@ function update_history(query, query_outcome, records, duration, start_date, end
     // update all of the history lists (the exist within the cells)
     let history_lists = document.getElementsByClassName("sql-history");
     for (let i = 0; i < history_lists.length; i++) {
-        history_lists[i].innerHTML = "<table class='table history-table'>" + history_table + "</table>";
+        history_lists[i].innerHTML = "<table class='table'>" + history_table + "</table>";
     }
 
     // update all of the pills in the command bar
     let history_count_lists = document.getElementsByClassName("sql-history-count");
     for (let i = 0; i < history_count_lists.length; i++) {
         history_count_lists[i].innerText = _history.length;
+    }
+}
+
+
+function update_sql_saved(query) {
+
+    let saved = getLocalCache("saved_sql")
+    if (saved) {
+        saved_list = JSON.parse(saved)
+    } else {
+        saved_list = []
+    }
+
+    if (query) {
+        index = -1
+        for (var i = 0; i < saved_list.length; i++) {
+            if (saved_list[i] == query) {
+                index = i
+            }
+        }
+        if (index > -1) {
+            saved_list.splice(index, 1);
+        }
+        saved_list.push(query);
+    }
+
+    putLocalCache("saved_sql", JSON.stringify(saved_list));
+
+    if (saved_list.length == 0) {
+        document.getElementById("saved").innerHTML = '<div class="alert alert-primary col-sm-8" role="alert">No queries have been Saved.</div>'
+        return
+    }
+
+    saved_table = "<thead><tr><th>Query</th><th>Actions</th></tr></thead>"
+    saved_table += "<tbody>"
+    for (var i = 0; i < saved_list.length; i++) {
+        entry = `
+        <tr>
+            <td class="align-middle mono-font">${sql_highlight(htmlEncode(saved_list[i]))}</td>
+            <td>
+                <button type="button" id="redo-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
+                <button type="button" id="redo-${i}" class="btn btn-tiny btn-success" title="Rerun Query"><i class="fa-fw fa-solid fa-play"></i></button>
+                <button type="button" id="del-${i}" class="btn btn-tiny btn-danger" title="Remove Query from Saved"><i class="fa-fw fas fa-trash-alt"></i></button>
+            </td>
+        </tr>
+        `
+        saved_table = entry + saved_table
+    }
+    saved_table += "</tbody>"
+
+    // update all of the saved lists (the exist within the cells)
+    let saved_lists = document.getElementsByClassName("sql-saved");
+    for (let i = 0; i < saved_lists.length; i++) {
+        saved_lists[i].innerHTML = "<table class='table'>" + saved_table + "</table>";
+    }
+
+    // update all of the pills in the command bar
+    let saved_count_lists = document.getElementsByClassName("sql-saved-count");
+    for (let i = 0; i < saved_count_lists.length; i++) {
+        saved_count_lists[i].innerText = saved_list.length;
     }
 }

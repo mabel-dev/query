@@ -77,18 +77,17 @@ function createNewSqlCell(id, cellBlock) {
     // create saved queries dialog
     cellBlock.insertAdjacentHTML("beforeEnd", `
 <div class="modal fade" id="sql-saved-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-fullscreen">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Saved Queries</h5>
         <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body sql-saved">
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" id="sql-date-modal-apply-${id}" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -121,7 +120,8 @@ function createNewSqlCell(id, cellBlock) {
     editor(sql_e, highlight = sql_highlight);
 
     // load the history and saved lists
-    update_history();
+    update_sql_history();
+    update_sql_saved();
 }
 
 function select_dates(id, start, end) {

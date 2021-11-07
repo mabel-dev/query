@@ -33,11 +33,11 @@ steps:
         "managed",
         "--allow-unauthenticated",
         "--timeout",
-        "900",
+        "600",
         "--cpu",
-        "2",
+        "1",
         "--memory",
-        "8Gi",
+        "4Gi",
         "--update-env-vars",
         "SERVICE=$REPO_NAME,PROJECT_NAME=$PROJECT_ID,PROJECT_NUMBER=$PROJECT_NUMBER"
       ]
