@@ -4,7 +4,7 @@ than the include in the HTML file, everything should be contained in here.
 */
 
 function createNewSqlCell(id, cellBlock) {
-    let cell_icon = '<i class="fas fa-fw fa-database notebook-cell-icon"></i>';
+    let cell_icon = '<i class="fa-fw fa-solid fa-table notebook-cell-icon"></i>';
     let editor_class = 'notebook-cell-editor-sql';
 
     cellBlock.insertAdjacentHTML('beforeend', createCell(id, cell_icon, editor_class))
@@ -54,6 +54,13 @@ function createNewSqlCell(id, cellBlock) {
 `
     cellBlock.insertAdjacentHTML('beforeend', sqlDateSelectorModal);
 
+    const statusBar = `
+    <div class="d-flex flex-row justify-content-between notebook-cell-divider">
+        <div>RESULT</div>
+        <div id="execution-timer-${id}" class="mono-font">-</div>
+    <div>
+    `
+    document.getElementById(`editor-${id}`).insertAdjacentHTML('afterEnd', statusBar);
 
     // add the actions for the control buttons
     let play = document.getElementById(`play-${id}`);
@@ -343,7 +350,7 @@ function temp_run_sql(id) {
 
 
 // add the new SQL Cell option
-const newSqlCellOption = `<li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fas fa-fw fa-database"></i> SQL cell </a></li>`
+const newSqlCellOption = `<li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fa-fw fa-solid fa-table"></i> Query cell </a></li>`
 document.getElementById("notebook-new-cell-selector").insertAdjacentHTML('beforeend', newSqlCellOption)
 document.getElementById("new-sql-cell").addEventListener("click", function() { createNewCell("sql") }, false)
 

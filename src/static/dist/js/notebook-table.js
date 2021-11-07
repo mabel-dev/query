@@ -75,5 +75,5 @@ function renderTable(data, pageNumber, pageSize) {
     }
     header_data += "</tr></thead><tbody>";
 
-    return "<table class='table table-sm table-responsive table-results'>" + header_data + row_data + "</table>";
+    return "<table class='table'>" + header_data + row_data + "</table>";
 }

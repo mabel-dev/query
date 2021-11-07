@@ -51,6 +51,10 @@ body {
     text-align: right;
 }
 
+.icon-fw {
+    margin: 0;
+}
+
 
 /*
 cells
@@ -67,11 +71,6 @@ cells
 .notebook-cell-name {
     font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-size: 1.1em;
-}
-
-.snotebook-cell-buttons .btn {
-    padding: 0.4em;
-    font-size: 0.8rem;
 }
 
 .notebook-cell-editor {
@@ -92,7 +91,12 @@ cells
     font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-size: 11pt;
     font-weight: 300;
-    padding: 0.3em 0.8em;
+    padding: 0.3em 0.3em;
+}
+
+.notebook-cell-divider {
+    border-top: 1px #D0D0D0 solid;
+    border-bottom: 0;
 }
 
 
@@ -176,6 +180,10 @@ table styling
     font-weight: 500;
     padding: 0.3em 0.8em;
     border: 1px #D0D0D0 solid;
+}
+
+.table>thead>*>th {
+    border-top: 0;
 }
 
 .table>:not(:first-child) {

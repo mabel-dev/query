@@ -1,0 +1,6 @@
+
+.icon-column:before { content: '\e800'; } /* '' */
+.icon-column-inv:before { content: '\e801'; } /* '' */
+.icon-chart-line:before { content: '\e802'; } /* '' */
+.icon-numeric:before { content: '\e803'; } /* '' */
+.icon-parameter:before { content: '\e804'; } /* '' */
