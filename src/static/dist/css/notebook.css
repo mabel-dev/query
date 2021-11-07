@@ -96,13 +96,6 @@ cells
 code editor
 */
 
-.result-cell-markdown {
-    border-top: 1px solid rgba(0, 0, 0, .125);
-    border-bottom: 1px solid rgba(0, 0, 0, .125);
-    border-radius: 0.25 rem;
-    padding: 0.6em;
-}
-
 .notebook-cell-editor-sql {
     padding-left: 48px;
     counter-reset: line;
@@ -247,13 +240,13 @@ overwrite bootstrap styles
 
 .btn-secondary {
     background-color: transparent;
-    color: var(--theme-color-blue-highlight);
     border: transparent;
+    color: var(--base-accent-color)
 }
 
 .btn-secondary:hover {
-    background-color: var(--theme-color-blue);
-    border: transparent;
+    background-color: var(--base-accent-color);
+    color: white;
 }
 
 .btn-success {
@@ -274,17 +267,6 @@ overwrite bootstrap styles
 .btn-danger:hover {
     background-color: var(--theme-color-red-highlight);
     border: transparent;
-}
-
-.btn-light {
-    background-color: transparent;
-    border: transparent;
-    color: var(--base-accent-color)
-}
-
-.btn-light:hover {
-    background-color: var(--base-accent-color);
-    color: white;
 }
 
 

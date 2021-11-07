@@ -17,7 +17,7 @@ document.getElementById("play-py").addEventListener("click", function() {
 
 //                                 <li><a class="dropdown-item" href="#" id="new-python-cell"><i class="fa-solid fa-fw fa-code"></i> Python cell </a></li>
 
-// <script src="plugins/pyodide_0.18.1/pyodide.js"></script>
+document.write('<script src="plugins/pyodide_0.18.1/pyodide.js"></script>');
 
 async function main() {
     pyodide = await loadPyodide({

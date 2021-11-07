@@ -1,3 +1,8 @@
+/*
+Everything relating to the operation of SQL Cells should be in this file and other
+than the include in the HTML file, everything should be contained in here.
+*/
+
 function createNewSqlCell(id, cellBlock) {
     let cell_icon = '<i class="fas fa-fw fa-database notebook-cell-icon"></i>';
     let editor_class = 'notebook-cell-editor-sql';
@@ -315,19 +320,19 @@ function temp_run_sql(id) {
     resultFooter = `
     <div class="card d-flex flex-row justify-content-between notebook-cell-footer">
         <div>
-            <button type="button" class="btn btn-sm btn-light">
+            <button type="button" class="btn btn-sm btn-secondary">
                 <i class="fa-fw fa-regular fa-floppy-disk"></i> Save
             </button>
-            <button type="button" class="btn btn-sm btn-light">
+            <button type="button" class="btn btn-sm btn-secondary">
                 <i class="fa-fw fa-solid fa-right-to-bracket fa-rotate-90 "></i> Download
             </button>
         </div>
         <div class="align-middle">
             1 - 10 of Many (2000 available) 
-            <button type="button" class="btn btn-sm btn-light">
+            <button type="button" class="btn btn-sm btn-secondary">
                 <i class="fa-fw fas fa-chevron-left"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-light">
+            <button type="button" class="btn btn-sm btn-secondary">
                 <i class="fa-fw fas fa-chevron-right"></i>
             </button>
         </div>
@@ -341,3 +346,6 @@ function temp_run_sql(id) {
 const newSqlCellOption = `<li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fas fa-fw fa-database"></i> SQL cell </a></li>`
 document.getElementById("notebook-new-cell-selector").insertAdjacentHTML('beforeend', newSqlCellOption)
 document.getElementById("new-sql-cell").addEventListener("click", function() { createNewCell("sql") }, false)
+
+// add bespoke styles
+addNewStyle('.cssClass { color: #F00; }');
