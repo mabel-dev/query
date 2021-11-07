@@ -47,6 +47,10 @@ body {
     font-weight: 500;
 }
 
+.cell_right {
+    text-align: right;
+}
+
 
 /*
 cells
