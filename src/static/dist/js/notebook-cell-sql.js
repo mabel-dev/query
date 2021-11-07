@@ -9,14 +9,14 @@ function createNewSqlCell(id, cellBlock) {
 
     cellBlock.insertAdjacentHTML('beforeend', createCell(id, cell_icon, editor_class))
 
-    let control_bar = document.getElementById(`controls-${id}`)
-    control_bar.insertAdjacentHTML('beforebegin', `
+    // add the cell specific buttons to the command bar
+    document.getElementById(`controls-${id}`).insertAdjacentHTML('beforebegin', `
 <div class="btn-group btn-group-sm notebook-cell-buttons" role="group">
-    <button id="pins-${id}" type="button" class="btn btn-secondary">
-        Saved <span class="badge bg-pill">5</span>
+    <button id="pins-${id}" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sql-saved-modal-${id}">
+        Saved <span class="badge bg-pill sql-saved-count">0</span>
     </button>
-    <button id="history-${id}" type="button" class="btn btn-secondary">
-        Recent <span class="badge bg-pill">10</span>
+    <button id="history-${id}" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sql-history-modal-${id}">
+        Recent <span class="badge bg-pill sql-history-count">0</span>
     </button>
     <button id="dates-${id}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa-fw fa-solid fa-calendar-days"></i> <span id="date-label-${id}">NOT SET</span> 
@@ -30,19 +30,61 @@ function createNewSqlCell(id, cellBlock) {
 </div>
     `);
 
-    const sqlDateSelectorModal = `
-<div class="modal fade" id="sql-date-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    // create the data selection dialog
+    cellBlock.insertAdjacentHTML('beforeend', `
+    <div class="modal fade" id="sql-date-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Select Date Range</h5>
+            <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+                <div class="setting-label">START DATE</div>
+                <input type="date" class="form-control datepicker" id="cell-start-date-${id}" />
+                <div class="setting-label">END DATE</div>
+                <input type="date" class="form-control datepicker" id="cell-end-date-${id}" />
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" id="sql-date-modal-apply-${id}" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    `);
+
+    // create history dialog
+    cellBlock.insertAdjacentHTML("beforeEnd", `
+<div class="modal fade" id="sql-history-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Recent Queries</h5>
+        <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body sql-history">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+`);
+
+    // create saved queries dialog
+    cellBlock.insertAdjacentHTML("beforeEnd", `
+<div class="modal fade" id="sql-saved-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Select Date Range</h5>
+        <h5 class="modal-title">Saved Queries</h5>
         <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-            <div class="setting-label">START DATE</div>
-            <input type="date" class="form-control datepicker" id="cell-start-date-${id}" />
-            <div class="setting-label">END DATE</div>
-            <input type="date" class="form-control datepicker" id="cell-end-date-${id}" />
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -51,22 +93,18 @@ function createNewSqlCell(id, cellBlock) {
     </div>
   </div>
 </div>
-`
-    cellBlock.insertAdjacentHTML('beforeend', sqlDateSelectorModal);
+`);
 
-    const statusBar = `
-    <div class="d-flex flex-row justify-content-between notebook-cell-divider">
-        <div>RESULT</div>
-        <div id="execution-timer-${id}" class="mono-font">-</div>
-    <div>
-    `
-    document.getElementById(`editor-${id}`).insertAdjacentHTML('afterEnd', statusBar);
+    document.getElementById(`editor-${id}`).insertAdjacentHTML('afterEnd', `
+<div class="d-flex flex-row justify-content-between notebook-cell-divider">
+    <div>RESULT</div>
+    <div id="execution-timer-${id}" class="mono-font">-</div>
+<div>
+    `);
 
     // add the actions for the control buttons
     let play = document.getElementById(`play-${id}`);
     play.addEventListener("click", function() { temp_run_sql(id) }, false);
-    let history = document.getElementById(`history-${id}`);
-    history.addEventListener("click", function() { temp_run_sql(id) }, false);
 
     // add the actions for the date selectors
     document.getElementById(`dates-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, moment().subtract(2, 'months').date(27), moment().subtract(1, 'months').date(26)) });
@@ -81,6 +119,9 @@ function createNewSqlCell(id, cellBlock) {
     const sql_e = document.getElementById(`editor-${id}`);
     sql_e.focus();
     editor(sql_e, highlight = sql_highlight);
+
+    // load the history and saved lists
+    update_history();
 }
 
 function select_dates(id, start, end) {
@@ -347,7 +388,6 @@ function temp_run_sql(id) {
 
     document.getElementById(`result-cell-${id}`).innerHTML = resultHeader + "<div class='w-100 overflow-auto'>" + resultTable + "</div>" + resultFooter;
 }
-
 
 // add the new SQL Cell option
 const newSqlCellOption = `<li><a class="dropdown-item" href="#" id="new-sql-cell"><i class="fa-fw fa-solid fa-table"></i> Query cell </a></li>`

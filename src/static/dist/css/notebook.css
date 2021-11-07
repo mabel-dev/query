@@ -2,9 +2,9 @@
     --base-theme-color: #2D333A;
     --base-accent-color: #406888;
     --base-theme-color-highlight: #9052FB;
-    --base-font-color: #3F4255;
+    --base-font-color: rgb(63, 66, 87);
     --base-accent-font-color: #747C94;
-    --base-background: #f3f2f3;
+    --base-background: rgb(247, 249, 250);
     /* https://spectrum.adobe.com/page/color/  */
     --theme-color-red: #e34850;
     --theme-color-red-highlight: #800006;
@@ -20,11 +20,6 @@
     --theme-color-purple-highlight: #5a5af9;
     --transparent-50: rgba(255, 255, 255, 0.5);
     --grey-50: (128, 128, 128);
-}
-
-body {
-    background-color: var(--base-background);
-    color: var(--base-font-color)
 }
 
 .mono-font {
@@ -53,6 +48,25 @@ body {
 
 .icon-fw {
     margin: 0;
+}
+
+.well-padded {
+    padding: 0.5em 5em 1em 1em;
+}
+
+.fail {
+    background-color: var(--theme-color-red);
+    color: white;
+}
+
+.success {
+    background-color: var(--theme-color-green);
+    color: white;
+}
+
+.waiting {
+    background-color: var(--theme-color-blue);
+    color: white;
 }
 
 
@@ -199,11 +213,14 @@ table styling
 */
 
 .setting-label {
-    padding-top: 0.5em;
-    padding-bottom: 0.1em;
+    margin-top: 1em;
+    padding-bottom: 0.5em;
     font-family: "IBM Plex Sans", sans-serif;
-    color: var(--base-accent-font-color);
-    font-weight: 500;
+    align-items: center;
+    color: --base-font-color;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
 }
 
 
@@ -238,6 +255,11 @@ overwrite bootstrap styles
 .btn-group-sm>.btn,
 .btn-sm {
     border-radius: 0.1rem;
+}
+
+.btn-tiny {
+    padding: 0.15rem 0.35rem;
+    font-size: .66rem;
 }
 
 .btn-primary {
@@ -296,4 +318,10 @@ h2 {
 
 h3 {
     font-size: 1.2em;
+}
+
+body {
+    background-color: var(--base-background);
+    color: var(--base-font-color);
+    font-family: "IBM Plex Sans", sans-serif;
 }

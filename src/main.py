@@ -18,7 +18,7 @@ logger = get_logger()
 logger.setLevel(5)
 
 
-RESULT_BATCH = int(context.get("maximum_return")) or 5000
+RESULT_BATCH = int(context.get("maximum_return", 2000)) or 5000
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates

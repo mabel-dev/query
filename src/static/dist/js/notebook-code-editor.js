@@ -1,4 +1,4 @@
-function sql_highlight(element) {
+function sql_highlight(s) {
 
     var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)\b/gi;
     var function_reg = /\b(COUNT|MAX|MAX|MIN|AVG|DATE|YEAR|MONTH|STRING|CONCAT)\b/gi;
@@ -6,16 +6,15 @@ function sql_highlight(element) {
     var numbers_reg = /\b(\d+)\b/g;
     var literal_reg_dbl = /"([^\"]*)"/g
 
-    s = element.innerText;
     s = s.replace(keyword_reg, function(m) { return "<span class='code-purple'>" + m.toUpperCase() + "</span>" });
     s = s.replace(function_reg, function(m) { return "<span class='code-green'>" + m.toUpperCase() + "</span>" });
     s = s.replace(literal_reg_dbl, "\"<span class='code-red'>$1</span>\"");
     s = s.replace(numbers_reg, "<span class='code-orange'>$1</span>");
     s = s.replace(values_reg, function(m) { return "<span class='code-blue'>" + m.toUpperCase() + "</span>" });
-    element.innerHTML = s.split('\n').join('<br/>');
+    return s.split('\n').join('<br/>');
 }
 
-function py_highlight(element) {
+function py_highlight(s) {
 
     var numbers_reg = /\b(\d+)\b/g;
     var literal_dbl_reg = /"([^\"]*)"/g
@@ -23,14 +22,12 @@ function py_highlight(element) {
     var control_reg = /\b(try|except|pass|finally|return|else|if|elif|import|from|for|in)\b/gi;
     var keyword_reg = /\b(def|class\s)\b/gi;
 
-    s = element.innerText;
-
     s = s.replace(literal_dbl_reg, "\"<span class='code-yellow'>$1</span>\"");
     s = s.replace(literal_sng_reg, "\"<span class='code-yellow'>$1</span>\"");
     s = s.replace(numbers_reg, "<span class='code-purple'>$1</span>");
     s = s.replace(control_reg, "<span class='code-red'>$1</span>");
     s = s.replace(keyword_reg, "<span class='code-blue'>$1</span>");
-    element.innerHTML = s.split('\n').join('<br/>');
+    return s.split('\n').join('<br/>');
 }
 
 const editor = (el, highlight = js, tab = '    ') => {
@@ -66,7 +63,7 @@ const editor = (el, highlight = js, tab = '    ') => {
         return pos;
     };
 
-    highlight(el);
+    el.innerHTML = highlight(el.innerText);
 
     el.addEventListener('keydown', e => {
         if (e.code == "Tab") {
@@ -74,7 +71,7 @@ const editor = (el, highlight = js, tab = '    ') => {
             const range = window.getSelection().getRangeAt(0);
             range.deleteContents();
             range.insertNode(document.createTextNode(tab));
-            highlight(el);
+            el.innerHTML = highlight(el.innerText);
             setCaret(pos);
             e.preventDefault();
         }
@@ -104,7 +101,7 @@ const editor = (el, highlight = js, tab = '    ') => {
             //                console.log(pos, el.innerText.replace(/\n/g, "").length, el.innerText)
             //            }
 
-            highlight(el);
+            el.innerHTML = highlight(el.innerText);
             setCaret(pos);
         }
     });
