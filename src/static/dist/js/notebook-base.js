@@ -18,7 +18,7 @@ function createCell(id, cell_icon, editor_class) {
                     <i class="fa-fw fa-solid fa-asterisk highlight-color"></i>
                 </button>
                 <div id="controls-${id}" class="btn-group btn-group-sm notebook-cell-buttons" role="group">
-                    <button id="del-${id}" type="button" class="btn btn-danger">
+                    <button id="delete-cell-${id}" type="button" class="btn btn-danger">
                         <i class="fa-regular fa-fw fa-trash-can"></i>
                     </button>
                 </div>
@@ -57,7 +57,7 @@ function createNewCell(type) {
     }
 
     // add default actions to the cell
-    document.getElementById(`del-${_cellNumber}`).addEventListener("click", function(e) {
+    document.getElementById(`delete-cell-${_cellNumber}`).addEventListener("click", function(e) {
         removeCell(e.target)
     }, false);
 
@@ -68,13 +68,13 @@ function createNewCell(type) {
 function removeCell(element) {
 
     // we may be at the i tag inside the button
-    if (!element.id.startsWith('del-')) {
+    if (!element.id.startsWith('delete-cell-')) {
         removeCell(element.parentElement);
         return;
     }
 
     // get the cell id from the button id
-    let id = index = element.id.replace(/^del-/, "");
+    let id = index = element.id.replace(/^delete-cell-/, "");
 
     // remove the display of a cell - we tombstone the entry in the _cells list
     for (let i = 0; i < _cells.length; i++) {

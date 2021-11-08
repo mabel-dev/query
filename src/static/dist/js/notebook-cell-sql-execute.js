@@ -182,17 +182,21 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
         } else if (_history[i].outcome == "fail") {
             status = '<span class="badge fail mono-font">fail</span>'
         }
+        runtime = '--'
+        if (_history[i].runtime != '--') {
+            runtime = moment.utc(_history[i].runtime * 1000).format("mm:ss.SS");
+        }
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
             <td class="align-middle mono-font" title="${htmlEncode(_history[i].query)}">${sql_highlight(_history[i].query.replace(/\n/g, " "))}</td>
             <td class="align-middle">${moment(_history[i].start_date).format("DD MMM YYYY")} to ${moment(_history[i].end_date).format("DD MMM YYYY")}</td>
             <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
-            <td class="align-middle text-end">${moment.utc(_history[i].runtime * 1000).format("mm:ss.SS")}</td>
+            <td class="align-middle text-end">${runtime}</td>
             <td class="align-middle text-end">${_history[i].rowcount}</td>
             <td>
-                <button type="button" id="redo-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
-                <button type="button" id="redo-${i}" class="btn btn-tiny btn-success" title="Rerun Query"><i class="fa-fw fa-solid fa-play"></i></button>
+                <button type="button" id="sql-history-reload-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor" data-bs-dismiss="modal"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
+                <button type="button" id="sql-history-rerun-${i}" class="btn btn-tiny btn-success" title="Rerun Query" data-bs-dismiss="modal"><i class="fa-fw fa-solid fa-play"></i></button>
             </td>
         </tr>
         `
@@ -200,19 +204,45 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
     }
     history_table += "</tbody>"
 
-    // update all of the history lists (the exist within the cells)
-    let history_lists = document.getElementsByClassName("sql-history");
-    for (let i = 0; i < history_lists.length; i++) {
-        history_lists[i].innerHTML = "<table class='table'>" + history_table + "</table>";
-    }
+    // update the history dialog
+    document.getElementById("sql-history").innerHTML = "<table class='table'>" + history_table + "</table>";
 
     // update all of the pills in the command bar
     let history_count_lists = document.getElementsByClassName("sql-history-count");
     for (let i = 0; i < history_count_lists.length; i++) {
         history_count_lists[i].innerText = _history.length;
     }
+
+    document.getElementById("sql-history").addEventListener("click", function(e) { sqlDialogAction(e.target, "sql-history") })
 }
 
+function sqlDialogAction(element, dialog) {
+
+    // we can't do anything useful at this level, stop
+    if (element.id == dialog) { return; }
+
+    if (!element.id.startsWith(dialog)) {
+        // if we don't have a handler, try the parent element
+        sqlDialogAction(element.parentElement, dialog);
+        return;
+    }
+
+    // get the information from the button and dialog
+    let action_item = element.id.split("-");
+    let action = action_item[2];
+    let item = action_item[3];
+    let cell = document.getElementById(dialog + "-modal").querySelector('.cell-id').value;
+
+    let query_list = []
+    if (dialog == "sql-history") {
+        query_list = JSON.parse(getLocalCache("recent_queries"));
+    }
+    if (dialog == "sql-saved") {
+        query_list = JSON.parse(getLocalCache("saved_sql"));
+    }
+
+    document.getElementById(`editor-${cell}`).innerHTML = sql_highlight(query_list[item].query);
+}
 
 function update_sql_saved(query) {
 
@@ -250,9 +280,9 @@ function update_sql_saved(query) {
         <tr>
             <td class="align-middle mono-font">${sql_highlight(htmlEncode(saved_list[i]))}</td>
             <td>
-                <button type="button" id="redo-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
-                <button type="button" id="redo-${i}" class="btn btn-tiny btn-success" title="Rerun Query"><i class="fa-fw fa-solid fa-play"></i></button>
-                <button type="button" id="del-${i}" class="btn btn-tiny btn-danger" title="Remove Query from Saved"><i class="fa-fw fas fa-trash-alt"></i></button>
+                <button type="button" id="sql-reload-saved-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
+                <button type="button" id="sql-rerun-saved-${i}" class="btn btn-tiny btn-success" title="Rerun Query"><i class="fa-fw fa-solid fa-play"></i></button>
+                <button type="button" id="sql-delete-saved-${i}" class="btn btn-tiny btn-danger" title="Remove Query from Saved"><i class="fa-fw fas fa-trash-alt"></i></button>
             </td>
         </tr>
         `
@@ -260,11 +290,8 @@ function update_sql_saved(query) {
     }
     saved_table += "</tbody>"
 
-    // update all of the saved lists (the exist within the cells)
-    let saved_lists = document.getElementsByClassName("sql-saved");
-    for (let i = 0; i < saved_lists.length; i++) {
-        saved_lists[i].innerHTML = "<table class='table'>" + saved_table + "</table>";
-    }
+    // update the saved dialog
+    document.getElementById("sql-saved").innerHTML = "<table class='table'>" + saved_table + "</table>";
 
     // update all of the pills in the command bar
     let saved_count_lists = document.getElementsByClassName("sql-saved-count");

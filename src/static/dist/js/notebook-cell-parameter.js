@@ -4,10 +4,10 @@ function createNewParameterCell(id, cellBlock) {
 
     cellBlock.insertAdjacentHTML('beforeend', createCell(id, cell_icon, editor_class))
 
-    let control_bar = document.getElementById(`controls-${id}`)
-    control_bar.insertAdjacentHTML('beforebegin', `
+    // add the cell specific options to the control bar
+    document.getElementById(`controls-${id}`).insertAdjacentHTML('beforebegin', `
 <div class="btn-group btn-group-sm notebook-cell-buttons" role="group">
-    <button id="dates-${id}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    <button id="types-${id}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="icon-parameter"></i> <span id="type-label-${id}">NOT SET</span> 
     </button>
     <ul class="dropdown-menu" id="notebook-new-cell-selector">
@@ -17,7 +17,6 @@ function createNewParameterCell(id, cellBlock) {
     </ul>
 </div>
     `);
-
 
     // add the actions for the type selectors
     document.getElementById(`parameter-text-${id}`).addEventListener("click", function() { set_as_type_text(id); });
@@ -71,7 +70,7 @@ function set_as_type_date(id) {
 </div>`
 }
 
-// add the new Markdown Cell option
+// add the new Parameter Cell option
 const newParameterCellOption = `<li><a class="dropdown-item" href="#" id="new-parameter-cell"><i class="icon-parameter icon-fw"></i> Parameter cell</a></li>`
 document.getElementById("notebook-new-cell-selector").insertAdjacentHTML('beforeend', newParameterCellOption)
 document.getElementById("new-parameter-cell").addEventListener("click", function() { createNewCell("parameter") }, false)

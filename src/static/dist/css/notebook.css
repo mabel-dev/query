@@ -258,7 +258,7 @@ overwrite bootstrap styles
 }
 
 .btn-tiny {
-    padding: 0.15rem 0.35rem;
+    padding: 0.20rem 0.30rem;
     font-size: .66rem;
 }
 
@@ -325,3 +325,6 @@ body {
     color: var(--base-font-color);
     font-family: "IBM Plex Sans", sans-serif;
 }
+
+
+/* **************************************************************************** */

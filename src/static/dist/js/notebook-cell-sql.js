@@ -12,10 +12,10 @@ function createNewSqlCell(id, cellBlock) {
     // add the cell specific buttons to the command bar
     document.getElementById(`controls-${id}`).insertAdjacentHTML('beforebegin', `
 <div class="btn-group btn-group-sm notebook-cell-buttons" role="group">
-    <button id="pins-${id}" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sql-saved-modal-${id}">
+    <button id="pins-${id}" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sql-saved-modal" data-bs-cellid="${id}">
         Saved <span class="badge bg-pill sql-saved-count">0</span>
     </button>
-    <button id="history-${id}" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sql-history-modal-${id}">
+    <button id="history-${id}" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sql-history-modal" data-bs-cellid="${id}">
         Recent <span class="badge bg-pill sql-history-count">0</span>
     </button>
     <button id="dates-${id}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -54,51 +54,15 @@ function createNewSqlCell(id, cellBlock) {
     </div>
     `);
 
-    // create history dialog
-    cellBlock.insertAdjacentHTML("beforeEnd", `
-<div class="modal fade" id="sql-history-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Recent Queries</h5>
-        <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body sql-history">
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-`);
-
-    // create saved queries dialog
-    cellBlock.insertAdjacentHTML("beforeEnd", `
-<div class="modal fade" id="sql-saved-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Saved Queries</h5>
-        <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body sql-saved">
-
-      </div>
-      <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-`);
-
     document.getElementById(`editor-${id}`).insertAdjacentHTML('afterEnd', `
-<div class="d-flex flex-row justify-content-between notebook-cell-divider">
-    <div>RESULT</div>
-    <div id="execution-timer-${id}" class="mono-font">-</div>
-<div>
+<div class="d-flex flex-row justify-content-between notebook-cell-divider notebook-cell-footer">
+    <div>
+        <span id="execution-timer-${id}" class="mono-font">-</span>
+    </div>
+    <div>
+        <span id="last-executed-${id}">08 November 2021, 00:00</span>
+    </div>
+</div>
     `);
 
     // add the actions for the control buttons
@@ -396,3 +360,69 @@ document.getElementById("new-sql-cell").addEventListener("click", function() { c
 
 // add bespoke styles
 addNewStyle('.cssClass { color: #F00; }');
+
+let cellBlock = document.getElementById("cell-block")
+
+// create history dialog
+cellBlock.insertAdjacentHTML("beforeEnd", `
+<div class="modal fade" id="sql-history-modal" tabindex="-1" aria-hidden="true">
+  <input type="hidden" class="cell-id" />
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Recent Queries</h5>
+        <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="sql-history">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+`);
+
+// use BootStrap features to put the ID of the Cell that the actions should be applied to
+var sqlHistoryModal = document.getElementById('sql-history-modal')
+sqlHistoryModal.addEventListener('show.bs.modal', function(event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget;
+    // Extract info from data-bs-* attributes
+    var cellId = button.getAttribute('data-bs-cellid');
+    // Update the modal's content.
+    sqlHistoryModal.querySelector('.cell-id').value = cellId
+})
+
+// create saved queries dialog
+cellBlock.insertAdjacentHTML("beforeEnd", `
+<div class="modal fade" id="sql-saved-modal" tabindex="-1" aria-hidden="true">
+  <input type="text" class="cell-id" />
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Saved Queries</h5>
+        <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="sql-saved">
+
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+`);
+
+// use BootStrap features to put the ID of the Cell that the actions should be applied to
+var sqlSavedModal = document.getElementById('sql-saved-modal')
+sqlSavedModal.addEventListener('show.bs.modal', function(event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget;
+    // Extract info from data-bs-* attributes
+    var cellId = button.getAttribute('data-bs-cellid');
+    // Update the modal's content.
+    sqlSavedModal.querySelector('.cell-id').value = cellId
+})
