@@ -21,7 +21,9 @@ def join_lists(list_a, list_b):
 
 @router.post("/download/")
 def download_results(request: SearchModel):
-
+    """
+    Bulk download - not severely limited like the search which targets the UI
+    """
     try:
         request = SearchModel(
             start_date=request.start_date,
