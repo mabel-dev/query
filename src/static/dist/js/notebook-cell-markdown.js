@@ -31,10 +31,17 @@ function createNewMarkdownCell(id, cellBlock) {
         document.getElementById(`result-cell-${id}`).classList.remove("d-none");
     });
 
-    document.getElementById(`result-cell-${id}`).addEventListener("click", function() {
+    document.getElementById(`result-cell-${id}`).addEventListener("dblclick", function() {
         document.getElementById(`notebook-cell-body-${id}`).classList.remove("d-none");
         document.getElementById(`result-cell-${id}`).classList.add("d-none");
     });
+
+    //    // Enter on the rendered MD returns to the editot
+    //    document.getElementById(`result-cell-${id}`).addEventListener("keydown", function() {
+    //        if (!(e.key == "Enter")) { return }
+    //        document.getElementById(`notebook-cell-body-${id}`).classList.remove("d-none");
+    //        document.getElementById(`result-cell-${id}`).classList.add("d-none");
+    //    });
 
     document.getElementById(`result-cell-${id}`).classList.add("d-none");
     document.getElementById(`result-cell-${id}`).classList.add("result-cell-markdown");

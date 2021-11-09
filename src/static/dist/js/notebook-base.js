@@ -61,6 +61,12 @@ function createNewCell(type) {
         removeCell(e.target)
     }, false);
 
+    // ctrl-enter play short-cut
+    document.getElementById(`editor-${_cellNumber}`).addEventListener("keydown", function(e) {
+        if (!(e.key == "Enter" && (e.metaKey || e.ctrlKey))) { return }
+        document.getElementById(`play-${_cellNumber}`).click();
+    });
+
     // keep a record of the cell
     _cells.push({ type: type, id: _cellNumber });
 }
