@@ -105,7 +105,7 @@ cells
     font-family: 'Roboto Condensed', Arial, Helvetica, sans-serif;
     font-size: 11pt;
     font-weight: 300;
-    padding: 0.3em 0.3em;
+    padding: 0.3em 0.8em;
 }
 
 .notebook-cell-divider {
@@ -143,27 +143,27 @@ code editor
 }
 
 .code-green {
-    color: #53A053;
+    color: #2ea42f;
 }
 
 .code-orange {
-    color: #E2574E;
+    color: #cc8206;
 }
 
 .code-red {
-    color: #FF3D5A;
+    color: #ff1326;
 }
 
 .code-comment {
-    color: #A0A1A7;
+    color: #8B8B8B;
 }
 
 .code-blue {
-    color: #447BEF;
+    color: #0764ff;
 }
 
 .code-yellow {
-    color: #976715;
+    color: #f6ff13;
 }
 
 
@@ -187,6 +187,10 @@ table styling
     padding: 0.3em 0.8em;
     border: 1px #D0D0D0 solid;
     background-color: white;
+}
+
+.table>*>*>td:hover {
+    filter: drop-shadow(2px 2px 1px #666666);
 }
 
 .table>*>*>th {

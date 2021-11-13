@@ -1,4 +1,5 @@
 /* ****************************************************************************
+
     This module contains the dynamic parts of the SQL Query cell type -
 
     - Executing Queries (the table rendering is separate)
@@ -7,26 +8,38 @@
 
 **************************************************************************** */
 
-function execute(id) {
-    ticker_start = Date.now()
-    update_history(_query, undefined, "--", "--")
+function get_columns(data) {
+    if (data.columns === undefined) {
+        var columns = [];
+        for (var key in data) {
+            columns.push(key);
+        }
+        return columns
+    }
+    return data.columns
+}
+
+function execute_sql_query(id) {
+    let ticker_start = Date.now()
+    document.getElementById(`play-${id}`).disabled = true;
+
+    // get the execution details
+    let data = {};
+    data.query = document.getElementById(`editor-${id}`).innerText;
+    data.start_date = document.getElementById(`cell-start-date-${id}`).value;
+    data.end_date = document.getElementById(`cell-end-date-${id}`).value;
+
+    update_sql_history(data.query, undefined, "--", "--", data.start_date, data.end_date)
 
     function do_ticker() {
-        document.getElementById('clock').innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
-    }
-    if (_interval_obj) {
-        clearInterval(_interval_obj)
+        document.getElementById(`execution-timer-${id}`).innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
     }
 
     do_ticker();
     _interval_obj = setInterval(function() { do_ticker() }, 100);
+    document.getElementById(`last-executed-${id}`).innerText = moment();
 
-    var url = '/v1/search';
-    data = {};
-    data.query = _query;
-    data.start_date = document.getElementById('start_date').value;
-    data.end_date = document.getElementById('end_date').value;
-    data.page_size = recordBufferSize;
+    var url = '/v1/search'
 
     fetch(url, {
             method: "POST",
@@ -48,23 +61,46 @@ function execute(id) {
 
                     _record_count = _results.length
                     _results.columns = get_columns(_results[0]);
-                    renderTable(_results, _page_number, _records_per_page, document.getElementById('data-table-wrapper'))
+                    resultTable = renderTable(_results, 1, 10, document.getElementById('data-table-wrapper'))
 
                     if (_has_more_records) {
                         _records = "Many (" + _results.length + " available)";
-                        update_history(_query, "okay", "Many", document.getElementById('clock').innerText);
+                        update_sql_history(data.query, "okay", "Many", document.getElementById(`execution-timer-${id}`).innerText);
                     } else {
                         _records = _results.length;
-                        update_history(_query, "okay", _records, document.getElementById('clock').innerText);
+                        update_sql_history(data.query, "okay", _records, document.getElementById(`execution-timer-${id}`).innerText);
                     }
-                    max_record = Math.min(_results.length, _page_number * _records_per_page)
+                    //max_record = Math.min(_results.length, _page_number * _records_per_page)
 
-                    document.getElementById('page-back').disabled = (_page_number == 1)
-                    document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
-                    document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
+                    //document.getElementById('page-back').disabled = (_page_number == 1)
+                    //document.getElementById('page-forward').disabled = (_page_number * _records_per_page) >= _results.length
+                    //document.getElementById('record_counter').innerText = ((_page_number - 1) * _records_per_page + 1) + " - " + max_record + " of " + _records
 
+                    resultHeader = ''
+                    resultFooter = `
+                    <div class="card d-flex flex-row justify-content-between notebook-cell-footer">
+                        <div>
+                            <button type="button" class="btn btn-sm btn-secondary">
+                                <i class="fa-fw fa-regular fa-floppy-disk"></i> Save
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary">
+                                <i class="fa-fw fa-solid fa-right-to-bracket fa-rotate-90 "></i> Download
+                            </button>
+                        </div>
+                        <div class="align-middle">
+                            1 - 10 of Many (2000 available) 
+                            <button type="button" class="btn btn-sm btn-secondary">
+                                <i class="fa-fw fas fa-chevron-left"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary">
+                                <i class="fa-fw fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>`
 
-                    update_visualization(_query, _results);
+                    document.getElementById(`result-cell-${id}`).innerHTML = resultHeader + "<div class='w-100 overflow-auto'>" + resultTable + "</div>" + resultFooter;
+                    document.getElementById(`play-${id}`).disabled = false;
+
                 })
             } else {
                 if (response.status == "416") {
@@ -112,7 +148,8 @@ function execute(id) {
         })
         .catch(error => {
             clearInterval(_interval_obj);
-            update_history(_query, "fail", "--", "--");
+            document.getElementById(`play-${id}`).disabled = false;
+            update_sql_history(data.query, "fail", "--", "--");
             console.log(error.message)
             errorObject = JSON.parse(error.message)
             document.getElementById("data-table-wrapper").innerHTML =
@@ -129,14 +166,68 @@ function execute(id) {
 
 
 /* ****************************************************************************
-    HISTORY
+    HISTORY & SAVED
 **************************************************************************** */
+
+function sqlDialogAction(element, dialog) {
+
+    // we can't do anything useful at this level, stop
+    if (element.id == dialog) { return; }
+
+    if (!element.id.startsWith(dialog)) {
+        // if we don't have a handler, try the parent element
+        sqlDialogAction(element.parentElement, dialog);
+        return;
+    }
+
+    // get the information from the button and dialog
+    let action_item = element.id.split("-");
+    let action = action_item[2];
+    let item = action_item[3];
+    let cell = document.getElementById(dialog + "-modal").querySelector('.cell-id').value;
+
+    let query_list = []
+    if (dialog == "sql-history") {
+        query_list = JSON.parse(getLocalCache("recent_queries"));
+    }
+    if (dialog == "sql-saved") {
+        query_list = JSON.parse(getLocalCache("saved_sql"));
+    }
+
+    // both of these actions put the query into the query box
+    if (action == 'reload' || action == 'rerun') {
+        document.getElementById(`editor-${cell}`).innerHTML = sql_highlight(query_list[item].query);
+    }
+    // we've just put the query into the query box, rerun runs it
+    if (action == 'rerun') {
+        document.getElementById(`play-${cell}`).click();
+    }
+    if (action == 'remove') {
+        query_list.splice(item, 1);
+        if (dialog == "sql-history") {
+            putLocalCache("recent_queries", JSON.stringify(query_list));
+            update_sql_history();
+        }
+        if (dialog == "sql-saved") {
+            putLocalCache("saved_sql", JSON.stringify(query_list));
+            update_sql_saved();
+        }
+    }
+}
 
 function update_sql_history(query, query_outcome, records, duration, start_date, end_date) {
 
     const history_timestampFormat = "DD MMM YYYY HH:mm"
-    let _history = JSON.parse(getLocalCache("recent_queries"));
-    if (_history == null) { _sql_history = [] };
+    let history = getLocalCache("recent_queries");
+    if (history) {
+        try {
+            _history = JSON.parse(history)
+        } catch (objError) {
+            _history = []
+        }
+    } else {
+        _history = []
+    }
 
     // if we've been given a query, update the history
     if (query) {
@@ -161,9 +252,9 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
 
         _history.push(history_object);
 
-        while (_history.length > 10) {
-            // we only keep the last 10 queries, so if we have more than
-            // 10 items, remove the older items from the list
+        while (_history.length > 20) {
+            // we only keep the last 20 queries, so if we have more than
+            // 20 items, remove the older items from the list
             _history.shift();
         }
     }
@@ -216,39 +307,22 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
     document.getElementById("sql-history").addEventListener("click", function(e) { sqlDialogAction(e.target, "sql-history") })
 }
 
-function sqlDialogAction(element, dialog) {
 
-    // we can't do anything useful at this level, stop
-    if (element.id == dialog) { return; }
-
-    if (!element.id.startsWith(dialog)) {
-        // if we don't have a handler, try the parent element
-        sqlDialogAction(element.parentElement, dialog);
-        return;
-    }
-
-    // get the information from the button and dialog
-    let action_item = element.id.split("-");
-    let action = action_item[2];
-    let item = action_item[3];
-    let cell = document.getElementById(dialog + "-modal").querySelector('.cell-id').value;
-
-    let query_list = []
-    if (dialog == "sql-history") {
-        query_list = JSON.parse(getLocalCache("recent_queries"));
-    }
-    if (dialog == "sql-saved") {
-        query_list = JSON.parse(getLocalCache("saved_sql"));
-    }
-
-    document.getElementById(`editor-${cell}`).innerHTML = sql_highlight(query_list[item].query);
-}
 
 function update_sql_saved(query) {
 
     let saved = getLocalCache("saved_sql")
     if (saved) {
-        saved_list = JSON.parse(saved)
+        try {
+            saved_list = JSON.parse(saved)
+        } catch (objError) {
+            saved_list = []
+        }
+        if (saved_list.length > 0 && saved_list[0].query === undefined) {
+            for (var i = 0; i < saved_list.length; i++) {
+                saved_list[i] = { query: saved_list[i] }
+            }
+        }
     } else {
         saved_list = []
     }
@@ -256,7 +330,7 @@ function update_sql_saved(query) {
     if (query) {
         index = -1
         for (var i = 0; i < saved_list.length; i++) {
-            if (saved_list[i] == query) {
+            if (saved_list[i].query == query) {
                 index = i
             }
         }
@@ -269,7 +343,7 @@ function update_sql_saved(query) {
     putLocalCache("saved_sql", JSON.stringify(saved_list));
 
     if (saved_list.length == 0) {
-        document.getElementById("saved").innerHTML = '<div class="alert alert-primary col-sm-8" role="alert">No queries have been Saved.</div>'
+        document.getElementById("sql-saved").innerHTML = '<div class="alert alert-primary col-sm-8" role="alert">No queries have been Saved.</div>'
         return
     }
 
@@ -278,11 +352,11 @@ function update_sql_saved(query) {
     for (var i = 0; i < saved_list.length; i++) {
         entry = `
         <tr>
-            <td class="align-middle mono-font">${sql_highlight(htmlEncode(saved_list[i]))}</td>
+            <td class="align-middle mono-font">${sql_highlight(htmlEncode(saved_list[i].query))}</td>
             <td>
-                <button type="button" id="sql-reload-saved-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
-                <button type="button" id="sql-rerun-saved-${i}" class="btn btn-tiny btn-success" title="Rerun Query"><i class="fa-fw fa-solid fa-play"></i></button>
-                <button type="button" id="sql-delete-saved-${i}" class="btn btn-tiny btn-danger" title="Remove Query from Saved"><i class="fa-fw fas fa-trash-alt"></i></button>
+                <button type="button" id="sql-saved-reload-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor" data-bs-dismiss="modal"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
+                <button type="button" id="sql-saved-rerun-${i}" class="btn btn-tiny btn-success" title="Rerun Query" data-bs-dismiss="modal"><i class="fa-fw fa-solid fa-play"></i></button>
+                <button type="button" id="sql-saved-remove-${i}" class="btn btn-tiny btn-danger" title="Remove Query from Saved"><i class="fa-fw fas fa-trash-alt"></i></button>
             </td>
         </tr>
         `
@@ -298,4 +372,6 @@ function update_sql_saved(query) {
     for (let i = 0; i < saved_count_lists.length; i++) {
         saved_count_lists[i].innerText = saved_list.length;
     }
+
+    document.getElementById("sql-saved").addEventListener("click", function(e) { sqlDialogAction(e.target, "sql-saved") })
 }
