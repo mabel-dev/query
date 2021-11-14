@@ -40,7 +40,7 @@ function renderTable(data, pageNumber, pageSize) {
 
     for (var i = startIndex; i < (startIndex + pageSize); i++) {
         if (i < data.length) {
-            row_data += `<tr><th scope="row" class="mono-font align-middle">${zeroPad(i + 1, 2)}</th>`;
+            row_data += `<tr><th scope="row" class="mono-font align-middle row-nums">${zeroPad(i + 1, 2)}</th>`;
             for (var h = 0; h < data.columns.length; h++) {
                 var cellValue = htmlEncode(data[i][data.columns[h]])
                 if (is_date(cellValue)) {

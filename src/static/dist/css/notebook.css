@@ -190,7 +190,7 @@ table styling
 }
 
 .table>*>*>td:hover {
-    filter: drop-shadow(2px 2px 1px #666666);
+    filter: drop-shadow(0px 0px 2px var(--theme-color-blue));
 }
 
 .table>*>*>th {
@@ -212,6 +212,10 @@ table styling
     overflow-x: scroll;
 }
 
+.row-nums {
+    width: 2em;
+}
+
 
 /*
 */
@@ -231,6 +235,10 @@ table styling
 /* 
 overwrite bootstrap styles 
 */
+
+.alert {
+    border-radius: 0;
+}
 
 .modal-content {
     border-radius: 0;
@@ -305,6 +313,15 @@ overwrite bootstrap styles
 .btn-danger:hover {
     background-color: var(--theme-color-red-highlight);
     border: transparent;
+}
+
+.placeholder {
+    height: 6em;
+}
+
+.alert-heading {
+    font-size: 1.3em;
+    font-weight: 500;
 }
 
 

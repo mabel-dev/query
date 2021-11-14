@@ -23,6 +23,11 @@ function execute_sql_query(id) {
     let ticker_start = Date.now()
     document.getElementById(`play-${id}`).disabled = true;
 
+    document.getElementById(`result-cell-${id}`).innerHTML = `
+<div class="placeholder-glow">
+  <span class="placeholder col-12"></span>
+</div>`
+
     // get the execution details
     let data = {};
     data.query = document.getElementById(`editor-${id}`).innerText;
@@ -32,7 +37,7 @@ function execute_sql_query(id) {
     update_sql_history(data.query, undefined, "--", "--", data.start_date, data.end_date)
 
     function do_ticker() {
-        document.getElementById(`execution-timer-${id}`).innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
+        document.getElementById(`execution-timer-${id}`).innerText = ((Date.now() - ticker_start) / 1000).toFixed(1) + "s";
     }
 
     do_ticker();
@@ -41,7 +46,7 @@ function execute_sql_query(id) {
 
     var url = '/v1/search'
 
-    fetch(url, {
+    let execute = fetch(url, {
             method: "POST",
             body: JSON.stringify(data),
             headers: { 'Content-Type': 'application/json' }
@@ -80,7 +85,7 @@ function execute_sql_query(id) {
                     resultFooter = `
                     <div class="card d-flex flex-row justify-content-between notebook-cell-footer">
                         <div>
-                            <button type="button" class="btn btn-sm btn-secondary">
+                            <button type="button" class="btn btn-sm btn-secondary" id="do-save-sql-${id}">
                                 <i class="fa-fw fa-regular fa-floppy-disk"></i> Save
                             </button>
                             <button type="button" class="btn btn-sm btn-secondary">
@@ -100,6 +105,7 @@ function execute_sql_query(id) {
 
                     document.getElementById(`result-cell-${id}`).innerHTML = resultHeader + "<div class='w-100 overflow-auto'>" + resultTable + "</div>" + resultFooter;
                     document.getElementById(`play-${id}`).disabled = false;
+                    document.getElementById(`do-save-sql-${id}`).addEventListener("click", function(e) { save_query(e.target); })
 
                 })
             } else {
@@ -152,13 +158,13 @@ function execute_sql_query(id) {
             update_sql_history(data.query, "fail", "--", "--");
             console.log(error.message)
             errorObject = JSON.parse(error.message)
-            document.getElementById("data-table-wrapper").innerHTML =
+            document.getElementById(`result-cell-${id}`).innerHTML =
                 `
-<div class="alert alert-error col-sm-8" role="alert">
-    <h4 class="alert-heading">${htmlEncode(errorObject.error)}</h4>
+<div class="alert alert-danger" role="alert">
+    <p class="alert-heading">${htmlEncode(errorObject.error)}</p>
     <p>${htmlEncode(errorObject.detail)}</p>
     <hr />
-    <p class="mb-0">Update your query and try again.</p>
+    <p class="mb-0">Please update your query before trying again.</p>
 </div>
 `;
         })
@@ -252,9 +258,9 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
 
         _history.push(history_object);
 
-        while (_history.length > 20) {
-            // we only keep the last 20 queries, so if we have more than
-            // 20 items, remove the older items from the list
+        while (_history.length > 25) {
+            // we only keep the last 25 queries, so if we have more than
+            // 25 items, remove the older items from the list
             _history.shift();
         }
     }
@@ -337,13 +343,21 @@ function update_sql_saved(query) {
         if (index > -1) {
             saved_list.splice(index, 1);
         }
-        saved_list.push(query);
+        saved_list.push({ query: query });
     }
 
+    console.log(saved_list);
     putLocalCache("saved_sql", JSON.stringify(saved_list));
 
+    // update all of the pills in the command bar
+    let saved_count_lists = document.getElementsByClassName("sql-saved-count");
+    for (let i = 0; i < saved_count_lists.length; i++) {
+        saved_count_lists[i].innerText = saved_list.length;
+    }
+
+    // if we have no items, show a placeholder and bail
     if (saved_list.length == 0) {
-        document.getElementById("sql-saved").innerHTML = '<div class="alert alert-primary col-sm-8" role="alert">No queries have been Saved.</div>'
+        document.getElementById("sql-saved").innerHTML = '<br /><div class="alert alert-primary" role="alert">No queries have been Saved.</div>'
         return
     }
 
@@ -366,12 +380,25 @@ function update_sql_saved(query) {
 
     // update the saved dialog
     document.getElementById("sql-saved").innerHTML = "<table class='table'>" + saved_table + "</table>";
+    document.getElementById("sql-saved").addEventListener("click", function(e) { sqlDialogAction(e.target, "sql-saved") })
+}
 
-    // update all of the pills in the command bar
-    let saved_count_lists = document.getElementsByClassName("sql-saved-count");
-    for (let i = 0; i < saved_count_lists.length; i++) {
-        saved_count_lists[i].innerText = saved_list.length;
+
+function save_query(initiator) {
+    /*
+     */
+
+    if (!initiator.id.startsWith("do-save-sql-")) {
+        // if we're not the one we want, try the parent
+        if (initiator.parentElement !== undefined) {
+            save_query(initiator.parentElement);
+        }
+        return;
     }
 
-    document.getElementById("sql-saved").addEventListener("click", function(e) { sqlDialogAction(e.target, "sql-saved") })
+    id = initiator.id.replace("do-save-sql-", "");
+
+    console.log(initiator, id, document.getElementById(`editor-${id}`).innerText);
+
+    update_sql_saved(document.getElementById(`editor-${id}`).innerText);
 }

@@ -6,6 +6,7 @@ function sql_highlight(s) {
     var numbers_reg = /\b(\d+)\b/g;
     var literal_reg_dbl = /"([^\"]*)"/g
 
+    s = s.replaceAll("&#160;", " ");
     s = s.replace(keyword_reg, function(m) { return "<span class='code-purple'>" + m.toUpperCase() + "</span>" });
     s = s.replace(function_reg, function(m) { return "<span class='code-green'>" + m.toUpperCase() + "</span>" });
     s = s.replace(literal_reg_dbl, "\"<span class='code-red'>$1</span>\"");

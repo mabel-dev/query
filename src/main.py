@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.join(sys.path[0], "../../mabel/"))
+sys.path.insert(0, os.path.join(sys.path[0], "../../mabel_/"))
 
 import uvicorn
 from fastapi.responses import HTMLResponse
