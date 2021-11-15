@@ -1,31 +1,49 @@
-cell_icon = '<i class="fa-solid fa-fw fa-code"></i>'
-editor_class = 'notebook-cell-editor-python'
+var pyodide = null
 
-document.getElementById("play-py").addEventListener("click", function() {
-    python_code = document.getElementById("py-code").innerText;
-    python_code = python_code.replace(/\u00A0/g, "").replace(/[\r\n]+/g, "\n");
-    console.log(python_code);
-    let output = pyodide.runPython(python_code);
-    console.log(output);
-    document.getElementById("py-res").innerText = output
-});
+function createNewPythonCell(id, cellBlock) {
+    let cell_icon = '<i class="fa-solid fa-fw fa-code"></i>'
+    let editor_class = 'notebook-cell-editor-python'
+
+    cellBlock.insertAdjacentHTML('beforeend', createCell(id, cell_icon, editor_class))
+
+    // set up the syntax highlighting
+    const sql_e = document.getElementById(`editor-${id}`);
+    sql_e.focus();
+    editor(sql_e, highlight = py_highlight);
 
 
-//const py_ed = document.querySelector('.py_editor');
-//py_ed.focus();
-//editor(py_ed, highlight = py_highlight);
-
-//                                 <li><a class="dropdown-item" href="#" id="new-python-cell"><i class="fa-solid fa-fw fa-code"></i> Python cell </a></li>
-
-document.write('<script src="plugins/pyodide_0.18.1/pyodide.js"></script>');
-
-async function main() {
-    pyodide = await loadPyodide({
-        indexURL: "/plugins/pyodide_0.18.1/"
+    document.getElementById(`play-${id}`).addEventListener("click", function() {
+        python_code = document.getElementById(`editor-${id}`).innerText;
+        python_code = python_code.replace(/\u00A0/g, "").replace(/[\r\n]+/g, "\n");
+        console.log(python_code);
+        if (pyodide !== undefined) {
+            let output = pyodide.runPython(python_code);
+            console.log(output);
+            document.getElementById(`result-cell-${id}`).innerText = output
+        } else {
+            document.getElementById(`result-cell-${id}`).innerText = "Python Engine not Initialized."
+        }
     });
-    console.log(pyodide.runPython(`
-        import sys
-        sys.version
-    `));
 }
-main();
+
+
+// add the new Python Cell option
+const newPythonCellOption = `<li><a class="dropdown-item" href="#" id="new-python-cell"><i class="fa-fw fa-solid fa-fw fa-code"></i> Code cell </a></li>`
+document.getElementById("notebook-new-cell-selector").insertAdjacentHTML('beforeend', newPythonCellOption)
+document.getElementById("new-python-cell").addEventListener("click", function() { createNewCell("python") }, false)
+
+
+
+function pythonInitializer() {
+    pyodide = null;
+    pyodide = loadPyodide({
+        indexURL: "/plugins/pyodide@0.18.1/"
+    });
+
+    console.log(pyodide.runPython(`
+            import sys
+            sys.version
+        `));
+}
+
+loadJS("plugins/pyodide@0.18.1/pyodide.js", pythonInitializer, document.body);

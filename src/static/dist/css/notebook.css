@@ -163,7 +163,7 @@ code editor
 }
 
 .code-yellow {
-    color: #f6ff13;
+    color: #b3b814;
 }
 
 
@@ -229,6 +229,18 @@ table styling
     font-weight: 600;
     font-size: 12px;
     text-transform: uppercase;
+}
+
+.col-form-label {
+    font-family: "IBM Plex Sans", sans-serif;
+    color: --base-font-color;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.dropdown-item>i {
+    width: 2em;
 }
 
 
@@ -349,3 +361,7 @@ body {
 
 
 /* **************************************************************************** */
+
+.chart-options-box {
+    padding: 1em 0em 1em 2em;
+}

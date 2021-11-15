@@ -18,7 +18,7 @@ function is_date(sDate) {
     if (sDate === undefined || sDate == null) { return false }
     if (sDate.toString() == parseInt(sDate).toString()) return false;
     var tryDate = new Date(sDate);
-    var m = moment(sDate, ['YYYY-MM-DD', 'YYYYMMDD', 'DD/MM/YYYY', moment.ISO_8601, 'L', 'LL', 'LLL', 'LLLL'], true);
+    var m = dayjs(sDate, ['YYYY-MM-DD', 'YYYYMMDD', 'DD/MM/YYYY', dayjs.ISO_8601, 'L', 'LL', 'LLL', 'LLLL'], true);
     return (tryDate && tryDate.toString() != "NaN" && tryDate != "Invalid Date" && m.isValid());
 }
 
@@ -47,7 +47,7 @@ function renderTable(data, pageNumber, pageSize, dom) {
             for (var h = 0; h < data.columns.length; h++) {
                 var cellValue = htmlEncode(data[i][data.columns[h]])
                 if (is_date(cellValue)) {
-                    row_data += `<td class="cell_right">${moment(cellValue).format(timestampFormat)}</td>`
+                    row_data += `<td class="cell_right">${dayjs(cellValue).format(timestampFormat)}</td>`
                     if (!right_justified_headers.includes(data.columns[h])) {
                         right_justified_headers.push(data.columns[h])
                     }

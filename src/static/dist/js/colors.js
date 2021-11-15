@@ -22,6 +22,7 @@ VIRIDIS = ['#440154', '#482878', '#3e4989', '#31688e', '#26828e', '#1f9e89', '#3
 PINK_AND_BLUE = ["#e52165", "#0d1137"]
 BLUE_SCALE = ["#0d1137", "#e0f0ff"]
 SPROUT = ['#0f6d84', '#08c3b2', '#ffcd1d', '#d86be3', '#8678e7', '#3796e3']
+CORPORATE = ['#00864e', '#24986a', '#50aa86', '#7fc3a7', '#acd8c6', '#cce7dc']
 
 // PALETTE
 SIMPLE = ["#264653", '#2a9d8f', '#e9c46a', '#e76f51']
@@ -74,4 +75,12 @@ function getColors(scheme, steps) {
         colors.push(colorGradient(scheme, (i / (steps - 1))))
     }
     return colors;
+}
+
+function createExampleGradient(color) {
+    g = ""
+    for (let i = 0; i < color.length; i++) {
+        g += `<div style="background-color:${color[i]}; height:5px; min-width:5px; width:100%; display:inline;">&nbsp;</div>`
+    }
+    return '<div style="display:flex; justify-content: space-between;">' + g + '</div>'
 }

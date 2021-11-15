@@ -52,6 +52,12 @@ function createNewCell(type) {
         case "markdown":
             newCell = createNewMarkdownCell(_cellNumber, cellBlock);
             break;
+        case "chart":
+            newCell = createNewChartCell(_cellNumber, cellBlock);
+            break;
+        case "python":
+            newCell = createNewPythonCell(_cellNumber, cellBlock);
+            break;
         default:
             break;
     }

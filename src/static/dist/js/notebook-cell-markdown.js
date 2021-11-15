@@ -65,4 +65,4 @@ addNewStyle(`
 
 // we use an additional JS library - showdown, to keep this self-contained, we'll
 // import it here.
-document.write('<script src="plugins/showdown-1.9.1/js/showdown.min.js"></script>');
+document.write('<script src="plugins/showdown@1.9.1/js/showdown.min.js"></script>');

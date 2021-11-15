@@ -258,7 +258,7 @@ function update_history(query, query_outcome, records, duration) {
         <tr>
             <td class="align-middle">${status}</td>
             <td class="align-middle trim code cm-s-default" title="${htmlEncode(_history[i].query)}">${colorize_sql(htmlEncode(_history[i].query))}</td>
-            <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
+            <td class="align-middle">${dayjs(_history[i].last_run).format(history_timestampFormat)}</td>
             <td class="align-middle text-end">${_history[i].runtime}</td>
             <td class="align-middle text-end">${_history[i].rowcount}</td>
             <td>

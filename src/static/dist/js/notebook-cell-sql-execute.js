@@ -3,7 +3,7 @@
     This module contains the dynamic parts of the SQL Query cell type -
 
     - Executing Queries (the table rendering is separate)
-    - Keeping and rendering the last 10 queries - "Recent"
+    - Keeping and rendering the last 25 queries - "Recent"
     - Maintaining and rendering Saved queries
 
 **************************************************************************** */
@@ -19,10 +19,17 @@ function get_columns(data) {
     return data.columns
 }
 
+function do_ticker(id, ticker_start) {
+    document.getElementById(`execution-timer-${id}`).innerText = ((Date.now() - ticker_start) / 1000).toFixed(1);
+}
+
 function execute_sql_query(id) {
     let ticker_start = Date.now()
     document.getElementById(`play-${id}`).disabled = true;
 
+    // format the query
+    document.getElementById(`editor-${id}`).innerHTML = sql_highlight(document.getElementById(`editor-${id}`).innerText);
+    // change the result grid to be 'empty'
     document.getElementById(`result-cell-${id}`).innerHTML = `
 <div class="placeholder-glow">
   <span class="placeholder col-12"></span>
@@ -34,15 +41,22 @@ function execute_sql_query(id) {
     data.start_date = document.getElementById(`cell-start-date-${id}`).value;
     data.end_date = document.getElementById(`cell-end-date-${id}`).value;
 
-    update_sql_history(data.query, undefined, "--", "--", data.start_date, data.end_date)
-
-    function do_ticker() {
-        document.getElementById(`execution-timer-${id}`).innerText = ((Date.now() - ticker_start) / 1000).toFixed(1) + "s";
+    // do any exchanges of placeholders
+    for (var cell = 0; cell < _cells.length; cell++) {
+        if (_cells[cell].type == "parameter") {
+            let label = document.getElementById(`label-${cell + 1}`).innerText;
+            let value = document.getElementById(`editor-${cell + 1}`).value;
+            data.query = data.query.replaceAll("${" + label + "}", value);
+            console.log(label, value);
+            console.log(data);
+        }
     }
 
-    do_ticker();
-    _interval_obj = setInterval(function() { do_ticker() }, 100);
-    document.getElementById(`last-executed-${id}`).innerText = moment();
+    update_sql_history(data.query, undefined, "--", "--", data.start_date, data.end_date)
+
+    do_ticker(id, ticker_start);
+    _interval_obj = setInterval(function() { do_ticker(id, ticker_start) }, 100);
+    document.getElementById(`last-executed-${id}`).innerText = dayjs().format("ddd, MMM D, YYYY h:mm A");
 
     var url = '/v1/search'
 
@@ -112,7 +126,7 @@ function execute_sql_query(id) {
                 if (response.status == "416") {
                     throw new Error(JSON.stringify({
                         "error": "No Matching Records",
-                        "detail": "The query ran with any problems but returned no records."
+                        "detail": "The query ran without any problems but it didn't find any records."
                     }))
                 }
                 if (response.status == "401") {
@@ -124,18 +138,18 @@ function execute_sql_query(id) {
                 if (response.status == "403") {
                     throw new Error(JSON.stringify({
                         "error": "Access Denied",
-                        "detail": "You do not have access to this resource, you may have access after authenticating."
+                        "detail": "You do not have access to this resource, you may need to reauthenticate or this may be permanent."
                     }))
                 }
                 if (response.status == "404") {
                     throw new Error(JSON.stringify({
                         "error": "Dataset Not Found",
-                        "detail": "The dataset was not able to be found, it may be missing for the selected period or it may not exist."
+                        "detail": "The dataset wasn't found, it may be late, missing for the selected period, or it may not exist."
                     }))
                 }
                 if (response.status == "500") {
                     throw new Error(JSON.stringify({
-                        "error": "Server Error",
+                        "error": "Unspecified Server Error",
                         "detail": "The server failed to respond to your request."
                     }))
                 }
@@ -160,7 +174,7 @@ function execute_sql_query(id) {
             errorObject = JSON.parse(error.message)
             document.getElementById(`result-cell-${id}`).innerHTML =
                 `
-<div class="alert alert-danger" role="alert">
+<div class="alert alert-dark" role="alert">
     <p class="alert-heading">${htmlEncode(errorObject.error)}</p>
     <p>${htmlEncode(errorObject.detail)}</p>
     <hr />
@@ -200,12 +214,13 @@ function sqlDialogAction(element, dialog) {
         query_list = JSON.parse(getLocalCache("saved_sql"));
     }
 
-    // both of these actions put the query into the query box
-    if (action == 'reload' || action == 'rerun') {
+    // just put the query in the query box
+    if (action == 'reload') {
         document.getElementById(`editor-${cell}`).innerHTML = sql_highlight(query_list[item].query);
     }
-    // we've just put the query into the query box, rerun runs it
+    // put the query into the query box and run it
     if (action == 'rerun') {
+        document.getElementById(`editor-${cell}`).innerHTML = sql_highlight(query_list[item].query);
         document.getElementById(`play-${cell}`).click();
     }
     if (action == 'remove') {
@@ -281,14 +296,14 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
         }
         runtime = '--'
         if (_history[i].runtime != '--') {
-            runtime = moment.utc(_history[i].runtime * 1000).format("mm:ss.SS");
+            runtime = parseFloat(_history[i].runtime).toFixed(1) + "s";
         }
         entry = `
         <tr>
             <td class="align-middle">${status}</td>
             <td class="align-middle mono-font" title="${htmlEncode(_history[i].query)}">${sql_highlight(_history[i].query.replace(/\n/g, " "))}</td>
-            <td class="align-middle">${moment(_history[i].start_date).format("DD MMM YYYY")} to ${moment(_history[i].end_date).format("DD MMM YYYY")}</td>
-            <td class="align-middle">${moment(_history[i].last_run).format(history_timestampFormat)}</td>
+            <td class="align-middle">${dayjs(_history[i].start_date).format("DD MMM YYYY")} to ${dayjs(_history[i].end_date).format("DD MMM YYYY")}</td>
+            <td class="align-middle text-end">${dayjs(_history[i].last_run).format("ddd, MMM D, YYYY h:mm A")}</td>
             <td class="align-middle text-end">${runtime}</td>
             <td class="align-middle text-end">${_history[i].rowcount}</td>
             <td>

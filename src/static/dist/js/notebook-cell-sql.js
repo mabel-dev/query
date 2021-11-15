@@ -54,6 +54,7 @@ function createNewSqlCell(id, cellBlock) {
     </div>
     `);
 
+    // create the status bar
     document.getElementById(`editor-${id}`).insertAdjacentHTML('afterEnd', `
 <div class="d-flex flex-row justify-content-between notebook-cell-divider notebook-cell-footer">
     <div>
@@ -70,13 +71,13 @@ function createNewSqlCell(id, cellBlock) {
     play.addEventListener("click", function() { execute_sql_query(id) }, false);
 
     // add the actions for the date selectors
-    document.getElementById(`dates-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, moment().subtract(2, 'months').date(27), moment().subtract(1, 'months').date(26)) });
-    document.getElementById(`dates-since-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, moment().subtract(1, 'months').date(27), moment()) });
-    document.getElementById(`dates-today-${id}`).addEventListener("click", function() { select_dates(id, moment(), moment()) });
-    document.getElementById(`sql-date-modal-apply-${id}`).addEventListener("click", function() { select_dates(id, moment(document.getElementById(`cell-start-date-${id}`).value), moment(document.getElementById(`cell-end-date-${id}`).value)) })
+    document.getElementById(`dates-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, dayjs().subtract(2, 'months').date(27), dayjs().subtract(1, 'months').date(26)) });
+    document.getElementById(`dates-since-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, dayjs().subtract(1, 'months').date(27), dayjs()) });
+    document.getElementById(`dates-today-${id}`).addEventListener("click", function() { select_dates(id, dayjs(), dayjs()) });
+    document.getElementById(`sql-date-modal-apply-${id}`).addEventListener("click", function() { select_dates(id, dayjs(document.getElementById(`cell-start-date-${id}`).value), dayjs(document.getElementById(`cell-end-date-${id}`).value)) })
 
     // default to the last reporting cycle
-    select_dates(id, moment().subtract(2, 'months').date(27), moment().subtract(1, 'months').date(26));
+    select_dates(id, dayjs().subtract(2, 'months').date(27), dayjs().subtract(1, 'months').date(26));
 
     // set up the syntax highlighting
     const sql_e = document.getElementById(`editor-${id}`);

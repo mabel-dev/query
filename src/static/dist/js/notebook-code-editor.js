@@ -19,15 +19,16 @@ function py_highlight(s) {
 
     var numbers_reg = /\b(\d+)\b/g;
     var literal_dbl_reg = /"([^\"]*)"/g
-    var literal_sng_reg = /'([^\']*)'/g
     var control_reg = /\b(try|except|pass|finally|return|else|if|elif|import|from|for|in)\b/gi;
-    var keyword_reg = /\b(def|class\s)\b/gi;
+    var keyword_reg = /\b(def|class)\b/gi;
+    var inbuilt_func = /\b(print|enumerate|int|float)\b/gi;
+
 
     s = s.replace(literal_dbl_reg, "\"<span class='code-yellow'>$1</span>\"");
-    s = s.replace(literal_sng_reg, "\"<span class='code-yellow'>$1</span>\"");
     s = s.replace(numbers_reg, "<span class='code-purple'>$1</span>");
     s = s.replace(control_reg, "<span class='code-red'>$1</span>");
     s = s.replace(keyword_reg, "<span class='code-blue'>$1</span>");
+    s = s.replace(inbuilt_func, "<span class='code-green'>$1</span>");
     return s.split('\n').join('<br/>');
 }
 
