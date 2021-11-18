@@ -3,24 +3,21 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Query</title>
+    <title>Explorer Notebooks</title>
     <link rel="icon" type="image/png" href="dist/img/q-logo.png">
 
-    <link href="dist/fonts/JetBrains Mono/font.css" rel="stylesheet" />
-    <link href="dist/fonts/Rubik/font.css" rel="stylesheet" />
-    <link href="dist/fonts/Roboto Condensed/font.css" rel="stylesheet" />
-    <link href="dist/fonts/Roboto/font.css" rel="stylesheet" />
-    <link href="dist/fonts/Open Sans Condensed/font.css" rel="stylesheet" />
+    <link rel="stylesheet" href="dist/fonts/JetBrains Mono/font.css" />
+    <link rel="stylesheet" href="dist/fonts/Roboto Condensed/font.css" />
+    <link rel="stylesheet" href="dist/fonts/IBM Plex Sans/font.css" />
+    <link rel="stylesheet" href="dist/fonts/P22 Underground Pro/font.css" />
 
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="plugins/codemirror/css/codemirror.css">
-    <link rel="stylesheet" href="plugins/codemirror/css/show-hint.css">
+    <link rel="stylesheet" href="plugins/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="plugins/bootstrap@5.1.3/css/bootstrap.min.css">
 
-    <link rel="stylesheet" href="dist/css/styles.css">
+    <link rel="stylesheet" href="dist/css/notebook.css">
     <link rel="stylesheet" href="dist/css/nav.css">
 </head>
 
@@ -30,21 +27,11 @@
 
         <nav id="sidebar">
             <div class="sidebar-header">
-                <span class="brand-text"><i class="far fa-compass"></i> Query</span>
+                <span class="brand-text"><i class="far fa-compass"></i> Explorer</span>
             </div>
 
-
             <div style="padding: 10px;">
-
                 <input class="form-control" list="lab-dataset-options" id="lab-dataset-filter" placeholder="Dataset Filter">
-                <datalist id="lab-dataset-options">
-              <option value="San Francisco">
-              <option value="New York">
-              <option value="Seattle">
-              <option value="Los Angeles">
-              <option value="Chicago">
-            </datalist>
-
                 <ul class="list-unstyled" style="padding-top: 10px;">
                     <li><span class="field-name">name</span> <span class="field-type">STRING</span></li>
                     <li><span class="field-name">age</span> <span class="field-type">INT</span></li>
@@ -56,505 +43,92 @@
         </nav>
 
         <div id="content">
+            <div class="container-xxl">
 
-            <nav id="top-navbar" class="navbar navbar-expand-md">
-                <button type="button" id="sidebarCollapse" class="btn button-query-white">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="container-fluid">
-                    <div class="navbar-collapse collapse">
-                        <ul class="navbar-nav" id="header-nav">
-                            <li class="nav-item" id="nav-explorer">
-                                <a class="nav-link header-link btn" href="#"><i class="far fa-compass"></i> Explorer</a>
-                            </li>
-                            <li class="nav-item" id="nav-lab">
-                                <a class="nav-link header-link btn" href="#"><i class="fas fa-flask"></i> Lab</a>
-                            </li>
-                            <li class="nav-item" id="nav-visualize">
-                                <a class="nav-link header-link btn" href="#"><i class="fas fa-chart-bar"></i> Visualise</a>
-                            </li>
-                            <li class="nav-item d-none" id="nav-dashboard">
-                                <a class="nav-link header-link btn" href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                            </li>
-                            <li class="nav-item" id="nav-help">
-                                <a class="nav-link header-link btn" href="#"><i class="fas fa-question-circle"></i> Help</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item" id="identity">
-                                Identity
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <section id="main-explorer" class="d-none">
-
-                <div class="col-md-8">
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text" id="inputGroup-sizing-lg"><i class="fas fa-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Discover">
-                    </div>
-                </div>
-
-                <div class="card discover-card">
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <div class="col-1 align-left">
-                                <img src="dist/img/database.svg" width="48px" />
-                            </div>
-                            <div class="col-11">
-                                <div class="discover-result-title">
-                                    TABLE NAME
-                                    <span class="discover-head">10 columns</span>
-                                    <span class="discover-head">1000 rows</span>
-                                </div>
-                                <p class="card-text discover-summary-row">
-                                    Description
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card discover-card">
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <div class="col-1 center">
-                                <img src="dist/img/column.svg" width="48px" />
-                            </div>
-                            <div class="col-11">
-                                <div class="discover-result-title">
-                                    COLUMN NAME
-                                    <span class="discover-head">TYPE</span>
-                                </div>
-                                <p class="card-text discover-summary-row">
-                                    Description
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card discover-card">
-                    <div class="card-body">
-                        <div class="discover-result-title">TABLE NAME</div>
-                        <p class="card-text discover-summary-row">
-                            Description
-                        </p>
-
-                        <div class="clear-padding">
-                            <ul class="nav nav-tabs">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="discover-tab-overview" data-bs-toggle="tab" data-bs-target="#discover-overview" type="button" role="tab" aria-controls="overview" aria-selected="false"><i class="far fa-file-alt"></i> Overview</button>
+                <nav id="top-navbar" class="navbar navbar-expand-md">
+                    <button type="button" id="sidebarCollapse" class="btn btn-secondary">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="container-fluid">
+                        <div class="navbar-collapse collapse">
+                            <ul class="navbar-nav" id="header-nav">
+                                <li class="nav-item" id="nav-explorer">
+                                    <button id="notebook-save" type="button" class="btn btn-secondary">
+                                        <i class="fa-fw fa-regular fa-floppy-disk"></i> Download
+                                    </button>
                                 </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="discover-tab-columns" data-bs-toggle="tab" data-bs-target="#discover-columns" type="button" role="tab" aria-controls="recent" aria-selected="false"><i class="fas fa-columns"></i> Columns</button>
+                                <li class="nav-item" id="nav-explorer">
+                                    <button id="notebook-present" type="button" class="btn btn-secondary">
+                                        <i class="fa-fw fa-solid fa-tv"></i> Present
+                                    </button>
                                 </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="discover-tab-usage" data-bs-toggle="tab" data-bs-target="#discover-usage" type="button" role="tab" aria-controls="saved" aria-selected="false"><i class="fas fa-code"></i> Usage</button>
+                                <li class="nav-item" id="nav-explorer">
+                                    <button id="notebook-load" type="button" class="btn btn-secondary">
+                                        <i class="fa-fw fa-regular fa-folder-open"></i> Open
+                                    </button>
+                                </li>
+                                <li class="nav-item" id="nav-explorer">
+                                    <button id="notebook-reset" type="button" class="btn btn-secondary">
+                                        <i class="fa-fw fa-solid fa-power-off"></i> Reset
+                                    </button>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ms-auto">
+                                <li class="nav-item">
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="dropdown-toggle btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa-solid fa-circle-user"></i> <span id="identity">Identity</span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <a class="dropdown-item" href="https://accounts.google.com/logout">Sign Out</a>
+                                        </ul>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
-
-                        <div class="tab-content" id="tabs">
-                            <div class="tab-pane fade show active" id="discover-overview" role="tabpanel" aria-labelledby="discover-tab-overview">
-                                Overview<i class="far fa-edit"></i>
-                                <br />
-                                <i class="fas fa-tags"></i>
-                                <ul>
-                                    <li>Owner</li>
-                                    <li>Licence</li>
-                                    <li>Confidentiality</li>
-                                </ul>
-                            </div>
-                            <div class="tab-pane fade" id="discover-columns" role="tabpanel" aria-labelledby="discover-tab-columns">
-                                <div class="card discover-card">
-
-                                    <div class="accordion accordion-flush">
-                                        <div class="accordion accordion-flush" id="accordionFlushExample">
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="flush-headingOne">
-                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                                        <div class="field-name">Name</div>
-                                                        <span class="field-type-discoverer">STR</span>
-                                                </button>
-                                                </h2>
-                                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-2">
-                                                            <canvas class="profile-chart" id="profile-one"></canvas>
-                                                        </div>
-                                                        <div class="col-3">
-                                                            <ul class="list-unstyled discover-head">
-                                                                <li>COUNT</li>
-                                                                <li class="color-alt">201001</li>
-                                                                <li>MISSING</li>
-                                                                <li class="color-alt">100002</li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="col-3">
-                                                            DISTINCT
-                                                        </div>
-                                                        <div class="col-3">
-                                                            COLUMN
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="flush-headingTwo">
-                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                                        <div class="field-name">COLUMN NAME</div>
-                                                        <span class="field-type-discoverer">INT</span>
-                                                </button>
-                                                </h2>
-                                                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual
-                                                        content.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="flush-headingThree">
-                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                                                        <div class="field-name">COLUMN NAME</div>
-                                                        <span class="field-type-discoverer">INT</span>
-                                                </button>
-                                                </h2>
-                                                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                                                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms
-                                                        of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="discover-usage" role="tabpanel" aria-labelledby="discover-tab-usage">
-                                <ul>
-                                    <li>Popular Queries</li>
-                                    <li>Measures Derived</li>
-                                    <li>Lineage</li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
-                </div>
+                </nav>
 
+                <div class="row">
 
-            </section>
+                    <div id="cell-block"></div>
 
-            <section id="main-lab">
-                <div>
-                    <form onsubmit="return false" id="search-form">
-                        <div class="form-group row">
-                            <div class="col-sm-8 clear-padding">
-                                <textarea id="sql-editor" spellcheck="false">
-SELECT *
-FROM mabel_data.RAW.NVD.CVE_LIST
-</textarea>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="input-group">
-                                    <select class="form-select col-2" id="period" size="1">
-                                        <option value='today' selected>Today</option>
-                                        <option value='yesterday' select>Yesterday</option>
-                                        <option value="t-30">Last 30 days</option>
-                                    </select>
-                                </div>
-                                <div><br /></div>
-                                <div class="row" id="custom-date-range">
-                                    <div class="col-1 col-form-label">from</div>
-                                    <div class="col-5">
-                                        <div class="input-group">
-                                            <input type="date" class="form-control datepicker" id="start_date" />
-                                        </div>
-                                    </div>
-                                    <div class="col-1 col-form-label">to</div>
-                                    <div class="col-5">
-                                        <div class="input-group">
-                                            <input type="date" class="form-control datepicker" id="end_date" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="row" id="button-row">
-                    <div class="col-sm-6 clear-padding">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false"><i class="fas fa-th-list"></i> Results</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="recent-tab" data-bs-toggle="tab" data-bs-target="#recent" type="button" role="tab" aria-controls="recent" aria-selected="false"><i class="fas fa-history"></i> Recent</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab" aria-controls="saved" aria-selected="false"><i class="fas fa-thumbtack"></i> Pinned</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-2 clear-padding">
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn-fixed-width btn btn-outline-secondary" id="save">
-                                <i class="fas fa-thumbtack"></i> Pin
+                    <div class="notebook-cell">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-plus"></i> New Cell
                             </button>
-                            <button type="button" class="btn-fixed-width btn btn-action" id="run">
-                            <i class="fas fa-sync-alt"></i> Run
-                        </button>
-                        </div>
-                    </div>
-                    <div class="col-sm-1">
-                        <span id="clock" class="btn mono-font">-</span>
-                    </div>
-                    <div class="col-sm-3 clear-padding">
-                        <div class="d-flex justify-content-end">
-                            <button type="button" class="btn-fixed-width btn btn-outline-secondary" id="download">
-                            <i class="fas fa-cloud-download-alt"></i> Download
-                        </button>
+                            <ul class="dropdown-menu" id="notebook-new-cell-selector"></ul>
                         </div>
                     </div>
                 </div>
-
-
-                <div class="tab-content" id="tabs">
-                    <div class="tab-pane fade show active" id="results" role="tabpanel" aria-labelledby="results-tab">
-                        <div id="data-table-wrapper">
-                            <div class="alert alert-primary col-sm-8" role="alert">
-                                No queries have been run.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="recent" role="tabpanel" aria-labelledby="recent-tab">
-                        <div class="alert alert-primary col-sm-8" role="alert">
-                            No queries have been run.
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="saved-tab">
-                        <div class="alert alert-primary col-sm-8" role="alert">
-                            No queries have been Pinned.
-                        </div>
-                    </div>
-                </div>
-
-                <footer id="footer-lab">
-                    <div class="d-flex justify-content-end">
-                        <div>
-                            Records per page
-                            <select id="records_per_page" class="mono-font align-middle">
-                                    <option value="20" selected>20</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            <span class="vertical-separator">|</span>
-                            <span id="record_counter"></span>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button id="page-back" type="button" class="btn button-query-white" disabled><i class="fas fa-chevron-left"></i></button>
-                                <button id="page-forward" type="button" class="btn button-query-white" disabled><i class="fas fa-chevron-right"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </section>
-
-            <section id="main-visualize" class="d-none">
-
-                <ul>
-                    <li>Title</li>
-                    <li>Chart Type</li>
-                    <li>Axis</li>
-                    <li>Data
-                        <ul>
-                            <li>label</li>
-                            <li>color</li>
-                            <li>aggregation (e.g. daily/monthly)</li>
-                        </ul>
-                    </li>
-                </ul>
-
-
-                <div id="visualize">
-                    <div class="alert alert-primary col-sm-8" role="alert">
-                        No data set.
-                    </div>
-                </div>
-            </section>
-
-            <section id="main-dashboard" class="d-none">
-                <p>select prebuild dashboard</p>
-            </section>
-
-            <section id="main-help" class="d-none">
-                <p>Query supports a limited Data Query Language.</p>
-                <pre class="code cm-s-default">
-        <span class="cm-keyword">SELECT</span> [<span class="cm-keyword">DISTINCT</span>] * | select_expression 
-        <span class="cm-keyword">FROM</span> dataset
-        [<span class="cm-keyword">WHERE</span> <var>filter_expression</var>]
-        [<span class="cm-keyword">GROUP BY</span> <var>column_name</var>]
-        [<span class="cm-keyword">ORDER BY</span> <var>column_name</var> ASC|DESC] 
-        [<span class="cm-keyword">LIMIT</span> <var>n</var>]
-            </pre>
-                <p>Data is read only, DELETE, INSERT, CREATE, ALTER and UPDATE are not supported.</p>
-                <p>Some features, such as JOINs, Sub Queries, UNIONS are not supported.</p>
-
-                <h4>select_expression</h4>
-                <p>
-                    Sets the columns to populate the result set with, in a comma separated list. select_expressions can contain functions to perform on columns in the source dataset. At least one expression is required, GROUP BY statements must contain aggregation functions
-                    to perform on the groups.
-                </p>
-                <p>
-                    The columns referenced in the SELECT clause must exist in the target table. Columns in big data applications duplicate values. Use the DISTINCT keyword to return only distinct (different) values.
-                </p>
-
-                <h4>dataset</h4>
-                <p>
-                    Defines the
-                </p>
-
-                <p>Filter Operations:</p>
-                <ul>
-                    <li>equals (=), also as '=='</li>
-                    <li>not equals (&lt;&gt;), also as '!='</li>
-                    <li>greater than (&gt;)</li>
-                    <li>greater than or equal (&gt;=)</li>
-                    <li>less than (&lt;)</li>
-                    <li>less than or equal (&lt;=)</li>
-                    <li>is (IS)</li>
-                    <li>isn't (IS NOT)</li>
-                    <li>SQL like (LIKE)</li>
-                    <li>not SQL like (NOT LIKE)</li>
-                    <li>IN</li>
-                    <li>CONTAINS</li>
-                </ul>
-
-                <p>Aggregation Functions:</p>
-                <ul>
-                    <li>COUNT</li>
-                    <li>SUM</li>
-                    <li>MAX</li>
-                    <li>MIN</li>
-                    <li>AVG</li>
-                </ul>
-
-                <p>Date and Time Functions:</p>
-                <ul>
-                    <li>DAY(date) - extract the day of the month from a date</li>
-                    <li>MONTH(date) - extract the month of the year from a date</li>
-                    <li>YEAR(date) - extract the year from a date</li>
-                    <li>DATE(date) - extract/convert the date from a timestamp</li>
-                    <li>QUARTER(date) - extract the quarter of the year from a date</li>
-                    <li>WEEK(date) - extract the week of the year (ISO 8601)</li>
-                    <li>TIME(timestamp) - extract the time from a timestamp</li>
-                    <li>HOUR(timestamp) - extract the hour from a timestamp</li>
-                    <li>MINUTE(timestamp) - extract the minutes from a timestamp</li>
-                    <li>SECOND(timestamp) - extract the seconds from a timestamp</li>
-                    <li>ADDDAYS(date, days) - add 'days' number of days to a date, negative values allowed</li>
-                    <li>NOW() - the current date and time</li>
-                </ul>
-
-                <p>String Functions:</p>
-                <ul>
-                    <li>UPPER(string) - convert a string to upper case (also UCASE)</li>
-                    <li>LOWER(string) - convert a string to lower case (also LCASE)</li>
-                    <li>LEN(string) - calculate the length of a string</li>
-                    <li>TRIM(string) - remove whitespace from the start and end of a string</li>
-                    <li>LEFT(string, characters) extract the leftmost characters from a string</li>
-                    <li>RIGHT(string, characters) - extract the rightmost characters from a string</li>
-                    <li>MID(string, start, length) - extract a substring from a string</li>
-                    <li>CONCAT(string, string ... ) - concatenate a set of strings</li>
-                    <li>STRING(string) - convert a value to a string</li>
-                </ul>
-
-                <p>Numbers Functions:</p>
-                <ul>
-                    <li>ROUND(number) - round a number</li>
-                    <li>TRUNC(number) - truncate a number</li>
-                    <li>INT(number) - convert a number or string to an integer (same logic as INT)</li>
-                    <li>FLOAT(number) - convert a number or string to a floating point number</li>
-                </ul>
-
-                <p>Other Functions:</p>
-                <ul>
-                    <li>BOOLEAN(string) - convert a string TRUE/FALSE to a boolean</li>
-                    <li>ISNONE(any) - returns TRUE (boolean) if a value is none/null</li>
-                    <li>FLATTEN(dictionary, separator) - flattens a JSON/Object field, separator is optional</li>
-                    <li>HASH(any) - Hashes a value (uses SIPHASH)</li>
-                    <li>MD5(any) - Calculate the MD5 of a value</li>
-                    <li>RANDOM() - Return a random number between 0.000 to 0.999</li>
-                </ul>
-            </section>
-
+            </div>
         </div>
     </div>
 
+
     <script src="plugins/jquery/jquery.min.js"></script>
     <script src="plugins/popper/js/popper.min.js"></script>
-    <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="plugins/moment/js/moment.js"></script>
-    <script src="plugins/chart.js/js/chart.min.js"></script>
+    <script src="plugins/dayjs@1.8.21/js/dayjs.min.js"></script>
+    <script src="plugins/bootstrap@5.1.3/js/bootstrap.min.js"></script>
     <script src="plugins/custom-scrollbar/js/custom-scrollbar.js"></script>
 
-    <script src="plugins/codemirror/js/codemirror.js"></script>
-    <script src="plugins/codemirror/js/sql.js"></script>
-    <script src="plugins/codemirror/js/match_brackets.js"></script>
-    <script src="plugins/codemirror/js/close_brackets.js"></script>
-    <script src="plugins/codemirror/js/show-hint.js"></script>
-    <script src="plugins/codemirror/js/sql-hint.js"></script>
+    <!-- workbook resources -->
+    <script src="dist/js/notebook-workbook.js"></script>
+    <script src="dist/js/notebook-base.js"></script>
 
-    <script type="text/javascript">
-        var SqlEditor = CodeMirror.fromTextArea(
-            document.getElementById("sql-editor"), {
-                mode: "sql",
-                lineNumbers: true,
-                indentUnit: 4,
-                cursorHeight: 0.85,
-                autocapitalize: true,
-                lineWrapping: true,
-                matchBrackets: true,
-                lineSeparator: "\n",
-                autoCloseBrackets: true,
-                hint: CodeMirror.hint.sql,
-                inputStyle: "contenteditable",
-                showHint: true,
-                extraKeys: {
-                    'Ctrl-Space': 'autocomplete'
-                },
-            }
-        );
-
-        function initAutoComplete() {
-            CodeMirror.commands.autocomplete = function(cmeditor) {
-                CodeMirror.showHint(cmeditor, CodeMirror.hint.sql, {
-                    //completeSingle: false,
-                    tables: {
-                        "mabel_data.RAW.NVD.CVE_LIST": ["cve.CVE_data_meta.ID", "cve.CVE_data_meta.ID", "cve.problemtype.problemtype_data.0.description.0.value"]
-                    }
-                });
-            }
-        }
-
-        SqlEditor.on("inputRead", function(instance) {
-            if (instance.state.completionActive) {
-                return;
-            }
-            var cur = instance.getCursor();
-            var token = instance.getTokenAt(cur);
-            if (token.type && token.type != "comment") {
-                CodeMirror.commands.autocomplete(instance);
-            }
-        });
-    </script>
-
+    <!-- reusable cell resources -->
     <script src="dist/js/colors.js"></script>
-    <script src="dist/js/data-table.js"></script>
-    <script src="dist/js/user.js"></script>
-    <script src="dist/js/discover.js"></script>
-    <script src="dist/js/lab.js"></script>
-    <script src="dist/js/visualize.js"></script>
+    <script src="dist/js/notebook-code-editor.js"></script>
+    <script src="dist/js/notebook-table.js"></script>
+
+    <!-- cell type resources -->
+    <script src="dist/js/notebook-cell-sql.js"></script>
+    <script src="dist/js/notebook-cell-sql-execute.js"></script>
+    <script src="dist/js/notebook-cell-chart.js"></script>
+    <script src="dist/js/notebook-cell-markdown.js"></script>
+    <script src="dist/js/notebook-cell-parameter.js"></script>
+    <script src="dist/js/notebook-cell-python.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -563,13 +137,10 @@ FROM mabel_data.RAW.NVD.CVE_LIST
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
-            initUser();
-            initAutoComplete();
+
+            // so the user doesn't get an empty screen, give them a SQL cell
+            createNewCell("sql");
         });
-
-
-
-        draw_profile_pie([90, 10, 30], ["True", "False", "Other"], document.getElementById("profile-one"))
     </script>
 </body>
 
