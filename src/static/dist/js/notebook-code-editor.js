@@ -1,17 +1,25 @@
+function stripHTML(s) {
+    return s.replace(/(<([^>]+)>)/gi, "");
+}
+
 function sql_highlight(s) {
 
     var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)\b/gi;
-    var function_reg = /\b(COUNT|MAX|MAX|MIN|AVG|DATE|YEAR|MONTH|STRING|CONCAT)\b/gi;
+    var function_reg = /\b(ADDDAYS|AVG|CONCAT|COUNT|DATE|DAY|FLOAT|HASH|HOUR|INT|LEFT|LEN|LOWER|MAX|MD5|MID|MIN|MINUTE|MONTH|NOW|QUARTER|RANDOM|RIGHT|ROUND|SECOND|STRING|TIME|TRIM|TRUNC|UPPER|WEEK|YEAR)\b/gi;
     var values_reg = /\b(TRUE|FALSE|NONE|NULL)\b/gi;
     var numbers_reg = /\b(\d+)\b/g;
     var literal_reg_dbl = /"([^\"]*)"/g
+    var punctuation_reg = /(\(|\)|\=|\!)/g
+    var comments_reg = /(\".*?\"|\'.*?\')|(\/\*.*?\*\/|--[^\r\n]*$)/gi
 
     s = s.replaceAll("&#160;", " ");
-    s = s.replace(keyword_reg, function(m) { return "<span class='code-purple'>" + m.toUpperCase() + "</span>" });
-    s = s.replace(function_reg, function(m) { return "<span class='code-green'>" + m.toUpperCase() + "</span>" });
-    s = s.replace(literal_reg_dbl, "\"<span class='code-red'>$1</span>\"");
-    s = s.replace(numbers_reg, "<span class='code-orange'>$1</span>");
-    s = s.replace(values_reg, function(m) { return "<span class='code-blue'>" + m.toUpperCase() + "</span>" });
+    s = s.replace(punctuation_reg, function(m) { return "<span class='code-yellow'>" + stripHTML(m) + "</span>" });
+    s = s.replace(keyword_reg, function(m) { return "<span class='code-purple'>" + stripHTML(m).toUpperCase() + "</span>" });
+    s = s.replace(function_reg, function(m) { return "<span class='code-green'>" + stripHTML(m).toUpperCase() + "</span>" });
+    s = s.replace(numbers_reg, function(m) { return "<span class='code-orange'>" + stripHTML(m) + "</span>" });
+    s = s.replace(values_reg, function(m) { return "<span class='code-blue'>" + stripHTML(m).toUpperCase() + "</span>" });
+    s = s.replace(literal_reg_dbl, function(m) { return "<span class='code-red'>" + stripHTML(m) + "</span>" });
+    // s = s.replace(comments_reg, function(m) { return "<span class='code-comments'>" + stripHTML(m) + "</span>" });
     return s.split('\n').join('<br/>');
 }
 
@@ -77,6 +85,15 @@ const editor = (el, highlight = js, tab = '    ') => {
             setCaret(pos);
             e.preventDefault();
         }
+        if (e.code == "sEnter") {
+            pos = caret() + "\n".length;
+            const range = window.getSelection().getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode("\n"));
+            el.innerHTML = highlight(el.innerText);
+            setCaret(pos);
+            e.preventDefault();
+        }
     });
 
     function insertCharacter(str, char, pos) {
@@ -85,6 +102,7 @@ const editor = (el, highlight = js, tab = '    ') => {
 
     el.addEventListener('keydown', e => {
         if (e.code == "Space" ||
+            e.code == "Tab" ||
             e.code == "Enter" ||
             e.key == "\"" ||
             e.key == "(" ||

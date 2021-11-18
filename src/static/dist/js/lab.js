@@ -359,7 +359,6 @@ function download_query() {
             download_button.innerHTML = original_text
 
         });
-
 }
 
 function save_query() {

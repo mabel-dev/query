@@ -22,6 +22,15 @@
     --grey-50: (128, 128, 128);
 }
 
+.brand-text {
+    font-family: "P22 Underground Pro", Georgia, 'Times New Roman', Times, serif;
+    font-size: 2em;
+    line-height: 2em;
+    font-weight: 600;
+    color: white;
+    padding: 15px 15px 15px 15px;
+}
+
 .mono-font {
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
 }
@@ -91,9 +100,13 @@ cells
     font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
     font-weight: 500;
     padding: 0.3em;
+    padding-left: 1em;
+    font-size: 1.1em;
+    line-height: 1.5em;
     min-height: 6.5em;
     max-height: 15em;
     overflow-y: auto;
+    margin: 0;
 }
 
 .notebook-cell-label {
@@ -117,26 +130,6 @@ cells
 /*
 code editor
 */
-
-.notebook-cell-editor-sql {
-    padding-left: 48px;
-    counter-reset: line;
-    outline: none;
-}
-
-.notebook-cell-editor-sql div {
-    display: block;
-    position: relative;
-    white-space: pre-wrap;
-}
-
-.notebook-cell-editor-sql div::before {
-    content: counter(line, decimal-leading-zero);
-    counter-increment: line;
-    position: absolute;
-    right: calc(100% + 16px);
-    opacity: 0.5;
-}
 
 .code-purple {
     color: #A42EA2;

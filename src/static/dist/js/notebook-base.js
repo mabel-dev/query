@@ -30,7 +30,7 @@ function createCell(id, cell_icon, editor_class) {
     </div>
 
     <div class="card notebook-cell-body" id="notebook-cell-body-${id}">
-        <div contenteditable="true" spellcheck="false" class="notebook-cell-editor ${editor_class}" id="editor-${id}"></div>
+        <pre contenteditable="true" spellcheck="false" class="notebook-cell-editor ${editor_class}" id="editor-${id}"></pre>
     </div>
 
     <div class="notebook-cell-results w-100" id="result-cell-${id}"></div>
