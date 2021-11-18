@@ -1,5 +1,5 @@
 :root {
-    --base-theme-color: #2D333A;
+    --base-theme-color: hsl(212, 13%, 20%);
     --base-accent-color: #406888;
     --base-theme-color-highlight: #9052FB;
     --base-font-color: rgb(63, 66, 87);
@@ -101,9 +101,9 @@ cells
     font-weight: 500;
     padding: 0.3em;
     padding-left: 1em;
-    font-size: 1.1em;
-    line-height: 1.5em;
-    min-height: 6.5em;
+    font-size: 1em;
+    line-height: 1.4em;
+    min-height: 7em;
     max-height: 15em;
     overflow-y: auto;
     margin: 0;
