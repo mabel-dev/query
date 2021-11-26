@@ -13,3 +13,4 @@ aiofiles
 jinja2
 pyarrow
 pyjwt
+pymemcache
