@@ -4,12 +4,12 @@ function stripHTML(s) {
 
 function sql_highlight(s) {
 
-    var keyword_reg = /\b(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)\b/gi;
-    var function_reg = /\b(ADDDAYS|AVG|CONCAT|COUNT|DATE|DAY|FLOAT|HASH|HOUR|INT|LEFT|LEN|LOWER|MAX|MD5|MID|MIN|MINUTE|MONTH|NOW|QUARTER|RANDOM|RIGHT|ROUND|SECOND|STRING|TIME|TRIM|TRUNC|UPPER|WEEK|YEAR)\b/gi;
-    var values_reg = /\b(TRUE|FALSE|NONE|NULL)\b/gi;
+    var keyword_reg = /(?<!\S)(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)\b/gi;
+    var function_reg = /(?<!\S)(ADDDAYS|AVG|CONCAT|COUNT|DATE|DAY|FLOAT|HASH|HOUR|INT|LEFT|LEN|LOWER|MAX|MD5|MID|MIN|MINUTE|MONTH|NOW|QUARTER|RANDOM|RIGHT|ROUND|SECOND|STRING|TIME|TRIM|TRUNC|UPPER|WEEK|YEAR)\b/gi;
+    var values_reg = /(?<!\S)(TRUE|FALSE|NONE|NULL)\b/gi;
     var numbers_reg = /\b(\d+)\b/g;
     var literal_reg_dbl = /"([^\"]*)"/g
-    var punctuation_reg = /(\(|\)|\=|\!)/g
+    var punctuation_reg = /(\=\=|\!\=|\(|\)|\=|\!)/g
     var comments_reg = /(\".*?\"|\'.*?\')|(\/\*.*?\*\/|--[^\r\n]*$)/gi
 
     s = s.replaceAll("&#160;", " ");

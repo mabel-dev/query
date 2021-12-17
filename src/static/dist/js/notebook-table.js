@@ -11,12 +11,10 @@ function htmlEncode(str) {
         .replaceAll("'", "&#39;");
 }
 
-function is_date(sDate) {
-    if (sDate === undefined || sDate == null) { return false }
-    if (sDate.toString() == parseInt(sDate).toString()) return false;
-    var tryDate = new Date(sDate);
-    var m = dayjs(sDate, ['YYYY-MM-DD', 'YYYYMMDD', 'DD/MM/YYYY', dayjs.ISO_8601, 'L', 'LL', 'LLL', 'LLLL'], true);
-    return (tryDate && tryDate.toString() != "NaN" && tryDate != "Invalid Date" && m.isValid());
+const is_date = (date) => {
+    if (date === undefined || sDate == null) { return false }
+    if (date.match(/^\d{4}-\d{2}-\d{2}/) === null) { return false }
+    return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 }
 
 function is_number(sNum) {
