@@ -4,9 +4,9 @@ function stripHTML(s) {
 
 function sql_highlight(s) {
 
-    var keyword_reg = /(?<!\S)(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)\b/gi;
-    var function_reg = /(?<!\S)(ADDDAYS|AVG|CONCAT|COUNT|DATE|DAY|FLOAT|HASH|HOUR|INT|LEFT|LEN|LOWER|MAX|MD5|MID|MIN|MINUTE|MONTH|NOW|QUARTER|RANDOM|RIGHT|ROUND|SECOND|STRING|TIME|TRIM|TRUNC|UPPER|WEEK|YEAR)\b/gi;
-    var values_reg = /(?<!\S)(TRUE|FALSE|NONE|NULL)\b/gi;
+    var keyword_reg = /(?<!\S)(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)(?!\S)/gi;
+    var function_reg = /(?<!\S)(ADDDAYS|AVG|CONCAT|COUNT|DATE|DAY|FLOAT|HASH|HOUR|INT|LEFT|LEN|LOWER|MAX|MD5|MID|MIN|MINUTE|MONTH|NOW|QUARTER|RANDOM|RIGHT|ROUND|SECOND|STRING|TIME|TRIM|TRUNC|UPPER|WEEK|YEAR|PERCENT|APPROX_DISTINCT)\b/gi;
+    var values_reg = /(?<!\S)(TRUE|FALSE|NONE|NULL)(?!\S)/gi;
     var numbers_reg = /\b(\d+)\b/g;
     var literal_reg_dbl = /"([^\"]*)"/g
     var punctuation_reg = /(\=\=|\!\=|\(|\)|\=|\!)/g
@@ -27,9 +27,9 @@ function py_highlight(s) {
 
     var numbers_reg = /\b(\d+)\b/g;
     var literal_dbl_reg = /"([^\"]*)"/g
-    var control_reg = /\b(try|except|pass|finally|return|else|if|elif|import|from|for|in)\b/gi;
-    var keyword_reg = /\b(def|class)\b/gi;
-    var inbuilt_func = /\b(print|enumerate|int|float)\b/gi;
+    var control_reg = /\b(try|except|pass|finally|return|else|if|elif|for|in)\b/gi;
+    var keyword_reg = /\b(import|from|def|class)\b/gi;
+    var inbuilt_func = /\b(print|enumerate|int|float|dict|list|tuple|set)\b/gi;
 
 
     s = s.replace(literal_dbl_reg, "\"<span class='code-yellow'>$1</span>\"");
