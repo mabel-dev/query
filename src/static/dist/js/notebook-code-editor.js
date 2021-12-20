@@ -7,10 +7,10 @@ function sql_highlight(s) {
     var keyword_reg = /(?<!\S)(SELECT|FROM|WHERE|GROUP\sBY|ORDER\sBY|LIMIT|AS|DESC|ASC|HAVING|NOT|LIKE|MATCHES|AND|OR|IS)(?!\S)/gi;
     var function_reg = /(?<!\S)(ADDDAYS|AVG|CONCAT|COUNT|DATE|DAY|FLOAT|HASH|HOUR|INT|LEFT|LEN|LOWER|MAX|MD5|MID|MIN|MINUTE|MONTH|NOW|QUARTER|RANDOM|RIGHT|ROUND|SECOND|STRING|TIME|TRIM|TRUNC|UPPER|WEEK|YEAR|PERCENT|APPROX_DISTINCT)\b/gi;
     var values_reg = /(?<!\S)(TRUE|FALSE|NONE|NULL)(?!\S)/gi;
-    var numbers_reg = /\b(\d+)\b/g;
-    var literal_reg_dbl = /"([^\"]*)"/g
-    var punctuation_reg = /(\=\=|\!\=|\(|\)|\=|\!)/g
-    var comments_reg = /(\".*?\"|\'.*?\')|(\/\*.*?\*\/|--[^\r\n]*$)/gi
+    var numbers_reg = /(?<!\S)(-?\d*(\.?\d+))(?!\S)/gi;
+    var literal_reg_dbl = /"([^\"]*)"/g;
+    var punctuation_reg = /(\=\=|\!\=|\(|\)|\=|\!)/g;
+    var comments_reg = /(--[^\r\n]*$)/g;
 
     s = s.replaceAll("&#160;", " ");
     s = s.replace(punctuation_reg, function(m) { return "<span class='code-yellow'>" + stripHTML(m) + "</span>" });
@@ -19,7 +19,7 @@ function sql_highlight(s) {
     s = s.replace(numbers_reg, function(m) { return "<span class='code-orange'>" + stripHTML(m) + "</span>" });
     s = s.replace(values_reg, function(m) { return "<span class='code-blue'>" + stripHTML(m).toUpperCase() + "</span>" });
     s = s.replace(literal_reg_dbl, function(m) { return "<span class='code-red'>" + stripHTML(m) + "</span>" });
-    // s = s.replace(comments_reg, function(m) { return "<span class='code-comments'>" + stripHTML(m) + "</span>" });
+    s = s.replace(comments_reg, function(m) { return "<span class='code-comments'>" + stripHTML(m) + "</span>" });
     return s.split('\n').join('<br/>');
 }
 
