@@ -12,7 +12,7 @@ function htmlEncode(str) {
 }
 
 const is_date = (date) => {
-    if (date === undefined || sDate == null) { return false }
+    if (date === undefined || date == null) { return false }
     if (date.match(/^\d{4}-\d{2}-\d{2}/) === null) { return false }
     return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 }
