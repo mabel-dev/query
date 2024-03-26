@@ -71,6 +71,10 @@ async def get_identify_token(token: str):
                     "class": nid,
                     "search": attribs.get("search").replace(":item", "'" + token + "'"),
                 }
+            print("SEARCH", attribs.get("search"), opteryx.query(
+                    attribs.get("search"), {"item": token}, 1
+                ).rowcount
+            )
             c = opteryx.connect()
             cur = c.cursor()
             cur.execute("SELECT * FROM 'tables/CVE_TABLE.csv'")
