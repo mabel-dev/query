@@ -31,9 +31,15 @@
             </div>
 
             <div style="padding: 10px;">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="assistantPrompt">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button" id="assistantButton">Go</button>
+                    </div>
+                  </div>
+            </div>
 
-                <input id="assistantPrompt" />
-
+            <div style="padding: 10px;">
                 <div id="assistantSuggestions">
                     <div class="card">
                         <div class="card-body">
@@ -124,6 +130,7 @@
     <script src="plugins/custom-scrollbar/js/custom-scrollbar.js"></script>
 
     <!-- workbook resources -->
+    <script src="dist/js/api_adapter.js"></script>
     <script src="dist/js/notebook-workbook.js"></script>
     <script src="dist/js/notebook-base.js"></script>
 
@@ -139,6 +146,9 @@
     <script src="dist/js/notebook-cell-markdown.js"></script>
     <script src="dist/js/notebook-cell-parameter.js"></script>
     <script src="dist/js/notebook-cell-python.js"></script>
+
+    <!-- assistant -->
+    <script src="dist/js/apollo.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
