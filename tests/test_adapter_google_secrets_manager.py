@@ -3,7 +3,8 @@ import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], "../src"))
 sys.path.insert(1, os.path.join(sys.path[0], "src"))
-from internals.adapters.google import SecretsManagerAdapter, SecretsManagerSecretModel
+from internals.adapters.google import (SecretsManagerAdapter,
+                                       SecretsManagerSecretModel)
 
 
 def test_secrets_manager_stub():

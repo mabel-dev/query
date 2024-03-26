@@ -1,5 +1,5 @@
-function createNewParameterCell(id, cellBlock) {
-    let cell_icon = '<i class="fa-fw fa-solid fa-dollar-sign notebook-cell-icon"></i>';
+function createNewDiscovererCell(id, cellBlock) {
+    let cell_icon = '<i class="fa-fw far fa-compass notebook-cell-icon"></i>';
     let editor_class = 'notebook-cell-editor-parameter';
 
     cellBlock.insertAdjacentHTML('beforeend', createCell(id, cell_icon, editor_class))
@@ -8,7 +8,7 @@ function createNewParameterCell(id, cellBlock) {
     document.getElementById(`controls-${id}`).insertAdjacentHTML('beforebegin', `
 <div class="btn-group btn-group-sm notebook-cell-buttons" role="group">
     <button id="types-${id}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-solid fa-dollar-sign"></i> <span id="type-label-${id}">NOT SET</span> 
+        <i class="icon-parameter"></i> <span id="type-label-${id}">NOT SET</span> 
     </button>
     <ul class="dropdown-menu" id="notebook-new-cell-selector">
         <li><a href="#" class="dropdown-item" id="parameter-text-${id}"><i class="fa-fw fa-solid fa-a"></i> Text</a></li>
@@ -28,47 +28,6 @@ function createNewParameterCell(id, cellBlock) {
 
 }
 
-function set_as_type_text(id) {
-    document.getElementById(`type-label-${id}`).innerText = "Text"
-    document.getElementById(`notebook-cell-body-${id}`).innerHTML = `
-<div class="well-padded">
-    <div class="setting-label">TEXT PARAMETER</div>
-    <div class="row">
-        <label for="editor-${id}" class="col-sm-2 col-form-label">Value</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="editor-${id}">
-        </div>
-    </div>
-</div>`
-}
-
-function set_as_type_number(id) {
-    document.getElementById(`type-label-${id}`).innerText = "Number"
-    document.getElementById(`notebook-cell-body-${id}`).innerHTML = `
-<div class="well-padded">
-    <div class="setting-label">NUMBER PARAMETER</div>
-    <div class="row">
-        <label for="editor-${id}" class="col-sm-2 col-form-label">Value</label>
-        <div class="col-sm-10">
-            <input type="number" class="form-control" id="editor-${id}">
-        </div>
-    </div>
-</div>`
-}
-
-function set_as_type_date(id) {
-    document.getElementById(`type-label-${id}`).innerText = "Date"
-    document.getElementById(`notebook-cell-body-${id}`).innerHTML = `
-    <div class="well-padded">
-    <div class="setting-label">DATE PARAMETER</div>
-    <div class="row">
-        <label for="editor-${id}" class="col-sm-2 col-form-label">Value</label>
-        <div class="col-sm-10">
-            <input type="date" class="form-control" id="editor-${id}">
-        </div>
-    </div>
-</div>`
-}
 
 // add the new Parameter Cell option
 const newParameterCellOption = `<li><a class="dropdown-item" href="#" id="new-parameter-cell"><i class="fa-fw fa-solid fa-dollar-sign"></i> Parameter cell</a></li>`

@@ -5,14 +5,10 @@ def find_path(path):
     from here. Otherwise do a broader search which is a little slower.
     """
     import glob
-    from mabel.logging import get_logger
-
-    logger = get_logger()
 
     paths = glob.glob(f"/app/src/**/{path}", recursive=True)
     if len(paths) == 0:
         paths = glob.glob(f"**/{path}", recursive=True)
     for i in paths:
         if i.endswith(path):
-            logger.info(f"Found `{path}` at `{i}`")
             return i

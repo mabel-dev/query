@@ -16,9 +16,7 @@ function createNewChartCell(id, cellBlock) {
                     <span id="setting-chart-type-${id}-label-${id}">Cell_1</a></span> 
                 </button>
                 <ul class="dropdown-menu" id="notebook-new-cell-selector">
-                    <li><a href="#" class="dropdown-item" id="setting-pie-chart-${id}"><i class="fa-fw fa-solid fa-chart-pie"></i> Pie Chart</a></li>
-                    <li><a href="#" class="dropdown-item" id="setting-line-chart-${id}"><i class="fa-fw fa-solid fa-chart-line"></i> Line Chart</a></li>
-                    <li><a href="#" class="dropdown-item" id="setting-bar-chart-${id}"><i class="fa-fw fa-solid fa-chart-bar"></i> Bar Chart</a></li>
+                    
                 </ul>
             </div>
         </div>
@@ -72,6 +70,7 @@ function createNewChartCell(id, cellBlock) {
                     <li><a href="#" class="dropdown-item" id="setting-chart-colors-sprout-${id}">Sprout<br />${createExampleGradient(SPROUT)}</a></li>
                     <li><a href="#" class="dropdown-item" id="setting-chart-colors-plasma-${id}">Plasma<br />${createExampleGradient(PLASMA)}</a></li>
                     <li><a href="#" class="dropdown-item" id="setting-chart-colors-viridis-${id}">Viridis<br />${createExampleGradient(VIRIDIS)}</a></li>
+                    <li><a href="#" class="dropdown-item" id="setting-chart-colors-dracula-${id}">Dracula<br />${createExampleGradient(DRACULA)}</a></li>
                 </ul>
             </div>
         </div>

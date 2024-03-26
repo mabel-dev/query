@@ -35,8 +35,14 @@ MACARONS = [
     '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
 ]
 
+DRACULA = [
+    "#44475A", "#FF6E6E", "#282A36", "#21222C", "#A4FFFF",
+    "#BD93F9", "#8BE9FD", "#FF79C6", "#50FA7B", "#69FF94",
+    "#F1FA8C", "#6272A4", "#D6ACFF", "#FF92DF"
+]
 
-DEFAULT_COLORS = SPROUT
+
+DEFAULT_COLORS = DRACULA
 
 function interpolateColor(c0, c1, f) {
     c0 = c0.match(/.{1,2}/g).map((oct) => parseInt(oct, 16) * (1 - f))

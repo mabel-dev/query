@@ -1,37 +1,39 @@
-import orjson
 import datetime
-from fastapi import APIRouter, HTTPException, Response, Request
-from mabel.logging import get_logger, set_log_name
-from mabel.errors import DataNotFoundError
-from internals.models import SearchModel
-from internals.helpers.search import do_search
 
+import orjson
+from fastapi import APIRouter, HTTPException, Request, Response
+from internals.models import SearchModel
+
+
+class DataNotFoundError(Exception):
+    pass
 
 router = APIRouter()
-set_log_name("QUERY")
-logger = get_logger()
-logger.setLevel(5)
 
 
 RESULT_BATCH = 2000
 
 ##########################################################################
+
 def fix_dict(obj: dict) -> dict:
     def fix_fields(dt):
-        if isinstance(dt, (datetime.date, datetime.datetime)):
+        dt_type = type(dt)
+        if dt_type in (int, float, bool, str):
+            return dt
+        if dt_type in (datetime.date, datetime.datetime):
             return dt.isoformat()
-        if isinstance(dt, bytes):
+        if dt_type == dict:
+            return str(fix_dict(dt))
+        if dt_type == bytes:
             return dt.decode("UTF8")
-        if hasattr(dt, "mini"):
-            return dt.mini.decode("UTF8")
-        if isinstance(dt, dict):
-            return {k: fix_fields(v) for k, v in dt.items()}
         return str(dt)
 
     if not isinstance(obj, dict):
         return obj  # type:ignore
-    return {k: fix_fields(v) for k, v in obj.items()}
-
+    
+    for key in obj.keys():
+        obj[key] = fix_fields(obj[key])
+    return obj
 
 ########################################################################
 
@@ -45,11 +47,8 @@ def serialize_response(response, max_records):
     for i, record in enumerate(response):
         if i > max_records:
             break
-        if i < max_records and hasattr(record, "mini"):
-            # we have a saved minified json string
-            yield record.mini + b"\n"
         elif i < max_records:
-            yield orjson.dumps(fix_dict(record)) + b"\n"
+            yield record.as_json + b"\n"
     if i == -1:
         # UNABLE TO SATISFY RANGE
         raise HTTPException(status_code=416)
@@ -60,14 +59,18 @@ def serialize_response(response, max_records):
 @router.post("/v1/search")
 def search(search: SearchModel, request: Request):
     try:
-        from internals.helpers.identity import get_jwt, get_identity
+        from internals.helpers.identity import get_identity, get_jwt
 
         encoded_jwt = get_jwt(request)
-        logger.info({**search.dict(), "user": get_identity(encoded_jwt)})
 
-        results = do_search(search, encoded_jwt)
+        import opteryx
+        conn = opteryx.connect(
+            partition_scheme=[]
+        )
+        cur = conn.cursor()
+        cur.execute(search.query)
 
-        body = b"\n".join(serialize_response(results, RESULT_BATCH))
+        body = b"\n".join(serialize_response(cur.fetchmany(100), RESULT_BATCH))
         response = Response(
             body,
             media_type="application/jsonlines",
@@ -85,13 +88,13 @@ def search(search: SearchModel, request: Request):
 
         trace = traceback.format_exc()
         error_message = {"error": type(err).__name__, "detail": str(err)}
-        logger.error(f"Error {type(err).__name__} - {err}:\n{trace}")
+        print(f"Error {type(err).__name__} - {err}:\n{trace}")
         # I'M A TEAPOT
         raise HTTPException(status_code=418, detail=error_message)
     except SystemExit as err:
         import traceback
 
         trace = traceback.format_exc()
-        logger.alert(f"Fatal Error {type(err).__name__} - {err}:\n{trace}")
+        print(f"Fatal Error {type(err).__name__} - {err}:\n{trace}")
         # ERROR
         raise HTTPException(status_code=500, detail=err)
