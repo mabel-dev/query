@@ -2,15 +2,20 @@ import os
 import sys
 
 sys.path.insert(0, os.path.join(sys.path[0], "../../opteryx/"))
-#sys.path.insert(0, os.path.join(sys.path[0], "../../mabel@0.6/"))
+# sys.path.insert(0, os.path.join(sys.path[0], "../../mabel@0.6/"))
 
 import uvicorn
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-#from mabel.logging import get_logger, set_log_name
+from fastapi.responses import HTMLResponse, ORJSONResponse
+
+# from mabel.logging import get_logger, set_log_name
 from internals.helpers.paths import find_path
 from routers import search, users
+import travers
+import opteryx
+import re
 
+graph = travers.load("nock")
 RESULT_BATCH = 5000
 
 from fastapi.staticfiles import StaticFiles
@@ -35,6 +40,7 @@ def home(request: Request):
     """
     return templates.TemplateResponse("index.html", {"request": request})
 
+
 @application.get("/arrow", response_class=HTMLResponse)
 def home(request: Request):
     """
@@ -42,6 +48,51 @@ def home(request: Request):
     with the backend using APIs.
     """
     return templates.TemplateResponse("wow.html", {"request": request})
+
+
+@application.get("/v1/identify", response_class=ORJSONResponse)
+async def get_identify_token(token: str):
+    for nid, attribs in graph.nodes(True):
+        pattern = attribs.get("looks_like")
+        if re.match(pattern, token):
+            if (
+                opteryx.query_to_arrow(
+                    attribs.get("search"), {"item": token}, 1
+                ).num_rows
+                > 0
+            ):
+                return {
+                    "token": token,
+                    "class": nid,
+                    "search": attribs.get("search").replace(":item", "'" + token + "'"),
+                }
+    return HTMLResponse(status_code=404)
+
+
+@application.get("/v1/relations", response_class=ORJSONResponse)
+async def get_relations(token: str):
+
+    response = {}
+
+    for nid, attribs in graph.nodes(True):
+        pattern = attribs.get("looks_like")
+        if re.match(pattern, token):
+            if (
+                opteryx.query_to_arrow(
+                    attribs.get("search"), {"item": token}, 1
+                ).num_rows
+                > 0
+            ):
+                for me, target, relation in graph.outgoing_edges(nid):
+                    relation = json.loads(relation)
+                    cross = relation["cross"]
+                    if (
+                        opteryx.query_to_arrow(cross, {"item": token}, limit=1).num_rows
+                        > 0
+                    ):
+                        response[target] = cross.replace(":item", "'" + token + "'")
+
+    return response
 
 
 application.include_router(search.router)

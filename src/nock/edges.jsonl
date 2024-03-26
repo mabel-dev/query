@@ -1,0 +1,6 @@
+{"source":"CVE","target":"MFL","relationship":"{\"cross\": \"SELECT * FROM 'tables/MFL_TABLE.csv' WHERE CVE = :item\"}"}
+{"source":"CVE","target":"CWE","relationship":"{\"cross\": \"SELECT CWE_TABLE.* FROM 'tables/CWE_TABLE.csv' AS CWE_TABLE INNER JOIN 'tables/CVE_TABLE.csv' USING (CWE) WHERE CVE = :item\"}"}
+{"source":"CVE","target":"Malware","relationship":"{\"cross\": \"SELECT * FROM 'tables/MALWARE_TABLE.csv' WHERE CVE = :item\"}"}
+{"source":"MFL","target":"CVE","relationship":"{\"cross\": \"SELECT CVE_TABLE.* FROM 'tables/CVE_TABLE.csv' AS CVE_TABLE INNER JOIN 'tables/MFL_TABLE.csv' USING (CVE) WHERE MFL = :item\"}"}
+{"source":"CWE","target":"CVE","relationship":"{\"cross\": \"SELECT * FROM 'tables/CVE_TABLE.csv' WHERE CWE = :item\"}"}
+{"source":"Malware","target":"CVE","relationship":"{\"cross\": \"SELECT CVE_TABLE.* FROM 'tables/CVE_TABLE.csv' AS CVE_TABLE INNER JOIN 'tables/MALWARE_TABLE.csv' USING (CVE) WHERE Name = :item\"}"}

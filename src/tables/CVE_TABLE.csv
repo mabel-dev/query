@@ -1,0 +1,6 @@
+CVE,Description,CWE
+CVE-2000-0001,Vulnerability One,CWE-001
+CVE-2000-0002,Vulnerability Two,CWE-001
+CVE-2000-0003,Vulnerability Three,CWE-001
+CVE-2000-0004,Vulnerability Four,CWE-002
+CVE-2000-0005,Vulnerability Five,CWE-002

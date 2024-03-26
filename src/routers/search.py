@@ -9,12 +9,14 @@ from internals.models import SearchModel
 class DataNotFoundError(Exception):
     pass
 
+
 router = APIRouter()
 
 
 RESULT_BATCH = 2000
 
 ##########################################################################
+
 
 def fix_dict(obj: dict) -> dict:
     def fix_fields(dt):
@@ -31,10 +33,11 @@ def fix_dict(obj: dict) -> dict:
 
     if not isinstance(obj, dict):
         return obj  # type:ignore
-    
+
     for key in obj.keys():
         obj[key] = fix_fields(obj[key])
     return obj
+
 
 ########################################################################
 
@@ -67,7 +70,12 @@ def search(search: SearchModel, request: Request):
         import opteryx
         from opteryx.connectors import GcpCloudStorageConnector
         from opteryx.managers.schemes import MabelPartitionScheme
-        opteryx.register_store("mabel_data", GcpCloudStorageConnector, partition_scheme=MabelPartitionScheme)
+
+        opteryx.register_store(
+            "mabel_data",
+            GcpCloudStorageConnector,
+            partition_scheme=MabelPartitionScheme,
+        )
         conn = opteryx.connect()
         cur = conn.cursor()
         cur.execute(search.query)
