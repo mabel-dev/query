@@ -38,8 +38,6 @@ function execute_sql_query(id) {
     // get the execution details
     let data = {};
     data.query = document.getElementById(`editor-${id}`).innerText;
-    data.start_date = document.getElementById(`cell-start-date-${id}`).value;
-    data.end_date = document.getElementById(`cell-end-date-${id}`).value;
 
     // do any exchanges of placeholders
     for (var cell = 0; cell < _cells.length; cell++) {
@@ -52,7 +50,7 @@ function execute_sql_query(id) {
         }
     }
 
-    update_sql_history(data.query, undefined, "--", "--", data.start_date, data.end_date)
+    update_sql_history(data.query, undefined, "--", "--")
 
     do_ticker(id, ticker_start);
     _interval_obj = setInterval(function() { do_ticker(id, ticker_start) }, 100);
@@ -236,7 +234,7 @@ function sqlDialogAction(element, dialog) {
     }
 }
 
-function update_sql_history(query, query_outcome, records, duration, start_date, end_date) {
+function update_sql_history(query, query_outcome, records, duration) {
 
     const history_timestampFormat = "DD MMM YYYY HH:mm"
     let history = getLocalCache("recent_queries");
@@ -268,8 +266,6 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
         history_object.outcome = query_outcome;
         history_object.runtime = duration;
         history_object.rowcount = records;
-        history_object.start_date = start_date;
-        history_object.end_date = end_date;
 
         _history.push(history_object);
 
@@ -284,7 +280,7 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
     putLocalCache("recent_queries", JSON.stringify(_history))
 
     // render the history table
-    history_table = "<thead><tr><th>Status</th><th>Query</th><th>Date Range</th><th>Last Run</th><th>Duration</th><th>Rows</th><th class='text-end'>Actions</th></tr></thead>"
+    history_table = "<thead><tr><th>Status</th><th>Query</th><th>Last Run</th><th>Duration</th><th>Rows</th><th class='text-end'>Actions</th></tr></thead>"
     history_table += "<tbody>"
     for (var i = 0; i < _history.length; i++) {
 
@@ -302,7 +298,6 @@ function update_sql_history(query, query_outcome, records, duration, start_date,
         <tr>
             <td class="align-middle">${status}</td>
             <td class="align-middle mono-font" title="${htmlEncode(_history[i].query)}">${sql_highlight(_history[i].query.replace(/\n/g, " "))}</td>
-            <td class="align-middle">${dayjs(_history[i].start_date).format("DD MMM YYYY")} to ${dayjs(_history[i].end_date).format("DD MMM YYYY")}</td>
             <td class="align-middle text-end">${dayjs(_history[i].last_run).format("ddd, MMM D, YYYY h:mm A")}</td>
             <td class="align-middle text-end">${runtime}</td>
             <td class="align-middle text-end">${_history[i].rowcount}</td>

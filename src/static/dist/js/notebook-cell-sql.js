@@ -18,40 +18,7 @@ function createNewSqlCell(id, cellBlock) {
     <button id="history-${id}" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sql-history-modal" data-bs-cellid="${id}">
         Recent <span class="badge bg-pill sql-history-count">0</span>
     </button>
-    <button id="dates-${id}" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fa-fw fa-solid fa-calendar-days"></i> <span id="date-label-${id}">NOT SET</span> 
-    </button>
-    <ul class="dropdown-menu" id="notebook-new-cell-selector">
-        <li><a href="#" class="dropdown-item" id="dates-last-cycle-${id}">Last Reporting Cycle</a></li>
-        <li><a href="#" class="dropdown-item" id="dates-since-last-cycle-${id}">Since Last Reporting Cycle</a></li>
-        <li><a href="#" class="dropdown-item" id="dates-today-${id}">Today</a></li>
-        <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sql-date-modal-${id}">Select Custom Range</a></li>
-    </ul>
 </div>
-    `);
-
-    // create the data selection dialog
-    cellBlock.insertAdjacentHTML('beforeend', `
-    <div class="modal fade" id="sql-date-modal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Select Date Range</h5>
-            <button type="button" class="btn-close btm-sm" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-                <div class="setting-label">START DATE</div>
-                <input type="date" class="form-control datepicker" id="cell-start-date-${id}" />
-                <div class="setting-label">END DATE</div>
-                <input type="date" class="form-control datepicker" id="cell-end-date-${id}" />
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" id="sql-date-modal-apply-${id}" class="btn btn-primary" data-bs-dismiss="modal">Apply</button>
-          </div>
-        </div>
-      </div>
-    </div>
     `);
 
     // create the status bar
@@ -70,15 +37,6 @@ function createNewSqlCell(id, cellBlock) {
     let play = document.getElementById(`play-${id}`);
     play.addEventListener("click", function() { execute_sql_query(id) }, false);
 
-    // add the actions for the date selectors
-    document.getElementById(`dates-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, dayjs().subtract(2, 'months').date(27), dayjs().subtract(1, 'months').date(26)) });
-    document.getElementById(`dates-since-last-cycle-${id}`).addEventListener("click", function() { select_dates(id, dayjs().subtract(1, 'months').date(27), dayjs()) });
-    document.getElementById(`dates-today-${id}`).addEventListener("click", function() { select_dates(id, dayjs(), dayjs()) });
-    document.getElementById(`sql-date-modal-apply-${id}`).addEventListener("click", function() { select_dates(id, dayjs(document.getElementById(`cell-start-date-${id}`).value), dayjs(document.getElementById(`cell-end-date-${id}`).value)) })
-
-    // default to the last reporting cycle
-    select_dates(id, dayjs().subtract(2, 'months').date(27), dayjs().subtract(1, 'months').date(26));
-
     // set up the syntax highlighting
     const sql_e = document.getElementById(`editor-${id}`);
     sql_e.focus();
@@ -87,17 +45,6 @@ function createNewSqlCell(id, cellBlock) {
     // load the history and saved lists
     update_sql_history();
     update_sql_saved();
-}
-
-function select_dates(id, start, end) {
-    document.getElementById(`cell-start-date-${id}`).value = start.format('YYYY-MM-DD');
-    document.getElementById(`cell-end-date-${id}`).value = end.format('YYYY-MM-DD');
-
-    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
-        document.getElementById(`date-label-${id}`).innerText = start.format('DD MMM YYYY');
-    } else {
-        document.getElementById(`date-label-${id}`).innerText = start.format('DD MMM YYYY') + ' to ' + end.format('DD MMM YYYY');
-    }
 }
 
 // add the new SQL Cell option
