@@ -11,11 +11,10 @@ document.getElementById("assistantButton").addEventListener("click", function ()
 
         console.log(data);
 
-
         let type_suggestion = `
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Continue Exploring</h5>
+                <h5 class="card-title">Find More</h5>
                 <p class="card-text">
                     ${data.token} is a ${data.class}
                     <br />
@@ -28,6 +27,12 @@ document.getElementById("assistantButton").addEventListener("click", function ()
         </div>`;
 
         suggestion_container.innerHTML = type_suggestion;
+
+        apollo_api.get("v1/relations", null, { token: prompt }).then(data => {
+            for (let i = 0; i++; i < data.length) {
+                console.log(data[i])
+            }
+        });
     }
 
     ).catch(err => {
