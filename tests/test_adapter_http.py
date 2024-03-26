@@ -3,9 +3,11 @@ import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], "../src"))
 sys.path.insert(1, os.path.join(sys.path[0], "src"))
-from internals.adapters.http import HttpAdapter, GetRequestModel, PostRequestModel
-from mabel.utils.entropy import random_string
 import pytest
+from internals.adapters.http import (GetRequestModel, HttpAdapter,
+                                     PostRequestModel)
+
+from mabel.utils.entropy import random_string
 
 
 def test_get():

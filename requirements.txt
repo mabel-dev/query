@@ -1,9 +1,7 @@
 uvicorn
 fastapi
 pydantic
-mabelbeta 
 orjson
-ujson
 requests
 google-cloud-storage
 google-cloud-tasks
@@ -14,3 +12,4 @@ jinja2
 pyarrow
 pyjwt
 pymemcache
+opteryx

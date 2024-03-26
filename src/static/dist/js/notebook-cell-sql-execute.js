@@ -376,12 +376,16 @@ function update_sql_saved(query) {
         return
     }
 
-    saved_table = "<thead><tr><th>Query</th><th>Actions</th></tr></thead>"
+    saved_table = "<thead><tr><th>Query</th><th>Description</th><th>Actions</th></tr></thead>"
     saved_table += "<tbody>"
     for (var i = 0; i < saved_list.length; i++) {
         entry = `
         <tr>
             <td class="align-middle mono-font">${sql_highlight(htmlEncode(saved_list[i].query))}</td>
+            <td>
+                Description
+                <button type="button" id="sql-saved-edit-${i}" class="btn btn-tiny btn-primary" title="Edit Description"><i class="fa-fw far fa-edit"></i></button>
+            </td>
             <td>
                 <button type="button" id="sql-saved-reload-${i}" class="btn btn-tiny btn-primary" title="Load Query into Editor" data-bs-dismiss="modal"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
                 <button type="button" id="sql-saved-rerun-${i}" class="btn btn-tiny btn-success" title="Rerun Query" data-bs-dismiss="modal"><i class="fa-fw fa-solid fa-play"></i></button>
