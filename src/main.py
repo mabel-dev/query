@@ -5,6 +5,7 @@ import sys
 sys.path.insert(0, os.path.join(sys.path[0], "../../opteryx/"))
 # sys.path.insert(0, os.path.join(sys.path[0], "../../mabel@0.6/"))
 
+import opteryx.connection
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, ORJSONResponse
@@ -68,6 +69,11 @@ async def get_identify_token(token: str):
                     "class": nid,
                     "search": attribs.get("search").replace(":item", "'" + token + "'"),
                 }
+            c = opteryx.connect()
+            cur = c.cursor()
+            cur.execute("SELECT * FROM 'tables/CVE_TABLE.csv'")
+            print(cur)
+            print(cur.stats)
     return HTMLResponse(status_code=404)
 
 
