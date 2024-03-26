@@ -61,9 +61,9 @@ async def get_identify_token(token: str):
         if re.match(pattern, token):
             print(token, "matches pattern for", nid)
             if (
-                opteryx.query(
+                opteryx.query_to_arrow(
                     attribs.get("search"), {"item": token}, 1
-                ).rowcount
+                ).num_rows
                 > 0
             ):
                 return {
@@ -71,15 +71,6 @@ async def get_identify_token(token: str):
                     "class": nid,
                     "search": attribs.get("search").replace(":item", "'" + token + "'"),
                 }
-            print("SEARCH", attribs.get("search"), opteryx.query(
-                    attribs.get("search"), {"item": token}, 1
-                ).rowcount
-            )
-            c = opteryx.connect()
-            cur = c.cursor()
-            cur.execute("SELECT * FROM 'tables/CVE_TABLE.csv'")
-            print(cur)
-            print(cur.stats)
     return HTMLResponse(status_code=404)
 
 
@@ -92,9 +83,9 @@ async def get_relations(token: str):
         pattern = attribs.get("looks_like")
         if re.match(pattern, token):
             if (
-                opteryx.query(
+                opteryx.query_to_arrow(
                     attribs.get("search"), {"item": token}, 1
-                ).rowcount
+                ).num_rows
                 > 0
             ):
                 for me, target, relation in graph.outgoing_edges(nid):

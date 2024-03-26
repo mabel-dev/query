@@ -131,3 +131,6 @@ private/**
 _src/**
 data/**
 mabel_data/**
+tests/data/huge/**/*.*
+tests/data/nvd/*.jsonl.zstd
+tests/data/parquet/*.jsonl.parquet

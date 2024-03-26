@@ -30,14 +30,18 @@
                 <span class="brand-text"><i class="far fa-compass"></i> Explorer</span>
             </div>
 
-            <div style="padding: 10px;">
-                <input class="form-control" list="lab-dataset-options" id="lab-dataset-filter" placeholder="Dataset Filter">
-                <ul class="list-unstyled" style="padding-top: 10px;">
-                    <li><span class="field-name">name</span> <span class="field-type">STRING</span></li>
-                    <li><span class="field-name">age</span> <span class="field-type">INT</span></li>
-                    <li><span class="field-name">married</span> <span class="field-type">BOOLEAN</span></li>
-                    <li><span class="field-name">height</span> <span class="field-type">FLOAT</span></li>
-                </ul>
+            <div style="padding: 10px;" id="assistantSuggestions">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Continue Exploring</h5>
+                        <p class="card-text">This is the last query you ran:
+                            <br />
+                            <code>
+                            SELECT * FROM table
+                            </code>
+                        </p>
+                    </div>
+                </div>
             </div>
 
         </nav>
