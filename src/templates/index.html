@@ -30,16 +30,19 @@
                 <span class="brand-text"><i class="far fa-compass"></i> Explorer</span>
             </div>
 
-            <div style="padding: 10px;" id="assistantSuggestions">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Continue Exploring</h5>
-                        <p class="card-text">This is the last query you ran:
-                            <br />
-                            <code>
-                            SELECT * FROM table
-                            </code>
-                        </p>
+            <div style="padding: 10px;">
+
+                <input id="assistantPrompt" />
+
+                <div id="assistantSuggestions">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Continue Exploring</h5>
+                            <p class="card-text">This is the last query you ran:
+                                <br />
+                                <code>SELECT * FROM table;</code>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,11 +83,13 @@
                             <ul class="navbar-nav ms-auto">
                                 <li class="nav-item">
                                     <div class="btn-group" role="group">
-                                        <button type="button" class="dropdown-toggle btn btn-secondary identity-button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button" class="dropdown-toggle btn btn-secondary identity-button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa-solid fa-circle-user"></i> <span id="identity">Identity</span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <a class="dropdown-item" href="https://accounts.google.com/logout">Sign Out</a>
+                                            <a class="dropdown-item" href="https://accounts.google.com/logout">Sign
+                                                Out</a>
                                         </ul>
                                     </div>
                                 </li>
@@ -99,7 +104,8 @@
 
                     <div class="notebook-cell">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
                                 <i class="fa-solid fa-plus"></i> New Cell
                             </button>
                             <ul class="dropdown-menu" id="notebook-new-cell-selector"></ul>
@@ -135,8 +141,8 @@
     <script src="dist/js/notebook-cell-python.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#sidebarCollapse').on('click', function() {
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
                 $('#sidebar, #content').toggleClass('active');
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
