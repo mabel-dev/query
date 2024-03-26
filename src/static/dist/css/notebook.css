@@ -266,6 +266,7 @@ overwrite bootstrap styles
 .card {
     border-radius: 0rem;
     border: 1px #D0D0D0 solid;
+    color: var(--base-font-color);
 }
 
 .btn {
