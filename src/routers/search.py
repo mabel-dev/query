@@ -1,5 +1,6 @@
 import datetime
 
+import opteryx.connectors
 import orjson
 from fastapi import APIRouter, HTTPException, Request, Response
 from internals.models import SearchModel
@@ -64,9 +65,10 @@ def search(search: SearchModel, request: Request):
         encoded_jwt = get_jwt(request)
 
         import opteryx
-        conn = opteryx.connect(
-            partition_scheme=[]
-        )
+        from opteryx.connectors import GcpCloudStorageConnector
+        from opteryx.managers.schemes import MabelPartitionScheme
+        opteryx.register_store("mabel_data", GcpCloudStorageConnector, partition_scheme=MabelPartitionScheme)
+        conn = opteryx.connect()
         cur = conn.cursor()
         cur.execute(search.query)
 
