@@ -2,6 +2,8 @@ import os
 import json
 import sys
 
+os.environ["OPTERYX_DEBUG"] = "1"
+
 sys.path.insert(0, os.path.join(sys.path[0], "../../opteryx/"))
 # sys.path.insert(0, os.path.join(sys.path[0], "../../mabel@0.6/"))
 
@@ -59,9 +61,9 @@ async def get_identify_token(token: str):
         if re.match(pattern, token):
             print(token, "matches pattern for", nid)
             if (
-                opteryx.query_to_arrow(
+                opteryx.query(
                     attribs.get("search"), {"item": token}, 1
-                ).num_rows
+                ).rowcount
                 > 0
             ):
                 return {
@@ -86,9 +88,9 @@ async def get_relations(token: str):
         pattern = attribs.get("looks_like")
         if re.match(pattern, token):
             if (
-                opteryx.query_to_arrow(
+                opteryx.query(
                     attribs.get("search"), {"item": token}, 1
-                ).num_rows
+                ).rowcount
                 > 0
             ):
                 for me, target, relation in graph.outgoing_edges(nid):
