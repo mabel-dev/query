@@ -4,7 +4,7 @@
 const apollo_api = new APIAdapter('apollo');
 
 document.getElementById("assistantButton").addEventListener("click", function () {
-    let prompt = document.getElementById("assistantPrompt").textContent;
+    let prompt = document.getElementById("assistantPrompt").value;
 
     apollo_api.get("v1/identify", null, { token: prompt }).then(data =>
 
