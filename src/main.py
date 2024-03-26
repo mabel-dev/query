@@ -1,4 +1,5 @@
 import os
+import json
 import sys
 
 sys.path.insert(0, os.path.join(sys.path[0], "../../opteryx/"))
@@ -55,6 +56,7 @@ async def get_identify_token(token: str):
     for nid, attribs in graph.nodes(True):
         pattern = attribs.get("looks_like")
         if re.match(pattern, token):
+            print(token, "matches pattern for", nid)
             if (
                 opteryx.query_to_arrow(
                     attribs.get("search"), {"item": token}, 1
