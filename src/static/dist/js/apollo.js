@@ -11,7 +11,7 @@ document.getElementById("assistantButton").addEventListener("click", function ()
 
         console.log(data);
 
-    
+
         let type_suggestion = `
         <div class="card">
             <div class="card-body">
@@ -35,5 +35,6 @@ document.getElementById("assistantButton").addEventListener("click", function ()
         console.error(`Error occurred: ${err}`);
     }
     );
+}
 );
 
