@@ -28,10 +28,23 @@ document.getElementById("assistantButton").addEventListener("click", function ()
 
         suggestion_container.innerHTML = type_suggestion;
 
+        let other_suggestions = ""
+
         apollo_api.get("v1/relations", null, { token: prompt }).then(data => {
             console.log(data);
             for (let i = 0; i++; i < data.length) {
-                console.log(data[i])
+                console.log(data[i]);
+                let item = data[i]
+                other_suggestions += `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Related ITems</h5>
+                    <p class="card-text">
+                        This ${data.class} has related ${item.class} entries
+                        <code>${item.search}</code>
+                    </p>
+                </div>
+            </div>`
             }
         });
     }

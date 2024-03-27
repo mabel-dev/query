@@ -95,7 +95,7 @@ async def get_relations(token: str):
                         opteryx.query_to_arrow(cross, {"item": token}, limit=1).num_rows
                         > 0
                     ):
-                        response.append({"class": nid, "search": cross.replace(":item", "'" + token + "'")})
+                        response.append({"class": target, "search": cross.replace(":item", "'" + token + "'")})
 
     return response
 
