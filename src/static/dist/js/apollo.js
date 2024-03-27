@@ -36,7 +36,7 @@ document.getElementById("assistantButton").addEventListener("click", function ()
                 type_suggestion += `
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Related ITems</h5>
+                    <h5 class="card-title">Related Items</h5>
                     <p class="card-text">
                         This ${data.class} has related ${item.class} entries
                         <code>${item.search}</code>
