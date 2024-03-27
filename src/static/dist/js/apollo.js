@@ -30,11 +30,10 @@ document.getElementById("assistantButton").addEventListener("click", function ()
 
         apollo_api.get("v1/relations", null, { token: prompt }).then(data => {
             console.log(data);
-            let other_suggestions = ""
             for (let i = 0; i++; i < data.length) {
                 console.log(data[i]);
                 let item = data[i]
-                other_suggestions += `
+                type_suggestion += `
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Related ITems</h5>
@@ -44,9 +43,10 @@ document.getElementById("assistantButton").addEventListener("click", function ()
                     </p>
                 </div>
             </div>`
-            }
+            };
 
-            suggestion_container.innerHTML = type_suggestion + other_suggestions;
+            suggestion_container.innerHTML = type_suggestion;
+
         });
 
     }
