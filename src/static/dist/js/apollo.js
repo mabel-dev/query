@@ -46,7 +46,10 @@ document.getElementById("assistantButton").addEventListener("click", function ()
                 </div>
             </div>`
             }
+
+            suggestion_container.innerHTML = type_suggestion + other_suggestions;
         });
+
     }
 
     ).catch(err => {
