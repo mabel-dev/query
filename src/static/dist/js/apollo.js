@@ -29,6 +29,7 @@ document.getElementById("assistantButton").addEventListener("click", function ()
         suggestion_container.innerHTML = type_suggestion;
 
         apollo_api.get("v1/relations", null, { token: prompt }).then(data => {
+            console.log(data);
             for (let i = 0; i++; i < data.length) {
                 console.log(data[i])
             }
