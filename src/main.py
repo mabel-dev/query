@@ -77,7 +77,7 @@ async def get_identify_token(token: str):
 @application.get("/v1/relations", response_class=ORJSONResponse)
 async def get_relations(token: str):
 
-    response = {}
+    response = []
 
     for nid, attribs in graph.nodes(True):
         pattern = attribs.get("looks_like")
@@ -95,7 +95,7 @@ async def get_relations(token: str):
                         opteryx.query_to_arrow(cross, {"item": token}, limit=1).num_rows
                         > 0
                     ):
-                        response[target] = cross.replace(":item", "'" + token + "'")
+                        response.append({"class": nid, "search": cross.replace(":item", "'" + token + "'")})
 
     return response
 
