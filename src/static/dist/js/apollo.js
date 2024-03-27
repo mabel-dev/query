@@ -30,23 +30,26 @@ document.getElementById("assistantButton").addEventListener("click", function ()
         suggestion_container.innerHTML = type_suggestion;
 
         apollo_api.get("v1/relations", null, { token: prompt }).then(data => {
-            console.log(data);
-            for (let i = 0; i < data.length; i++) {
-                console.log(data[i]);
-                let item = data[i]
-                type_suggestion += `
+            type_suggestion += `
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Related Items</h5>
+                    <h5 class="card-title">Related Items</h5>`
+            if (data.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+                    console.log(data[i]);
+                    let item = data[i]
+                    type_suggestion += `
                     <p class="card-text">
                         This ${data.class} has related ${item.class} entries
                         <code>${item.search}</code>
-                    </p>
-                </div>
-            </div>`
-            };
+                    </p>`
+                };
 
-            suggestion_container.innerHTML = type_suggestion;
+                type_suggestion += `</div>
+            </div>`
+
+                suggestion_container.innerHTML = type_suggestion;
+            }
 
         });
 
