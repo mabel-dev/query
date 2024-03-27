@@ -21,6 +21,7 @@ document.getElementById("assistantButton").addEventListener("click", function ()
                     <code>${data.search}</code>
                     <br />
                     <button type="button" class="btn btn-tiny btn-primary" title="Load Query into Editor"><i class="fa-fw fa-solid fa-reply fa-rotate-90"></i></button>
+                    <button type="button" class="btn btn-tiny btn-primary" title="Add to New Cell"><i class="fa-fw fa-solid fa-plus"></i></button>
                     <button type="button" class="btn btn-tiny btn-success" title="Run Query"><i class="fa-fw fa-solid fa-play"></i></button>
                 </p>
             </div>
