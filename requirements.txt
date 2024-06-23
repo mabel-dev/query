@@ -11,6 +11,6 @@ aiofiles
 jinja2
 pyarrow
 pyjwt
-opteryx==15.*
+opteryx==0.15.*
 pymemcache
 travers
