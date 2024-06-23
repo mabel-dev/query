@@ -13,5 +13,4 @@ pyarrow
 pyjwt
 opteryx==15.*
 pymemcache
-opteryx
 travers
